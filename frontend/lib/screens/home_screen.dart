@@ -1,69 +1,145 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'scan_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:provider/provider.dart';
+import '../theme/app_theme.dart';
+import '../widgets/artifact_card.dart';
+import '../widgets/gold_button.dart';
+import '../services/api_service.dart';
+import '../models/artifact.dart';
+import '../providers/notification_provider.dart';
+import '../models/app_notification.dart';
+import 'main_shell.dart';
 import 'villas_screen.dart';
+import 'artifact_detail_screen.dart';
 
-// Assuming we have simple detail routes or coming soons for Stories/Orders
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  Widget _buildHomeCard({
-    required BuildContext context,
-    required String title,
-    required String subtitle,
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  static const _curatedIds = ['3', '5', '7'];
+
+  List<Artifact> _featured = [];
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    final artifacts = await ApiService.getArtifacts();
+    if (mounted) {
+      setState(() {
+        _featured = artifacts.where((a) => _curatedIds.contains(a.id)).toList();
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _switchToScanTab() {
+    context.findAncestorStateOfType<MainShellState>()?.switchToTab(1);
+  }
+
+  void _openVillas() {
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const VillasScreen()));
+  }
+
+  void _showNotificationSheet(BuildContext context) {
+    final notifProvider = context.read<NotificationProvider>();
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) => ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+          child: Container(
+            constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.55),
+            decoration: BoxDecoration(
+              color: KuriftuColors.surface.withValues(alpha: 0.92),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+              border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
             ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF9F5EE),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(icon, size: 32, color: const Color(0xFFC79A3F)),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF2C3E50),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 12),
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: KuriftuColors.textMuted.withValues(alpha: 0.4),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 20, 24, 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Notifications',
+                        style: GoogleFonts.playfairDisplay(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                          color: KuriftuColors.textPrimary,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          notifProvider.markAllRead();
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          'Mark All Read',
+                          style: KuriftuTheme.goldAccent.copyWith(fontSize: 13),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(color: KuriftuColors.glassBorder, height: 1),
+                Flexible(
+                  child: ChangeNotifierProvider.value(
+                    value: notifProvider,
+                    child: Consumer<NotificationProvider>(
+                      builder: (context, notif, _) {
+                        final items = notif.notifications;
+                        if (items.isEmpty) {
+                          return Padding(
+                            padding: const EdgeInsets.all(40),
+                            child: Text(
+                              'No notifications yet',
+                              style: KuriftuTheme.bodyText.copyWith(color: KuriftuColors.textMuted),
+                            ),
+                          );
+                        }
+                        return ListView.separated(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          shrinkWrap: true,
+                          itemCount: items.length,
+                          separatorBuilder: (_, __) => const Divider(
+                            color: KuriftuColors.glassBorder,
+                            height: 1,
+                            indent: 68,
+                          ),
+                          itemBuilder: (context, index) => _NotificationTile(notification: items[index]),
+                        );
+                      },
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    subtitle,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey.shade600,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 16),
-          ],
+          ),
         ),
       ),
     );
@@ -72,92 +148,299 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text(
-          'Kuriftu Village',
-          style: TextStyle(
-            color: Color(0xFF2C3E50),
-            fontWeight: FontWeight.bold,
+      backgroundColor: KuriftuColors.background,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset('assets/images/villa_4.jpg', fit: BoxFit.cover),
           ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person_outline, color: Color(0xFF2C3E50)),
-            onPressed: () {},
-          )
+          Positioned.fill(
+            child: Container(color: Colors.black.withValues(alpha: 0.82)),
+          ),
+          CustomScrollView(
+            physics: const BouncingScrollPhysics(),
+            slivers: [
+              _buildAppBar(),
+              SliverToBoxAdapter(child: _buildHeroSection()),
+              SliverToBoxAdapter(child: _buildActionButtons()),
+              SliverToBoxAdapter(child: _buildFeaturedSection()),
+              const SliverToBoxAdapter(child: SizedBox(height: 100)),
+            ],
+          ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Discover',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.w800,
-                color: Color(0xFF2C3E50),
+    );
+  }
+
+  Widget _buildAppBar() {
+    return SliverAppBar(
+      floating: true,
+      backgroundColor: Colors.transparent,
+      automaticallyImplyLeading: false,
+      title: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: KuriftuColors.gold.withValues(alpha: 0.6), width: 1),
+            ),
+            child: ClipOval(
+              child: Image.asset('assets/images/logo.jpg', fit: BoxFit.cover),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            'Kuriftu Village',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: KuriftuColors.textPrimary,
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        Consumer<NotificationProvider>(
+          builder: (context, notif, _) {
+            return GestureDetector(
+              onTap: () => _showNotificationSheet(context),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    const Icon(LucideIcons.bell, size: 20, color: KuriftuColors.textSecondary),
+                    if (notif.unreadCount > 0)
+                      Positioned(
+                        top: -3,
+                        right: -3,
+                        child: Container(
+                          width: 10,
+                          height: 10,
+                          decoration: const BoxDecoration(
+                            color: KuriftuColors.gold,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 32),
-            _buildHomeCard(
-              context: context,
-              title: 'Scan Cultural Object',
-              subtitle: 'AI-powered artifact discovery',
-              icon: Icons.center_focus_weak,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const ScanScreen()),
-                );
-              },
-            ),
-            const SizedBox(height: 20),
-            _buildHomeCard(
-              context: context,
-              title: 'Explore African Villas',
-              subtitle: 'Find items by origin',
-              icon: Icons.account_balance,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const VillasScreen()),
-                );
-              },
-            ),
-            const SizedBox(height: 20),
-            _buildHomeCard(
-              context: context,
-              title: 'Discover Cultural Stories',
-              subtitle: 'Read the legends behind the craft',
-              icon: Icons.menu_book,
-              onTap: () {
-                // Future expansion
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Stories coming soon!')),
-                );
-              },
-            ),
-            const SizedBox(height: 20),
-            _buildHomeCard(
-              context: context,
-              title: 'My Orders',
-              subtitle: 'Manage your purchased heritage',
-              icon: Icons.shopping_bag_outlined,
-              onTap: () {
-                // Future expansion
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Orders view coming soon!')),
-                );
-              },
-            ),
-          ],
+            );
+          },
         ),
+        const SizedBox(width: 8),
+      ],
+    );
+  }
+
+  Widget _buildHeroSection() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Discover',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 42,
+              fontWeight: FontWeight.w700,
+              color: KuriftuColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'African Heritage',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 42,
+              fontWeight: FontWeight.w700,
+              color: KuriftuColors.gold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Scan objects around you to unlock centuries of cultural stories powered by AI.',
+            style: KuriftuTheme.bodyText.copyWith(fontSize: 15, height: 1.7),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Column(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: GoldButton(
+              text: 'EXPLORE VILLAS',
+              icon: LucideIcons.building2,
+              onPressed: _openVillas,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Browse 3 African heritage villas and their cultural treasures',
+            style: KuriftuTheme.bodyText.copyWith(fontSize: 12, color: KuriftuColors.textMuted),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          SizedBox(
+            width: double.infinity,
+            child: GoldButton(
+              text: 'SCAN ARTIFACT',
+              icon: LucideIcons.scan,
+              onPressed: _switchToScanTab,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Point your camera at any artifact to hear its centuries-old story',
+            style: KuriftuTheme.bodyText.copyWith(fontSize: 12, color: KuriftuColors.textMuted),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFeaturedSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24, 36, 24, 20),
+          child: Text(
+            'Featured Artifacts',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: KuriftuColors.textPrimary,
+            ),
+          ),
+        ),
+        if (_isLoading)
+          const Center(
+            child: Padding(
+              padding: EdgeInsets.all(40),
+              child: CircularProgressIndicator(color: KuriftuColors.gold, strokeWidth: 2),
+            ),
+          )
+        else
+          SizedBox(
+            height: 280,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              itemCount: _featured.length,
+              separatorBuilder: (_, __) => const SizedBox(width: 16),
+              itemBuilder: (context, index) {
+                final artifact = _featured[index];
+                return SizedBox(
+                  width: 220,
+                  child: ArtifactCard(
+                    artifact: artifact,
+                    height: 280,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => ArtifactDetailScreen(artifact: artifact)),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _NotificationTile extends StatelessWidget {
+  final AppNotification notification;
+  const _NotificationTile({required this.notification});
+
+  String _timeAgo(DateTime dt) {
+    final diff = DateTime.now().difference(dt);
+    if (diff.inDays > 0) return '${diff.inDays}d ago';
+    if (diff.inHours > 0) return '${diff.inHours}h ago';
+    if (diff.inMinutes > 0) return '${diff.inMinutes}m ago';
+    return 'Just now';
+  }
+
+  IconData get _icon {
+    if (notification.id.startsWith('order_')) return LucideIcons.checkCircle;
+    if (notification.id == 'welcome') return LucideIcons.sparkles;
+    return LucideIcons.compass;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: notification.isRead
+                  ? KuriftuColors.surfaceLight
+                  : KuriftuColors.gold.withValues(alpha: 0.12),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              _icon,
+              size: 18,
+              color: notification.isRead ? KuriftuColors.textMuted : KuriftuColors.gold,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        notification.title,
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          fontWeight: notification.isRead ? FontWeight.w400 : FontWeight.w600,
+                          color: KuriftuColors.textPrimary,
+                        ),
+                      ),
+                    ),
+                    if (!notification.isRead)
+                      Container(
+                        width: 8,
+                        height: 8,
+                        decoration: const BoxDecoration(
+                          color: KuriftuColors.gold,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  notification.message,
+                  style: KuriftuTheme.bodyText.copyWith(fontSize: 13, color: KuriftuColors.textMuted),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  _timeAgo(notification.timestamp),
+                  style: GoogleFonts.inter(fontSize: 11, color: KuriftuColors.textMuted.withValues(alpha: 0.6)),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

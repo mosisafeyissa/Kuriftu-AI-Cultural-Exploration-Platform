@@ -1,96 +1,133 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../models/artifact.dart';
-import '../screens/artifact_detail_screen.dart';
+import '../theme/app_theme.dart';
 
 class ArtifactCard extends StatelessWidget {
   final Artifact artifact;
+  final VoidCallback? onTap;
+  final double height;
 
-  const ArtifactCard({super.key, required this.artifact});
+  const ArtifactCard({
+    super.key,
+    required this.artifact,
+    this.onTap,
+    this.height = 260,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ArtifactDetailScreen(artifact: artifact),
+      onTap: onTap,
+      child: Hero(
+        tag: 'artifact-${artifact.id}',
+        child: Container(
+          height: height,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: KuriftuTheme.softShadow,
           ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            )
-          ],
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.asset(
-              artifact.image,
-              height: 180,
-              width: double.infinity,
-              fit: BoxFit.cover,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                _buildImage(),
+                _buildGradientOverlay(),
+                _buildContent(),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    artifact.name,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF2C3E50),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    artifact.description,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey.shade600,
-                      height: 1.4,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '\$${artifact.price.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFFC79A3F),
-                        ),
-                      ),
-                      const Text(
-                        'Learn More >',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFFC79A3F),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            )
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImage() {
+    if (artifact.image.startsWith('assets/')) {
+      return Image.asset(
+        artifact.image,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => Container(
+          color: KuriftuColors.surfaceLight,
+          child: const Icon(LucideIcons.image, color: KuriftuColors.textMuted, size: 40),
+        ),
+      );
+    }
+    return Image.network(
+      artifact.image,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => Container(
+        color: KuriftuColors.surfaceLight,
+        child: const Icon(LucideIcons.image, color: KuriftuColors.textMuted, size: 40),
+      ),
+    );
+  }
+
+  Widget _buildGradientOverlay() {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.transparent,
+            Colors.black.withValues(alpha: 0.3),
+            Colors.black.withValues(alpha: 0.85),
           ],
+          stops: const [0.3, 0.6, 1.0],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContent() {
+    return Positioned(
+      left: 16,
+      right: 16,
+      bottom: 16,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  artifact.name,
+                  style: KuriftuTheme.headlineSerif.copyWith(fontSize: 16),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      artifact.countryName,
+                      style: KuriftuTheme.goldAccent.copyWith(fontSize: 12),
+                    ),
+                    Text(
+                      '\$${artifact.price.toStringAsFixed(0)}',
+                      style: KuriftuTheme.headlineSerif.copyWith(
+                        fontSize: 18,
+                        color: KuriftuColors.gold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'theme/app_theme.dart';
+import 'providers/scan_provider.dart';
+import 'providers/notification_provider.dart';
 import 'screens/welcome_screen.dart';
 
 void main() {
@@ -9,7 +12,15 @@ void main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: KuriftuColors.background,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ),
+  );
+
   runApp(const CulturalWhispererApp());
 }
 
@@ -18,17 +29,17 @@ class CulturalWhispererApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Kuriftu Cultural Whisperer',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFFAFAFA),
-        primaryColor: const Color(0xFFC79A3F),
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFC79A3F)),
-        useMaterial3: true,
-        textTheme: GoogleFonts.outfitTextTheme(Theme.of(context).textTheme),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ScanProvider()),
+        ChangeNotifierProvider(create: (_) => NotificationProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Kuriftu Cultural Whisperer',
+        debugShowCheckedModeBanner: false,
+        theme: KuriftuTheme.darkTheme,
+        home: const WelcomeScreen(),
       ),
-      home: const WelcomeScreen(),
     );
   }
 }
