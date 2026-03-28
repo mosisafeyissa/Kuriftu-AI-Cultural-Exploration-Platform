@@ -149,13 +149,26 @@ def scan_artifact(request):
 
     # ── Step 3: not in DB → AI-generated story ───────────────────────────────
     story_data = generate_story(identified_name, identified_country)
+    
+    # Optional: Log this scan in ai_services too if you want to track it
+    from ai_services.views import _log_scan
+    scan_log = _log_scan(image_file, identification, story_generated=True)
+    
+    if scan_log and scan_log.image:
+        image_url = request.build_absolute_uri(scan_log.image.url)
+    elif artifact_name_hint:
+        image_url = "https://placehold.co/400x300?text=No+Image+Provided"
+    else:
+        image_url = "https://placehold.co/400x300?text=Unknown+Artifact"
+
     return Response({
         "artifact_name": identified_name,
         "country": identified_country,
         "confidence": confidence,
         "story": story_data,
         "price": None,
-        "image_url": "https://placehold.co/400x300?text=Unknown+Artifact",
+        "image_url": image_url,
+        "source": "ai_generated",
         "note": "This artifact was not found in the database. Story was AI-generated.",
     }, status=status.HTTP_200_OK)
 

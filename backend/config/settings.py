@@ -9,11 +9,13 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-
+from dotenv import load_dotenv
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv()
 
 
 # Quick-start development settings - unsuitable for production
@@ -26,6 +28,7 @@ SECRET_KEY = "django-insecure-@_zp2q01g!rrnp7qyt3^@mh&%qivajvm_f@=%6d@-%138i1_80
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
 
 
 # Application definition
@@ -149,3 +152,4 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Temporary scan uploads directory (inside MEDIA_ROOT)
 SCAN_UPLOAD_DIR = "scans/"
+API_KEY = os.getenv('GEMINI_API_KEY')
