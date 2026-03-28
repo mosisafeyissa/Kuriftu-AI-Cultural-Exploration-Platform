@@ -77,3 +77,23 @@ def validate_story(data: dict) -> dict:
 
 def _clamp(value: float, lo: float, hi: float) -> float:
     return max(lo, min(hi, value))
+
+
+# Shared Constants 
+ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif"}
+MAX_IMAGE_SIZE_MB = 10
+
+
+def validate_image_file(image_file):
+    """
+    Validate an uploaded image file's type and size.
+    Returns (is_valid, error_message) tuple.
+    """
+    if image_file.content_type not in ALLOWED_IMAGE_TYPES:
+        return False, (
+            f"Unsupported image type '{image_file.content_type}'. "
+            f"Allowed: {', '.join(sorted(ALLOWED_IMAGE_TYPES))}"
+        )
+    if image_file.size > MAX_IMAGE_SIZE_MB * 1024 * 1024:
+        return False, f"Image too large. Maximum size is {MAX_IMAGE_SIZE_MB} MB."
+    return True, None

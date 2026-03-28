@@ -156,8 +156,8 @@ class AIScanEndpointTest(TestCase):
         response = self.client.post("/api/ai/scan/", {}, format="json")
         self.assertEqual(response.status_code, http_status.HTTP_400_BAD_REQUEST)
 
-    @patch("ai_services.views.identify_object")
-    @patch("ai_services.views.generate_story")
+    @patch("ai_services.services.identify_object")
+    @patch("ai_services.services.generate_story")
     def test_text_fallback_mode(self, mock_story, mock_identify):
         mock_story.return_value = {
             "title": "Test", "story": "Story", "materials": "Wood",
