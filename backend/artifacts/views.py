@@ -6,19 +6,19 @@ from .serializers import ArtifactSerializer, CountrySerializer, VillaSerializer
 
 # ── Countries ────────────────────────────────────────────────────────────────
 
-class CountryListView(generics.ListAPIView):
+class CountryListView(generics.ListCreateAPIView):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
 
 
-class CountryDetailView(generics.RetrieveAPIView):
+class CountryDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Country.objects.all()
     serializer_class = CountrySerializer
 
 
 # ── Villas ───────────────────────────────────────────────────────────────────
 
-class VillaListView(generics.ListAPIView):
+class VillaListView(generics.ListCreateAPIView):
     serializer_class = VillaSerializer
 
     def get_queryset(self):
@@ -29,14 +29,14 @@ class VillaListView(generics.ListAPIView):
         return qs
 
 
-class VillaDetailView(generics.RetrieveAPIView):
+class VillaDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Villa.objects.select_related("country").all()
     serializer_class = VillaSerializer
 
 
 # ── Artifacts ────────────────────────────────────────────────────────────────
 
-class ArtifactListView(generics.ListAPIView):
+class ArtifactListView(generics.ListCreateAPIView):
     serializer_class = ArtifactSerializer
 
     def get_queryset(self):
@@ -47,6 +47,6 @@ class ArtifactListView(generics.ListAPIView):
         return qs
 
 
-class ArtifactDetailView(generics.RetrieveAPIView):
+class ArtifactDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Artifact.objects.select_related("country", "villa", "story").all()
     serializer_class = ArtifactSerializer
