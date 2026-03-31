@@ -1,21 +1,29 @@
 import 'package:flutter/foundation.dart';
 import '../models/app_notification.dart';
+import '../services/api_service.dart';
 
 class NotificationProvider extends ChangeNotifier {
-  final List<AppNotification> _notifications = [
-    AppNotification(
-      id: 'welcome',
-      title: 'Welcome to Kuriftu',
-      message: 'Your journey into African heritage begins now.',
-      timestamp: DateTime.now().subtract(const Duration(minutes: 5)),
-    ),
-    AppNotification(
-      id: 'discovery',
-      title: 'New Artifacts Discovered',
-      message: 'Explore the latest additions to our collection.',
-      timestamp: DateTime.now().subtract(const Duration(minutes: 2)),
-    ),
-  ];
+  List<AppNotification> _notifications = [];
+
+  NotificationProvider() {
+    refresh();
+  }
+
+  Future<void> refresh() async {
+    try {
+      final rawData = await ApiService.getNotifications();
+      _notifications = rawData.map((e) => AppNotification(
+        id: e['id'].toString(),
+        title: e['title'] ?? '',
+        message: e['message'] ?? '',
+        timestamp: DateTime.parse(e['created_at']),
+        isRead: e['is_read'] ?? false,
+      )).toList();
+      notifyListeners();
+    } catch (e) {
+      debugPrint("Error fetching notifications: $e");
+    }
+  }
 
   List<AppNotification> get notifications {
     final sorted = List<AppNotification>.from(_notifications);
@@ -26,14 +34,7 @@ class NotificationProvider extends ChangeNotifier {
   int get unreadCount => _notifications.where((n) => !n.isRead).length;
 
   void addOrderNotification(String orderId, String artifactName) {
-    final shortId = orderId.length > 6 ? orderId.substring(orderId.length - 6) : orderId;
-    _notifications.add(AppNotification(
-      id: 'order_$orderId',
-      title: 'Order #$shortId Confirmed',
-      message: 'Your $artifactName has been reserved.',
-      timestamp: DateTime.now(),
-    ));
-    notifyListeners();
+    refresh(); // Refresh from backend which now generates the AI notification
   }
 
   void markAllRead() {

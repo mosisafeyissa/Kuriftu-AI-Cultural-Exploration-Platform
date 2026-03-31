@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../theme/app_theme.dart';
 import 'home_screen.dart';
@@ -125,7 +124,7 @@ class _BarItem extends StatelessWidget {
             const SizedBox(height: 5),
             Text(
               label,
-              style: GoogleFonts.inter(
+              style: TextStyle(fontFamily: 'Inter', 
                 fontSize: 11,
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
                 color: color,
@@ -176,3 +175,4 @@ class _ScanButton extends StatelessWidget {
     );
   }
 }
+

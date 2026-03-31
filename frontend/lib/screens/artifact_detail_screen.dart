@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../models/artifact.dart';
 import '../theme/app_theme.dart';
@@ -75,18 +74,25 @@ class ArtifactDetailScreen extends StatelessWidget {
         artifact.image,
         fit: BoxFit.cover,
         errorBuilder: (_, __, ___) => Container(
-          color: KuriftuColors.surfaceLight,
-          child: const Icon(LucideIcons.image, color: KuriftuColors.textMuted, size: 50),
+          color: Colors.grey[300],
+          child: const Icon(Icons.image_not_supported),
         ),
       );
     }
     return Image.network(
       artifact.image,
       fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => Container(
-        color: KuriftuColors.surfaceLight,
-        child: const Icon(LucideIcons.image, color: KuriftuColors.textMuted, size: 50),
-      ),
+      loadingBuilder: (context, child, progress) {
+        if (progress == null) return child;
+        return const Center(child: CircularProgressIndicator());
+      },
+      errorBuilder: (context, error, stackTrace) {
+        debugPrint("Image Load Error [ArtifactDetailScreen]: ${artifact.image} | $error");
+        return Container(
+          color: Colors.grey[300],
+          child: const Icon(Icons.image_not_supported),
+        );
+      },
     );
   }
 
@@ -104,7 +110,7 @@ class ArtifactDetailScreen extends StatelessWidget {
           // Name
           Text(
             artifact.name,
-            style: GoogleFonts.playfairDisplay(
+            style: TextStyle(fontFamily: 'PlayfairDisplay', 
               fontSize: 28,
               fontWeight: FontWeight.w700,
               color: KuriftuColors.textPrimary,
@@ -169,7 +175,7 @@ class ArtifactDetailScreen extends StatelessWidget {
         const SizedBox(width: 12),
         Text(
           title,
-          style: GoogleFonts.playfairDisplay(
+          style: TextStyle(fontFamily: 'PlayfairDisplay', 
             fontSize: 20,
             fontWeight: FontWeight.w600,
             color: KuriftuColors.textPrimary,
@@ -282,7 +288,7 @@ class ArtifactDetailScreen extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     '\$${artifact.price.toStringAsFixed(2)}',
-                    style: GoogleFonts.playfairDisplay(
+                    style: TextStyle(fontFamily: 'PlayfairDisplay', 
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
                       color: KuriftuColors.textPrimary,
@@ -312,3 +318,4 @@ class ArtifactDetailScreen extends StatelessWidget {
     );
   }
 }
+

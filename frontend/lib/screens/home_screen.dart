@@ -1,7 +1,6 @@
 import 'dart:ui';
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_theme.dart';
@@ -23,7 +22,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const _curatedIds = ['3', '5', '7'];
+
 
   List<Artifact> _featured = [];
   bool _isLoading = true;
@@ -44,7 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
       final artifacts = await ApiService.getArtifacts();
       if (mounted) {
         setState(() {
-          _featured = artifacts.where((a) => _curatedIds.contains(a.id)).toList();
+          final list = artifacts.toList()..shuffle();
+          _featured = list.take(4).toList();
           _isLoading = false;
         });
       }
@@ -103,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(
                         'Notifications',
-                        style: GoogleFonts.playfairDisplay(
+                        style: TextStyle(fontFamily: 'PlayfairDisplay', 
                           fontSize: 22,
                           fontWeight: FontWeight.w700,
                           color: KuriftuColors.textPrimary,
@@ -209,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 12),
           Text(
             'Kuriftu Village',
-            style: GoogleFonts.playfairDisplay(
+            style: TextStyle(fontFamily: 'PlayfairDisplay', 
               fontSize: 20,
               fontWeight: FontWeight.w600,
               color: KuriftuColors.textPrimary,
@@ -260,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text(
             'Discover',
-            style: GoogleFonts.playfairDisplay(
+            style: TextStyle(fontFamily: 'PlayfairDisplay', 
               fontSize: 42,
               fontWeight: FontWeight.w700,
               color: KuriftuColors.textPrimary,
@@ -269,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 4),
           Text(
             'African Heritage',
-            style: GoogleFonts.playfairDisplay(
+            style: TextStyle(fontFamily: 'PlayfairDisplay', 
               fontSize: 42,
               fontWeight: FontWeight.w700,
               color: KuriftuColors.gold,
@@ -332,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.fromLTRB(24, 36, 24, 20),
           child: Text(
             'Featured Artifacts',
-            style: GoogleFonts.playfairDisplay(
+            style: TextStyle(fontFamily: 'PlayfairDisplay', 
               fontSize: 22,
               fontWeight: FontWeight.w600,
               color: KuriftuColors.textPrimary,
@@ -452,7 +452,7 @@ class _NotificationTile extends StatelessWidget {
                     Expanded(
                       child: Text(
                         notification.title,
-                        style: GoogleFonts.inter(
+                        style: TextStyle(fontFamily: 'Inter', 
                           fontSize: 14,
                           fontWeight: notification.isRead ? FontWeight.w400 : FontWeight.w600,
                           color: KuriftuColors.textPrimary,
@@ -478,7 +478,7 @@ class _NotificationTile extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   _timeAgo(notification.timestamp),
-                  style: GoogleFonts.inter(fontSize: 11, color: KuriftuColors.textMuted.withValues(alpha: 0.6)),
+                  style: TextStyle(fontFamily: 'Inter', fontSize: 11, color: KuriftuColors.textMuted.withValues(alpha: 0.6)),
                 ),
               ],
             ),
@@ -488,3 +488,4 @@ class _NotificationTile extends StatelessWidget {
     );
   }
 }
+

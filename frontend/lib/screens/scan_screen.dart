@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_theme.dart';
@@ -146,7 +145,7 @@ class _ScanScreenState extends State<ScanScreen> {
                           const SizedBox(width: 6),
                           Text(
                             'Home',
-                            style: GoogleFonts.inter(
+                            style: TextStyle(fontFamily: 'Inter', 
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
@@ -163,7 +162,7 @@ class _ScanScreenState extends State<ScanScreen> {
             Expanded(
               child: Text(
                 'Cultural Scanner',
-                style: GoogleFonts.playfairDisplay(
+                style: TextStyle(fontFamily: 'PlayfairDisplay', 
                   fontSize: 20,
                   fontWeight: FontWeight.w600,
                   color: KuriftuColors.textPrimary,
@@ -310,3 +309,4 @@ class _ScanScreenState extends State<ScanScreen> {
     );
   }
 }
+

@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../models/artifact.dart';
 import '../theme/app_theme.dart';
@@ -177,7 +176,7 @@ class _ResultScreenState extends State<ResultScreen>
             const Spacer(),
             Text(
               'Artifact Discovered',
-              style: GoogleFonts.playfairDisplay(
+              style: TextStyle(fontFamily: 'PlayfairDisplay', 
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: KuriftuColors.textPrimary,
@@ -261,7 +260,7 @@ class _ResultScreenState extends State<ResultScreen>
               // Artifact name
               Text(
                 artifact.name,
-                style: GoogleFonts.playfairDisplay(
+                style: TextStyle(fontFamily: 'PlayfairDisplay', 
                   fontSize: 26,
                   fontWeight: FontWeight.w700,
                   color: KuriftuColors.textPrimary,
@@ -316,7 +315,7 @@ class _ResultScreenState extends State<ResultScreen>
                       const SizedBox(height: 4),
                       Text(
                         '\$${artifact.price.toStringAsFixed(2)}',
-                        style: GoogleFonts.playfairDisplay(
+                        style: TextStyle(fontFamily: 'PlayfairDisplay', 
                           fontSize: 28,
                           fontWeight: FontWeight.w700,
                           color: KuriftuColors.gold,
@@ -393,3 +392,4 @@ class _ResultScreenState extends State<ResultScreen>
     );
   }
 }
+

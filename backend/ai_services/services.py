@@ -7,7 +7,8 @@ Two public functions (called by artifacts/views.py):
 """
 import logging
 
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from django.conf import settings
 
 from .prompts import (
@@ -20,89 +21,93 @@ from .utils import parse_json_response, validate_identification, validate_story
 logger = logging.getLogger(__name__)
 
 # Configure Gemini 
-
 _API_KEY = getattr(settings, "API_KEY", None)
+_CLIENT = None
 
 if _API_KEY:
-    genai.configure(api_key=_API_KEY)
+    print(f"Loaded GEMINI_API_KEY: {_API_KEY[:8]}...")
+    _CLIENT = genai.Client(api_key=_API_KEY)
 else:
-    logger.warning(
-        "GEMINI_API_KEY is not set. AI features will return fallback responses."
-    )
-
-# Model instances (lazy — created once, reused across requests)
-_VISION_MODEL = None
-_TEXT_MODEL = None
+    logger.warning("GEMINI_API_KEY is not set. AI features will return fallback responses.")
 
 
-def _get_vision_model():
-    """Return (or create) the Gemini model used for image recognition."""
-    global _VISION_MODEL
-    if _VISION_MODEL is None:
-        _VISION_MODEL = genai.GenerativeModel("gemini-flash-latest")
-    return _VISION_MODEL
-
-
-def _get_text_model():
-    """Return (or create) the Gemini model used for story generation."""
-    global _TEXT_MODEL
-    if _TEXT_MODEL is None:
-        _TEXT_MODEL = genai.GenerativeModel("gemini-flash-latest")
-    return _TEXT_MODEL
-
+def _get_client():
+    if not _CLIENT:
+        raise ValueError("Gemini client not initialized. Ensure GEMINI_API_KEY is set.")
+    return _CLIENT
 
 # Job 1: Object Recognition 
 
 def identify_object(image_file) -> dict:
-    """
-    Identify a cultural artifact from an uploaded image file.
-
-    Args:
-        image_file: A Django UploadedFile (InMemoryUploadedFile or
-                    TemporaryUploadedFile) with .read() and .content_type.
-
-    Returns:
-        dict with keys: artifact_name, country, category, confidence, materials
-    """
-    if not _API_KEY:
+    if not _CLIENT:
         logger.warning("No API key — returning fallback identification.")
         return _fallback_identification()
 
     try:
-        # Read the image bytes from the uploaded file
-        image_file.seek(0)  # ensure we read from the start
+        image_file.seek(0)
         image_bytes = image_file.read()
         mime_type = getattr(image_file, "content_type", "image/jpeg")
+        # Ensure we properly map .webp even if it comes through as octet-stream
+        if image_file.name and image_file.name.lower().endswith(".webp"):
+            mime_type = "image/webp"
 
-        model = _get_vision_model()
+        client = _get_client()
 
-        # Build the multimodal content: [image, prompt]
-        response = model.generate_content(
-            [
-                {"mime_type": mime_type, "data": image_bytes},
-                IDENTIFY_OBJECT_PROMPT,
-            ],
-            generation_config=genai.types.GenerationConfig(
-                temperature=0.1,
-                max_output_tokens=1024,
-                response_mime_type="application/json",
-            ),
-        )
+        identify_schema = {
+            "type": "OBJECT",
+            "properties": {
+                "artifact_name": {"type": "STRING"},
+                "country": {"type": "STRING"},
+                "category": {"type": "STRING"},
+                "confidence": {"type": "NUMBER"},
+                "materials": {"type": "ARRAY", "items": {"type": "STRING"}},
+            },
+            "required": ["artifact_name", "country", "category", "confidence", "materials"],
+        }
 
-        result = parse_json_response(response.text)
-
-        if result is None:
-            # Retry once with a clearer prompt
-            logger.info("First identification parse failed, retrying…")
-            retry_response = model.generate_content(
-                [
-                    {"mime_type": mime_type, "data": image_bytes},
-                    IDENTIFY_RETRY_PROMPT,
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=[
+                    types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
+                    IDENTIFY_OBJECT_PROMPT,
                 ],
-                generation_config=genai.types.GenerationConfig(
+                config=types.GenerateContentConfig(
                     temperature=0.1,
                     max_output_tokens=1024,
                     response_mime_type="application/json",
+                    response_schema=identify_schema,
+                ),
+            )
+            print(f"DEBUG AI TEXT: {response.text}")
+        except Exception as e:
+            logger.error(f"Gemini Vision API error: {e}")
+            if "429" in str(e) or "ResourceExhausted" in str(e) or "Resource Exhausted" in str(e):
+                return {
+                    "artifact_name": "AI Cooling Down (Rate Limit)",
+                    "country": "Unknown",
+                    "category": "Other",
+                    "confidence": 0.0,
+                    "materials": []
+                }
+            return _fallback_identification()
+
+        clean_text = response.text.replace("```json", "").replace("```", "").strip()
+        result = parse_json_response(clean_text)
+
+        if result is None:
+            logger.info("First identification parse failed, retrying...")
+            retry_response = client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=[
+                    types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
+                    IDENTIFY_RETRY_PROMPT,
+                ],
+                config=types.GenerateContentConfig(
+                    temperature=0.1,
+                    max_output_tokens=1024,
+                    response_mime_type="application/json",
+                    response_schema=identify_schema,
                 ),
             )
             result = parse_json_response(retry_response.text)
@@ -128,17 +133,7 @@ def identify_object(image_file) -> dict:
 # Job 2: Cultural Story Generation 
 
 def generate_story(object_name: str, country: str) -> dict:
-    """
-    Generate a rich cultural story for the identified artifact.
-
-    Args:
-        object_name: The name of the artifact (from identify_object).
-        country:     The country of origin.
-
-    Returns:
-        dict with keys: title, story, materials, cultural_significance, fun_fact
-    """
-    if not _API_KEY:
+    if not _CLIENT:
         logger.warning("No API key — returning fallback story.")
         return _fallback_story(object_name, country)
 
@@ -148,17 +143,50 @@ def generate_story(object_name: str, country: str) -> dict:
             country=country,
         )
 
-        model = _get_text_model()
-        response = model.generate_content(
-            prompt,
-            generation_config=genai.types.GenerationConfig(
-                temperature=0.7,
-                max_output_tokens=3000,
-                response_mime_type="application/json",
-            ),
-        )
+        client = _get_client()
+        story_schema = {
+            "type": "OBJECT",
+            "properties": {
+                "title": {"type": "STRING"},
+                "story": {"type": "STRING"},
+                "materials": {"type": "STRING"},
+                "cultural_significance": {"type": "STRING"},
+                "fun_fact": {"type": "STRING"},
+                "name": {"type": "STRING"} # Added for frontend compat
+            },
+            "required": ["title", "story", "materials", "cultural_significance", "fun_fact"],
+        }
+        
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    temperature=0.7,
+                    max_output_tokens=3000,
+                    response_mime_type="application/json",
+                    response_schema=story_schema,
+                ),
+            )
+            print(f"DEBUG AI TEXT: {response.text}")
+        except Exception as e:
+            print(f"AI EXCEPTION GENERATE STORY: {e}")
+            logger.error(f"Gemini Text API error: {e}")
+            if "429" in str(e) or "ResourceExhausted" in str(e) or "Resource Exhausted" in str(e):
+                return {
+                    "title": "AI Cooling Down (Rate Limit)",
+                    "story": "The AI is cooling down due to Google Gemini rate limits.",
+                    "materials": "Unknown",
+                    "cultural_significance": "Unknown",
+                    "fun_fact": "Rate Limit",
+                    "name": "AI Cooling Down (Rate Limit)",
+                    "price": 150.0
+                }
+            return _fallback_story(object_name, country)
 
-        result = parse_json_response(response.text)
+        # Clean the JSON from Markdown block delimiters
+        clean_text = response.text.replace("```json", "").replace("```", "").strip()
+        result = parse_json_response(clean_text)
 
         if result is None:
             logger.error("AI story generation returned unparseable response.")
@@ -291,8 +319,11 @@ def process_scan_pipeline(image_file, artifact_name_hint, request) -> dict:
 
         _log_scan(image_file, identification, matched_artifact=artifact)
 
-        return {
+        response_dict = {
             "artifact_name": artifact.name,
+            "name": artifact.name,
+            "materials": story_data.get("materials", "") if isinstance(story_data, dict) else "",
+            "cultural_significance": story_data.get("cultural_significance", "") if isinstance(story_data, dict) else "",
             "country": artifact.country.name,
             "confidence": confidence,
             "category": category,
@@ -301,6 +332,8 @@ def process_scan_pipeline(image_file, artifact_name_hint, request) -> dict:
             "image_url": artifact.image_url,
             "source": "database",
         }
+        print(f"AI_DEBUG_DATA: {response_dict}")
+        return response_dict
     except Artifact.DoesNotExist:
         pass
 
@@ -312,19 +345,24 @@ def process_scan_pipeline(image_file, artifact_name_hint, request) -> dict:
     if scan_log and scan_log.image:
         image_url = request.build_absolute_uri(scan_log.image.url)
     elif artifact_name_hint:
-        image_url = "https://placehold.co/400x300?text=No+Image+Provided"
+        image_url = "https://placehold.co/400x300/png?text=No+Image+Provided"
     else:
-        image_url = "https://placehold.co/400x300?text=Unknown+Artifact"
+        image_url = "https://placehold.co/400x300/png?text=Unknown+Artifact"
 
-    return {
+    response_dict = {
         "artifact_name": identified_name,
+        "name": identified_name,
+        "materials": story_data.get("materials", "Traditional materials") if isinstance(story_data, dict) else "Traditional materials",
+        "cultural_significance": story_data.get("cultural_significance", "Holds deep local significance.") if isinstance(story_data, dict) else "Holds deep local significance.",
         "country": identified_country,
         "confidence": confidence,
         "category": category,
         "story": story_data,
-        "price": None,
+        "price": 150.0,
         "image_url": image_url,
         "source": "ai_generated",
         "note": "This artifact was not found in the database. Story was AI-generated.",
     }
+    print(f"AI_DEBUG_DATA: {response_dict}")
+    return response_dict
 

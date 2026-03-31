@@ -21,19 +21,19 @@ SEED = {
             "name": "Ethiopian Heritage Villa",
             "country_code": "ET",
             "location": "Inspired by the rock-hewn churches of Lalibela and the majestic Semien Mountains.",
-            "image_url": "https://placehold.co/400x300?text=Ethiopian+Villa",
+            "image_url": "https://placehold.co/400x300/png?text=Ethiopian+Villa",
         },
         {
             "name": "Moroccan Riad Villa",
             "country_code": "MA",
             "location": "A celebration of Zellige artistry, Riad architecture, and Saharan mystique.",
-            "image_url": "https://placehold.co/400x300?text=Moroccan+Villa",
+            "image_url": "https://placehold.co/400x300/png?text=Moroccan+Villa",
         },
         {
             "name": "Nigerian Royal Villa",
             "country_code": "NG",
             "location": "A tribute to Yoruba royalty, vibrant beadwork, and ancestral tradition.",
-            "image_url": "https://placehold.co/400x300?text=Nigerian+Villa",
+            "image_url": "https://placehold.co/400x300/png?text=Nigerian+Villa",
         },
     ],
     "artifacts": [
@@ -44,7 +44,7 @@ SEED = {
             "villa_name": "Ethiopian Heritage Villa",
             "description": "A low hand-carved wooden table central to the Ethiopian coffee ceremony, one of the world's oldest and most sacred rituals of hospitality.",
             "price": 189.99,
-            "image_url": "https://placehold.co/400x300?text=Coffee+Table",
+            "image_url": "https://placehold.co/400x300/png?text=Coffee+Table",
             "story": {
                 "title": "The Heart of Buna",
                 "story": "The Ethiopian coffee ceremony is far more than a simple brewing of coffee — it is a sacred ritual of community, respect, and spiritual connection that has been practiced for over a thousand years. At the center of this ritual sits the Rekebot, or coffee ceremony table.",
@@ -58,7 +58,7 @@ SEED = {
             "villa_name": "Ethiopian Heritage Villa",
             "description": "A traditional tall basket with a conical lid used to serve Injera, the centerpiece of every Ethiopian communal meal.",
             "price": 99.00,
-            "image_url": "https://placehold.co/400x300?text=Mesob+Basket",
+            "image_url": "https://placehold.co/400x300/png?text=Mesob+Basket",
             "story": {
                 "title": "Woven Together",
                 "story": "The Mesob is far more than a serving vessel — it is a symbol of unity, communal identity, and the Ethiopian philosophy of 'gursha,' the act of feeding another with your own hand as an expression of love.",
@@ -72,7 +72,7 @@ SEED = {
             "villa_name": "Ethiopian Heritage Villa",
             "description": "A three-legged carved throne from the Jimma Kingdom, hand-sculpted from a single piece of Wanza wood by Oromo master craftsmen.",
             "price": 150.00,
-            "image_url": "https://placehold.co/400x300?text=Jimma+Chair",
+            "image_url": "https://placehold.co/400x300/png?text=Jimma+Chair",
             "story": {
                 "title": "Throne of the Oromo Kings",
                 "story": "In the lush highlands of southwestern Ethiopia, the Jimma Kingdom once flourished as one of the most powerful Oromo monarchies. At the heart of its royal courts stood an iconic three-legged chair.",
@@ -87,7 +87,7 @@ SEED = {
             "villa_name": "Moroccan Riad Villa",
             "description": "A stunning hand-cut geometric mosaic table showcasing the Zellige tilework art that has adorned Moroccan palaces for centuries.",
             "price": 349.00,
-            "image_url": "https://placehold.co/400x300?text=Zellige+Table",
+            "image_url": "https://placehold.co/400x300/png?text=Zellige+Table",
             "story": {
                 "title": "Geometry of the Divine",
                 "story": "Zellige is an ancient Moroccan mosaic art form dating back to the 10th century, born in the city of Fez. Each tiny tile is hand-cut using a traditional hammer and chisel technique called 'taqshir.'",
@@ -101,7 +101,7 @@ SEED = {
             "villa_name": "Moroccan Riad Villa",
             "description": "An intricate pierced brass lantern casting mesmerizing light patterns, handcrafted in the copper souks of Marrakech.",
             "price": 120.00,
-            "image_url": "https://placehold.co/400x300?text=Brass+Lantern",
+            "image_url": "https://placehold.co/400x300/png?text=Brass+Lantern",
             "story": {
                 "title": "Light of the Medina",
                 "story": "In the narrow, bustling souks of Marrakech, master metalworkers known as 'seffarine' hammer, pierce, and shape brass into lanterns that transform ordinary light into something sacred.",
@@ -115,7 +115,7 @@ SEED = {
             "villa_name": "Moroccan Riad Villa",
             "description": "A thick wool carpet handwoven by Berber women of the Atlas Mountains, each pattern telling a personal story.",
             "price": 499.00,
-            "image_url": "https://placehold.co/400x300?text=Berber+Carpet",
+            "image_url": "https://placehold.co/400x300/png?text=Berber+Carpet",
             "story": {
                 "title": "A Diary in Thread",
                 "story": "High in the Atlas Mountains, Berber women have been weaving carpets for over two thousand years. Unlike commercial production, each Berber rug is a deeply personal creation.",
@@ -130,7 +130,7 @@ SEED = {
             "villa_name": "Nigerian Royal Villa",
             "description": "A ceremonial wooden mask carved to honor the Orishas, the divine intermediaries of Yoruba spiritual tradition.",
             "price": 250.00,
-            "image_url": "https://placehold.co/400x300?text=Yoruba+Mask",
+            "image_url": "https://placehold.co/400x300/png?text=Yoruba+Mask",
             "story": {
                 "title": "Face of the Ancestors",
                 "story": "Yoruba masks are among the most powerful objects in West African spiritual tradition. They are not art in the Western sense — they are spiritual technology.",
@@ -144,7 +144,7 @@ SEED = {
             "villa_name": "Nigerian Royal Villa",
             "description": "A solid wood stool carved from a single piece of iroko, traditionally reserved for village elders and chiefs.",
             "price": 80.00,
-            "image_url": "https://placehold.co/400x300?text=Wooden+Stool",
+            "image_url": "https://placehold.co/400x300/png?text=Wooden+Stool",
             "story": {
                 "title": "The Elder's Seat",
                 "story": "In Yoruba society, the stool is far more than furniture — it is a symbol of authority, wisdom, and the right to speak.",
@@ -158,7 +158,7 @@ SEED = {
             "villa_name": "Nigerian Royal Villa",
             "description": "An intricately beaded throne-chair reserved for Yoruba royalty, taking months of painstaking artistry to complete.",
             "price": 900.00,
-            "image_url": "https://placehold.co/400x300?text=Beaded+Chair",
+            "image_url": "https://placehold.co/400x300/png?text=Beaded+Chair",
             "story": {
                 "title": "Throne of Glass & Light",
                 "story": "The beaded chair is the pinnacle of Yoruba artistic achievement and royal authority. Reserved exclusively for the Oba (king) and high-ranking chiefs.",

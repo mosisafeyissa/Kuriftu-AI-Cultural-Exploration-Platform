@@ -17,7 +17,7 @@ class CountryCard extends StatelessWidget {
         border: Border.all(color: Colors.grey.shade200),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 8,
             offset: const Offset(0, 4),
           )
@@ -26,7 +26,7 @@ class CountryCard extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            country.flagImage,
+            country.flagEmoji,
             style: const TextStyle(fontSize: 40),
           ),
           const SizedBox(width: 16),
@@ -44,7 +44,7 @@ class CountryCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  country.description,
+                  country.code,
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey.shade600,

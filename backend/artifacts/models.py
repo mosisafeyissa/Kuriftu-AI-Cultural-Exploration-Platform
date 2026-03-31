@@ -18,8 +18,11 @@ class Villa(models.Model):
     name = models.CharField(max_length=200)
     country = models.ForeignKey(Country, on_delete=models.CASCADE, related_name="villas")
     location = models.CharField(max_length=300, blank=True)
-    image_url = models.URLField(
-        max_length=500, blank=True, default="https://placehold.co/400x300?text=Villa"
+    image_url = models.CharField(
+        max_length=500,
+        blank=True,
+        null=True,
+        help_text="Standard 400x300 image URL or local path.",
     )
 
     class Meta:
@@ -37,8 +40,11 @@ class Artifact(models.Model):
     )
     description = models.TextField(default="A beautiful cultural artifact.")
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    image_url = models.URLField(
-        max_length=500, blank=True, default="https://placehold.co/400x300?text=Artifact"
+    image_url = models.CharField(
+        max_length=500,
+        blank=True,
+        null=True,
+        help_text="Direct URL to a 400x300 image, or local path like assets/images/villa_1.jpg",
     )
     image = models.ImageField(upload_to="artifacts/", blank=True, null=True)
 

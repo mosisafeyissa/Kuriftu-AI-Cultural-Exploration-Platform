@@ -11,6 +11,12 @@ class ApiService {
   // Platform-aware base URL (no dart:io needed)
   static String get _baseUrl => getBaseUrl();
   
+  static String currentEmail = 'rebira@example.com';
+
+  static Map<String, String> get _headers => {
+    'X-User-Email': currentEmail,
+  };
+  
   // Toggle this flag to switch between live backend and mock data rapid testing
   static bool useMockData = false;
 
@@ -121,8 +127,9 @@ class ApiService {
     }
     try {
       debugPrint('[ApiService] GET $_baseUrl/countries/');
-      final response = await http.get(Uri.parse('$_baseUrl/countries/'));
+      final response = await http.get(Uri.parse('$_baseUrl/countries/'), headers: _headers);
       if (response.statusCode == 200) {
+        debugPrint('[ApiService] Response (${response.statusCode}): ${response.body}');
         final data = jsonDecode(response.body);
         final List results = data is List ? data : (data['results'] as List? ?? []);
         return results.map((e) => Country.fromJson(e as Map<String, dynamic>)).toList();
@@ -147,8 +154,9 @@ class ApiService {
     }
     try {
       debugPrint('[ApiService] GET $_baseUrl/villas/');
-      final response = await http.get(Uri.parse('$_baseUrl/villas/'));
+      final response = await http.get(Uri.parse('$_baseUrl/villas/'), headers: _headers);
       if (response.statusCode == 200) {
+        debugPrint('[ApiService] Response (${response.statusCode}): ${response.body}');
         final data = jsonDecode(response.body);
         final List results = data is List ? data : (data['results'] as List? ?? []);
         return results.map((e) => Villa.fromJson(e as Map<String, dynamic>)).toList();
@@ -181,8 +189,9 @@ class ApiService {
       final uri = Uri.parse('$_baseUrl/artifacts/').replace(queryParameters: params.isEmpty ? null : params);
       
       debugPrint('[ApiService] GET $uri');
-      final response = await http.get(uri);
+      final response = await http.get(uri, headers: _headers);
       if (response.statusCode == 200) {
+        debugPrint('[ApiService] Response (${response.statusCode}): ${response.body}');
         final data = jsonDecode(response.body);
         final List results = (data['results'] as List?) ?? (data is List ? data : []);
         return results.map((e) => Artifact.fromApiJson(e as Map<String, dynamic>)).toList();
@@ -207,8 +216,9 @@ class ApiService {
     }
     try {
       debugPrint('[ApiService] GET $_baseUrl/artifacts/$id/');
-      final response = await http.get(Uri.parse('$_baseUrl/artifacts/$id/'));
+      final response = await http.get(Uri.parse('$_baseUrl/artifacts/$id/'), headers: _headers);
       if (response.statusCode == 200) {
+        debugPrint('[ApiService] Response (${response.statusCode}): ${response.body}');
         return Artifact.fromApiJson(jsonDecode(response.body));
       }
       throw Exception('Failed to load artifact details');
@@ -241,16 +251,22 @@ class ApiService {
     }
     try {
       debugPrint('[ApiService] POST $_baseUrl/order/');
+      final bodyStr = jsonEncode({
+        'artifact': int.tryParse(artifactId) ?? 0,
+        'user_email': email,
+        'quantity': quantity,
+      });
+      print("REQUEST BODY: $bodyStr");
+
       final response = await http.post(
         Uri.parse('$_baseUrl/order/'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          'artifact': int.tryParse(artifactId) ?? 0,
-          'user_email': email,
-          'quantity': quantity,
-        }),
+        headers: {'Content-Type': 'application/json', ..._headers},
+        body: bodyStr,
       );
+      print("RESPONSE: ${response.body}");
+
       if (response.statusCode == 201 || response.statusCode == 200) {
+        debugPrint('[ApiService] Response (${response.statusCode}): ${response.body}');
         return Order.fromJson(jsonDecode(response.body));
       }
       debugPrint('[ApiService] Order failed: ${response.statusCode} ${response.body}');
@@ -266,17 +282,19 @@ class ApiService {
     }
   }
 
-  static Future<List<Order>> getOrders({required String email}) async {
+  static Future<List<Order>> getOrders() async {
     if (useMockData) {
       await Future.delayed(const Duration(milliseconds: 600));
       return [];
     }
     try {
-      debugPrint('[ApiService] GET $_baseUrl/orders/?email=$email');
+      debugPrint('[ApiService] GET $_baseUrl/orders/');
       final response = await http.get(
-        Uri.parse('$_baseUrl/orders/').replace(queryParameters: {'email': email}),
+        Uri.parse('$_baseUrl/orders/'),
+        headers: _headers,
       );
       if (response.statusCode == 200) {
+        debugPrint('[ApiService] Response (${response.statusCode}): ${response.body}');
         final data = jsonDecode(response.body);
         final List results = (data is List) ? data : (data['results'] as List? ?? []);
         return results.map((e) => Order.fromJson(e as Map<String, dynamic>)).toList();
@@ -291,6 +309,21 @@ class ApiService {
         throw Exception('Network error: Unable to load order history. Please check your connection.');
       }
       rethrow;
+    }
+  }
+
+  static Future<List<dynamic>> getNotifications() async {
+    if (useMockData) return [];
+    try {
+      final response = await http.get(Uri.parse('$_baseUrl/notifications/'), headers: _headers);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return (data is List) ? data : (data['results'] as List? ?? []);
+      }
+      return [];
+    } catch (e) {
+      debugPrint('Notifications fetch error: $e');
+      return [];
     }
   }
 

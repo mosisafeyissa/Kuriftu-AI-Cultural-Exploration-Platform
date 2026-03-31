@@ -1,9 +1,6 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../theme/app_theme.dart';
-import '../widgets/gold_button.dart';
 import '../widgets/glass_card.dart';
 import '../services/api_service.dart';
 import '../models/order.dart';
@@ -16,23 +13,20 @@ class PurchaseScreen extends StatefulWidget {
 }
 
 class _PurchaseScreenState extends State<PurchaseScreen> {
-  final _emailController = TextEditingController();
   List<Order>? _orders;
   bool _isLoading = false;
   String? _error;
 
   @override
-  void dispose() {
-    _emailController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _fetchOrders();
   }
 
-  Future<void> _lookupOrders() async {
-    final email = _emailController.text.trim();
-    if (email.isEmpty) return;
+  Future<void> _fetchOrders() async {
     setState(() { _isLoading = true; _error = null; });
     try {
-      final orders = await ApiService.getOrders(email: email);
+      final orders = await ApiService.getOrders();
       if (mounted) setState(() { _orders = orders; _isLoading = false; });
     } catch (e) {
       if (mounted) setState(() { _error = 'Could not fetch orders'; _isLoading = false; });
@@ -49,7 +43,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
           physics: const BouncingScrollPhysics(),
           slivers: [
             SliverToBoxAdapter(child: _buildHeader()),
-            SliverToBoxAdapter(child: _buildLookupCard()),
             if (_isLoading)
               const SliverFillRemaining(
                 child: Center(child: CircularProgressIndicator(color: KuriftuColors.gold, strokeWidth: 2)),
@@ -73,13 +66,23 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'My Purchases',
-            style: GoogleFonts.playfairDisplay(
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-              color: KuriftuColors.textPrimary,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'My Purchases',
+                style: TextStyle(fontFamily: 'PlayfairDisplay', 
+                  fontSize: 32,
+                  fontWeight: FontWeight.w700,
+                  color: KuriftuColors.textPrimary,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(LucideIcons.logIn, color: KuriftuColors.gold),
+                tooltip: 'Switch User',
+                onPressed: _showLoginDialog,
+              )
+            ],
           ),
           const SizedBox(height: 8),
           Text(
@@ -91,95 +94,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
     );
   }
 
-  Widget _buildLookupCard() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
-      child: GlassCard(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: KuriftuColors.gold.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: const Icon(LucideIcons.packageCheck, color: KuriftuColors.gold, size: 22),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'View Order History',
-                        style: GoogleFonts.playfairDisplay(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: KuriftuColors.textPrimary,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Enter your email to look up past orders',
-                        style: KuriftuTheme.bodyText.copyWith(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                child: TextField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  style: KuriftuTheme.bodyText.copyWith(color: KuriftuColors.textPrimary),
-                  decoration: InputDecoration(
-                    hintText: 'your@email.com',
-                    hintStyle: KuriftuTheme.bodyText.copyWith(color: KuriftuColors.textMuted),
-                    prefixIcon: const Icon(LucideIcons.mail, color: KuriftuColors.textMuted, size: 18),
-                    filled: true,
-                    fillColor: Colors.white.withValues(alpha: 0.06),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: KuriftuColors.glassBorder, width: 0.5),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(color: KuriftuColors.glassBorder, width: 0.5),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: KuriftuColors.gold, width: 1),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  ),
-                  onSubmitted: (_) => _lookupOrders(),
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: GoldButton(
-                text: 'LOOK UP ORDERS',
-                icon: LucideIcons.search,
-                isLoading: _isLoading,
-                height: 50,
-                onPressed: _lookupOrders,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildEmptyState() {
     return Padding(
@@ -197,7 +111,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
           const SizedBox(height: 24),
           Text(
             'No Orders Yet',
-            style: GoogleFonts.playfairDisplay(
+            style: TextStyle(fontFamily: 'PlayfairDisplay', 
               fontSize: 22,
               fontWeight: FontWeight.w600,
               color: KuriftuColors.textPrimary,
@@ -236,6 +150,47 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
         },
         childCount: _orders!.length,
       ),
+    );
+  }
+
+  void _showLoginDialog() {
+    final controller = TextEditingController(text: ApiService.currentEmail);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: KuriftuColors.surface,
+          title: Text('Switch User', style: KuriftuTheme.bodyText.copyWith(color: KuriftuColors.gold, fontWeight: FontWeight.bold)),
+          content: TextField(
+            controller: controller,
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              hintText: 'Enter your email',
+              hintStyle: const TextStyle(color: Colors.white54),
+              enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: KuriftuColors.gold)),
+              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: KuriftuColors.gold)),
+            ),
+            keyboardType: TextInputType.emailAddress,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel', style: TextStyle(color: Colors.white70)),
+            ),
+            TextButton(
+              onPressed: () {
+                final email = controller.text.trim();
+                if (email.isNotEmpty) {
+                  ApiService.currentEmail = email;
+                  Navigator.pop(context);
+                  _fetchOrders();
+                }
+              },
+              child: const Text('Log In', style: TextStyle(color: KuriftuColors.gold)),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -277,7 +232,7 @@ class _OrderCard extends StatelessWidget {
                 children: [
                   Text(
                     'Order #${order.id.length > 6 ? order.id.substring(order.id.length - 6) : order.id}',
-                    style: GoogleFonts.inter(
+                    style: TextStyle(fontFamily: 'Inter', 
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: KuriftuColors.textPrimary,
@@ -299,7 +254,7 @@ class _OrderCard extends StatelessWidget {
               ),
               child: Text(
                 order.status,
-                style: GoogleFonts.inter(
+                style: TextStyle(fontFamily: 'Inter', 
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   color: _statusColor(order.status),
@@ -317,3 +272,4 @@ class _OrderCard extends StatelessWidget {
     return '${months[dt.month - 1]} ${dt.day}, ${dt.year}';
   }
 }
+

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import '../models/artifact.dart';
 import 'api_service.dart';
@@ -49,6 +50,11 @@ class ScanService {
     try {
       debugPrint('[ScanService] POST $_scanUrl');
       final request = http.MultipartRequest('POST', Uri.parse(_scanUrl));
+      request.headers['Content-Type'] = 'multipart/form-data';
+      
+      final mimeType = _getMimeType(imageFile.name);
+      print("Uploading file: ${imageFile.name}");
+      print("Detected MIME: ${mimeType.mimeType}");
       
       // Web: use fromBytes (dart:io File not available)
       // Mobile: use fromPath (more efficient)
@@ -58,11 +64,13 @@ class ScanService {
           'image',
           bytes,
           filename: imageFile.name,
+          contentType: mimeType,
         ));
       } else {
         request.files.add(await http.MultipartFile.fromPath(
           'image',
           imageFile.path,
+          contentType: mimeType,
         ));
       }
       
@@ -104,5 +112,21 @@ class ScanService {
   static Future<Artifact> scanMockDemo() async {
     await Future.delayed(const Duration(milliseconds: 2500));
     return ApiService.mockArtifacts[DateTime.now().second % ApiService.mockArtifacts.length];
+  }
+
+  static MediaType _getMimeType(String filename) {
+    final ext = filename.split('.').last.toLowerCase();
+
+    switch (ext) {
+      case 'jpg':
+      case 'jpeg':
+        return MediaType('image', 'jpeg');
+      case 'png':
+        return MediaType('image', 'png');
+      case 'webp':
+        return MediaType('image', 'webp');
+      default:
+        return MediaType('application', 'octet-stream');
+    }
   }
 }

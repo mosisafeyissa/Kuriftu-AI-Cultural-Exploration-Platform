@@ -17,43 +17,45 @@ def _is_valid_email(email: str) -> bool:
 @api_view(["GET"])
 def order_list(request):
     """
-    GET /api/orders/?email=<guest_email>
+    GET /api/orders/
 
-    Returns all orders placed by the given email address.
-    Email is case-insensitive.
+    Returns all orders placed by the current authenticated user (based on X-User-Email).
     """
-    email = request.query_params.get("email", "").strip()
+    email = getattr(request, 'user_email', None)
 
     if not email:
         return Response(
-            {"error": "Query param 'email' is required."},
-            status=status.HTTP_400_BAD_REQUEST,
+            {"error": "Authentication required. Missing X-User-Email header."},
+            status=status.HTTP_401_UNAUTHORIZED,
         )
 
-    if not _is_valid_email(email):
-        return Response(
-            {"error": "Provided 'email' is not a valid email address."},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-
-    orders = Order.objects.filter(user_email__iexact=email).select_related(
+    orders = Order.objects.filter(user_email=email).select_related(
         "artifact", "artifact__country"
     )
     serializer = OrderSerializer(orders, many=True)
     return Response(serializer.data)
 
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 @api_view(["POST"])
 def create_order(request):
     """
     POST /api/order/
     Body: { "artifact": <id>, "user_email": "...", "quantity": <int> }
-
-    Creates a new order with status Pending.
-    Returns 201 on success, 400 on validation error.
     """
-    serializer = OrderSerializer(data=request.data)
-    if serializer.is_valid():
-        order = serializer.save()
-        return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    if not request.data:
+        return Response({"error": "Empty request body"}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        serializer = OrderSerializer(data=request.data)
+        if serializer.is_valid():
+            order = serializer.save()
+            return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print("ORDER ERROR:", str(e))
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -126,6 +126,7 @@ def scan_artifact(request):
          - Found  → return artifact + nested story
          - Missing → call AI generate_story() and return generated content
     """
+    print("FILES:", request.FILES)
     image_file = request.FILES.get("image")
     artifact_name_hint = request.data.get("artifact_name", "").strip()
 

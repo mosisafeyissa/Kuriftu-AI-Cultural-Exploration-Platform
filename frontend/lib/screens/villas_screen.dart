@@ -1,6 +1,5 @@
-import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../theme/app_theme.dart';
 import '../services/api_service.dart';
@@ -87,7 +86,7 @@ class _VillasScreenState extends State<VillasScreen> {
         ),
         title: Text(
           _selectedVillaId == null ? 'African Villas' : _villas.firstWhere((v) => v.id == _selectedVillaId).name,
-          style: GoogleFonts.playfairDisplay(
+          style: TextStyle(fontFamily: 'PlayfairDisplay', 
             fontSize: 22,
             fontWeight: FontWeight.w600,
             color: KuriftuColors.textPrimary,
@@ -263,7 +262,7 @@ class _ReferenceVillaCard extends StatelessWidget {
                     ),
                     child: Text(
                       villa.countryName.toUpperCase(),
-                      style: GoogleFonts.inter(
+                      style: TextStyle(fontFamily: 'Inter', 
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                         color: Colors.black,
@@ -283,7 +282,7 @@ class _ReferenceVillaCard extends StatelessWidget {
                     ),
                     child: Text(
                       '$artifactCount artifacts',
-                      style: GoogleFonts.inter(
+                      style: TextStyle(fontFamily: 'Inter', 
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                         color: KuriftuColors.textSecondary,
@@ -297,7 +296,7 @@ class _ReferenceVillaCard extends StatelessWidget {
           const SizedBox(height: 14),
           Text(
             villa.name,
-            style: GoogleFonts.playfairDisplay(
+            style: TextStyle(fontFamily: 'PlayfairDisplay', 
               fontSize: 20,
               fontWeight: FontWeight.w700,
               color: KuriftuColors.textPrimary,
@@ -315,3 +314,4 @@ class _ReferenceVillaCard extends StatelessWidget {
     );
   }
 }
+

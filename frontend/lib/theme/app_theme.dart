@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class KuriftuColors {
   KuriftuColors._();
@@ -26,25 +25,25 @@ class KuriftuColors {
 class KuriftuTheme {
   KuriftuTheme._();
 
-  static TextStyle get headlineSerif => GoogleFonts.playfairDisplay(
+  static TextStyle get headlineSerif => TextStyle(fontFamily: 'PlayfairDisplay', 
         color: KuriftuColors.textPrimary,
         fontWeight: FontWeight.w700,
       );
 
-  static TextStyle get bodyText => GoogleFonts.inter(
+  static TextStyle get bodyText => TextStyle(fontFamily: 'Inter', 
         color: KuriftuColors.textSecondary,
         fontSize: 14,
         height: 1.6,
       );
 
-  static TextStyle get labelText => GoogleFonts.inter(
+  static TextStyle get labelText => TextStyle(fontFamily: 'Inter', 
         color: KuriftuColors.textMuted,
         fontSize: 12,
         fontWeight: FontWeight.w500,
         letterSpacing: 1.2,
       );
 
-  static TextStyle get goldAccent => GoogleFonts.inter(
+  static TextStyle get goldAccent => TextStyle(fontFamily: 'Inter', 
         color: KuriftuColors.gold,
         fontSize: 13,
         fontWeight: FontWeight.w600,
@@ -84,7 +83,7 @@ class KuriftuTheme {
           backgroundColor: Colors.transparent,
           elevation: 0,
           centerTitle: true,
-          titleTextStyle: GoogleFonts.playfairDisplay(
+          titleTextStyle: TextStyle(fontFamily: 'PlayfairDisplay', 
             color: KuriftuColors.textPrimary,
             fontSize: 20,
             fontWeight: FontWeight.w600,
@@ -105,3 +104,4 @@ class KuriftuTheme {
         useMaterial3: true,
       );
 }
+

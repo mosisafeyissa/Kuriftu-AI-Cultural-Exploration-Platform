@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=200)),
                 ('description', models.TextField(default='A beautiful cultural artifact.')),
                 ('price', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('image_url', models.URLField(blank=True, default='https://placehold.co/400x300?text=Artifact', max_length=500)),
+                ('image_url', models.URLField(blank=True, default='https://placehold.co/400x300/png?text=Artifact', max_length=500)),
                 ('image', models.ImageField(blank=True, null=True, upload_to='artifacts/')),
                 ('country', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='artifacts', to='artifacts.country')),
             ],
@@ -62,7 +62,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=200)),
                 ('location', models.CharField(blank=True, max_length=300)),
-                ('image_url', models.URLField(blank=True, default='https://placehold.co/400x300?text=Villa', max_length=500)),
+                ('image_url', models.URLField(blank=True, default='https://placehold.co/400x300/png?text=Villa', max_length=500)),
                 ('country', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='villas', to='artifacts.country')),
             ],
             options={

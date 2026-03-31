@@ -26,7 +26,14 @@ class ArtifactSerializer(serializers.ModelSerializer):
     country = CountrySerializer(read_only=True)
     villa = VillaSerializer(read_only=True)
     story = StorySerializer(read_only=True)
+    image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Artifact
         fields = ["id", "name", "country", "villa", "description", "price", "image_url", "story"]
+
+    def get_image_url(self, obj):
+        request = self.context.get("request")
+        if obj.image and hasattr(obj.image, "url") and request:
+            return request.build_absolute_uri(obj.image.url)
+        return obj.image_url

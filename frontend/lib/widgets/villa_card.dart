@@ -41,15 +41,29 @@ class VillaCard extends StatelessWidget {
 
   Widget _buildImage() {
     if (villa.image.startsWith('assets/')) {
-      return Image.asset(villa.image, fit: BoxFit.cover);
+      return Image.asset(
+        villa.image, 
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => Container(
+          color: Colors.grey[300],
+          child: const Icon(Icons.image_not_supported),
+        ),
+      );
     }
     return Image.network(
       villa.image,
       fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => Container(
-        color: KuriftuColors.surfaceLight,
-        child: const Icon(LucideIcons.building, color: KuriftuColors.textMuted, size: 40),
-      ),
+      loadingBuilder: (context, child, progress) {
+        if (progress == null) return child;
+        return const Center(child: CircularProgressIndicator());
+      },
+      errorBuilder: (context, error, stackTrace) {
+        debugPrint("Image Load Error [VillaCard]: ${villa.image} | $error");
+        return Container(
+          color: Colors.grey[300],
+          child: const Icon(Icons.image_not_supported),
+        );
+      },
     );
   }
 

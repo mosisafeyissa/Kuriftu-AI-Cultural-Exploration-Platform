@@ -45,23 +45,31 @@ class ArtifactCard extends StatelessWidget {
   }
 
   Widget _buildImage() {
+    // If testing with mock data, use asset. Otherwise rely on full backend URL.
     if (artifact.image.startsWith('assets/')) {
       return Image.asset(
         artifact.image,
         fit: BoxFit.cover,
         errorBuilder: (_, __, ___) => Container(
-          color: KuriftuColors.surfaceLight,
-          child: const Icon(LucideIcons.image, color: KuriftuColors.textMuted, size: 40),
+          color: Colors.grey[300],
+          child: const Icon(Icons.image_not_supported),
         ),
       );
     }
     return Image.network(
       artifact.image,
       fit: BoxFit.cover,
-      errorBuilder: (_, __, ___) => Container(
-        color: KuriftuColors.surfaceLight,
-        child: const Icon(LucideIcons.image, color: KuriftuColors.textMuted, size: 40),
-      ),
+      loadingBuilder: (context, child, progress) {
+        if (progress == null) return child;
+        return const Center(child: CircularProgressIndicator());
+      },
+      errorBuilder: (context, error, stackTrace) {
+        debugPrint("Image Load Error [ArtifactCard]: ${artifact.image} | $error");
+        return Container(
+          color: Colors.grey[300],
+          child: const Icon(Icons.image_not_supported),
+        );
+      },
     );
   }
 

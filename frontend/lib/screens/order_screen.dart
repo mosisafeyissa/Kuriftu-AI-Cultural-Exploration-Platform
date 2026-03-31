@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../models/artifact.dart';
 import '../theme/app_theme.dart';
@@ -42,6 +41,7 @@ class _OrderScreenState extends State<OrderScreen> {
         quantity: _quantity,
       );
       if (mounted) {
+        ApiService.currentEmail = email;  // Save newly entered email
         context.read<NotificationProvider>().addOrderNotification(order.id, widget.artifact.name);
         _showSuccessDialog();
       }
@@ -98,7 +98,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   const SizedBox(height: 24),
                   Text(
                     'Order Confirmed',
-                    style: GoogleFonts.playfairDisplay(
+                    style: TextStyle(fontFamily: 'PlayfairDisplay', 
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
                       color: KuriftuColors.textPrimary,
@@ -157,7 +157,7 @@ class _OrderScreenState extends State<OrderScreen> {
         ),
         title: Text(
           'Checkout',
-          style: GoogleFonts.playfairDisplay(
+          style: TextStyle(fontFamily: 'PlayfairDisplay', 
             fontSize: 22,
             fontWeight: FontWeight.w600,
             color: KuriftuColors.textPrimary,
@@ -200,7 +200,7 @@ class _OrderScreenState extends State<OrderScreen> {
                         const SizedBox(height: 4),
                         Text(
                           '\$${widget.artifact.price.toStringAsFixed(2)}',
-                          style: GoogleFonts.playfairDisplay(
+                          style: TextStyle(fontFamily: 'PlayfairDisplay', 
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
                             color: KuriftuColors.gold,
@@ -236,7 +236,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   const SizedBox(width: 24),
                   Text(
                     '$_quantity',
-                    style: GoogleFonts.playfairDisplay(
+                    style: TextStyle(fontFamily: 'PlayfairDisplay', 
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
                       color: KuriftuColors.textPrimary,
@@ -324,7 +324,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   ),
                   Text(
                     '\$${_total.toStringAsFixed(2)}',
-                    style: GoogleFonts.playfairDisplay(
+                    style: TextStyle(fontFamily: 'PlayfairDisplay', 
                       fontSize: 32,
                       fontWeight: FontWeight.w700,
                       color: KuriftuColors.textPrimary,
@@ -352,3 +352,4 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 }
+

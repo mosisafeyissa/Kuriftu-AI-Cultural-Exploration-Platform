@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../theme/app_theme.dart';
 import '../widgets/gold_button.dart';
@@ -103,7 +102,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       // Brand
                       Text(
                         'KURIFTU',
-                        style: GoogleFonts.playfairDisplay(
+                        style: TextStyle(fontFamily: 'PlayfairDisplay', 
                           fontSize: 36,
                           fontWeight: FontWeight.w700,
                           color: KuriftuColors.gold,
@@ -113,7 +112,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       const SizedBox(height: 4),
                       Text(
                         'AFRICAN VILLAGE',
-                        style: GoogleFonts.inter(
+                        style: TextStyle(fontFamily: 'Inter', 
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
                           color: KuriftuColors.textSecondary,
@@ -126,7 +125,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       Text(
                         'Discover Culture\nThrough AI',
                         textAlign: TextAlign.center,
-                        style: GoogleFonts.playfairDisplay(
+                        style: TextStyle(fontFamily: 'PlayfairDisplay', 
                           fontSize: 28,
                           fontWeight: FontWeight.w600,
                           color: KuriftuColors.textPrimary,
@@ -149,7 +148,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       const SizedBox(height: 32),
                       Text(
                         'Our Vision',
-                        style: GoogleFonts.playfairDisplay(
+                        style: TextStyle(fontFamily: 'PlayfairDisplay', 
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
                           color: KuriftuColors.gold,
@@ -247,7 +246,7 @@ class _StatPill extends StatelessWidget {
               const SizedBox(width: 7),
               Text(
                 label,
-                style: GoogleFonts.inter(
+                style: TextStyle(fontFamily: 'Inter', 
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                   color: KuriftuColors.textPrimary,
@@ -261,3 +260,4 @@ class _StatPill extends StatelessWidget {
     );
   }
 }
+
