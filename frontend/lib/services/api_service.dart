@@ -1,13 +1,18 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../models/artifact.dart';
 import '../models/villa.dart';
 import '../models/country.dart';
 import '../models/order.dart';
+import 'platform_config.dart';
 
 class ApiService {
-  static const String _baseUrl = 'http://10.0.2.2:8000/api';
-  static bool useMockData = true;
+  // Platform-aware base URL (no dart:io needed)
+  static String get _baseUrl => getBaseUrl();
+  
+  // Toggle this flag to switch between live backend and mock data rapid testing
+  static bool useMockData = false;
 
   // ── Mock Data ──────────────────────────────────────────────────────────────
 
@@ -114,12 +119,25 @@ class ApiService {
       await Future.delayed(const Duration(milliseconds: 300));
       return _mockCountries;
     }
-    final response = await http.get(Uri.parse('$_baseUrl/countries/'));
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body) as List;
-      return data.map((e) => Country.fromJson(e)).toList();
+    try {
+      debugPrint('[ApiService] GET $_baseUrl/countries/');
+      final response = await http.get(Uri.parse('$_baseUrl/countries/'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List results = data is List ? data : (data['results'] as List? ?? []);
+        return results.map((e) => Country.fromJson(e as Map<String, dynamic>)).toList();
+      }
+      debugPrint('[ApiService] Countries failed: ${response.statusCode} ${response.body}');
+      throw Exception('Failed to load countries: ${response.statusCode} ${response.reasonPhrase}');
+    } catch (e) {
+      debugPrint('[ApiService] Countries error: $e');
+      if (e.toString().contains('SocketException') ||
+          e.toString().contains('Connection refused') ||
+          e.toString().contains('XMLHttpRequest')) {
+        throw Exception('Network error: Unable to reach the server. Please check your connection.');
+      }
+      rethrow;
     }
-    throw Exception('Failed to load countries');
   }
 
   static Future<List<Villa>> getVillas() async {
@@ -127,12 +145,25 @@ class ApiService {
       await Future.delayed(const Duration(milliseconds: 400));
       return _mockVillas;
     }
-    final response = await http.get(Uri.parse('$_baseUrl/villas/'));
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body) as List;
-      return data.map((e) => Villa.fromJson(e)).toList();
+    try {
+      debugPrint('[ApiService] GET $_baseUrl/villas/');
+      final response = await http.get(Uri.parse('$_baseUrl/villas/'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List results = data is List ? data : (data['results'] as List? ?? []);
+        return results.map((e) => Villa.fromJson(e as Map<String, dynamic>)).toList();
+      }
+      debugPrint('[ApiService] Villas failed: ${response.statusCode} ${response.body}');
+      throw Exception('Failed to load villas: ${response.statusCode} ${response.reasonPhrase}');
+    } catch (e) {
+      debugPrint('[ApiService] Villas error: $e');
+      if (e.toString().contains('SocketException') ||
+          e.toString().contains('Connection refused') ||
+          e.toString().contains('XMLHttpRequest')) {
+        throw Exception('Network error: Unable to reach the server. Please check your connection.');
+      }
+      rethrow;
     }
-    throw Exception('Failed to load villas');
   }
 
   static Future<List<Artifact>> getArtifacts({String? countryId, String? villaId}) async {
@@ -143,17 +174,30 @@ class ApiService {
       if (villaId != null) list = list.where((a) => a.villaId == villaId).toList();
       return list;
     }
-    final params = <String, String>{};
-    if (countryId != null) params['country'] = countryId;
-    if (villaId != null) params['villa'] = villaId;
-    final uri = Uri.parse('$_baseUrl/artifacts/').replace(queryParameters: params.isEmpty ? null : params);
-    final response = await http.get(uri);
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final results = (data['results'] as List?) ?? (data as List);
-      return results.map((e) => Artifact.fromApiJson(e)).toList();
+    try {
+      final params = <String, String>{};
+      if (countryId != null) params['country'] = countryId;
+      if (villaId != null) params['villa'] = villaId;
+      final uri = Uri.parse('$_baseUrl/artifacts/').replace(queryParameters: params.isEmpty ? null : params);
+      
+      debugPrint('[ApiService] GET $uri');
+      final response = await http.get(uri);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List results = (data['results'] as List?) ?? (data is List ? data : []);
+        return results.map((e) => Artifact.fromApiJson(e as Map<String, dynamic>)).toList();
+      }
+      debugPrint('[ApiService] Artifacts failed: ${response.statusCode} ${response.body}');
+      throw Exception('Failed to load artifacts: ${response.statusCode}');
+    } catch (e) {
+      debugPrint('[ApiService] Artifacts error: $e');
+      if (e.toString().contains('SocketException') ||
+          e.toString().contains('Connection refused') ||
+          e.toString().contains('XMLHttpRequest')) {
+        throw Exception('Network error: Unable to reach the server. Please check your connection.');
+      }
+      rethrow;
     }
-    throw Exception('Failed to load artifacts');
   }
 
   static Future<Artifact> getArtifactById(String id) async {
@@ -161,11 +205,22 @@ class ApiService {
       await Future.delayed(const Duration(milliseconds: 200));
       return _mockArtifacts.firstWhere((a) => a.id == id);
     }
-    final response = await http.get(Uri.parse('$_baseUrl/artifacts/$id/'));
-    if (response.statusCode == 200) {
-      return Artifact.fromApiJson(jsonDecode(response.body));
+    try {
+      debugPrint('[ApiService] GET $_baseUrl/artifacts/$id/');
+      final response = await http.get(Uri.parse('$_baseUrl/artifacts/$id/'));
+      if (response.statusCode == 200) {
+        return Artifact.fromApiJson(jsonDecode(response.body));
+      }
+      throw Exception('Failed to load artifact details');
+    } catch (e) {
+      debugPrint('[ApiService] Artifact $id error: $e');
+      if (e.toString().contains('SocketException') ||
+          e.toString().contains('Connection refused') ||
+          e.toString().contains('XMLHttpRequest')) {
+        throw Exception('Network error: Unable to reach the server. Please check your connection.');
+      }
+      rethrow;
     }
-    throw Exception('Failed to load artifact');
   }
 
   static Future<Order> createOrder({
@@ -184,19 +239,31 @@ class ApiService {
         createdAt: DateTime.now(),
       );
     }
-    final response = await http.post(
-      Uri.parse('$_baseUrl/order/'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'artifact': int.tryParse(artifactId) ?? 0,
-        'user_email': email,
-        'quantity': quantity,
-      }),
-    );
-    if (response.statusCode == 201) {
-      return Order.fromJson(jsonDecode(response.body));
+    try {
+      debugPrint('[ApiService] POST $_baseUrl/order/');
+      final response = await http.post(
+        Uri.parse('$_baseUrl/order/'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'artifact': int.tryParse(artifactId) ?? 0,
+          'user_email': email,
+          'quantity': quantity,
+        }),
+      );
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return Order.fromJson(jsonDecode(response.body));
+      }
+      debugPrint('[ApiService] Order failed: ${response.statusCode} ${response.body}');
+      throw Exception('Failed to create order: ${response.body}');
+    } catch (e) {
+      debugPrint('[ApiService] Order error: $e');
+      if (e.toString().contains('SocketException') ||
+          e.toString().contains('Connection refused') ||
+          e.toString().contains('XMLHttpRequest')) {
+        throw Exception('Network error: Unable to place order. Please check your connection.');
+      }
+      rethrow;
     }
-    throw Exception('Failed to create order: ${response.body}');
   }
 
   static Future<List<Order>> getOrders({required String email}) async {
@@ -204,15 +271,27 @@ class ApiService {
       await Future.delayed(const Duration(milliseconds: 600));
       return [];
     }
-    final response = await http.get(
-      Uri.parse('$_baseUrl/orders/').replace(queryParameters: {'email': email}),
-    );
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final results = (data is List) ? data : (data['results'] as List? ?? []);
-      return results.map((e) => Order.fromJson(e)).toList();
+    try {
+      debugPrint('[ApiService] GET $_baseUrl/orders/?email=$email');
+      final response = await http.get(
+        Uri.parse('$_baseUrl/orders/').replace(queryParameters: {'email': email}),
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List results = (data is List) ? data : (data['results'] as List? ?? []);
+        return results.map((e) => Order.fromJson(e as Map<String, dynamic>)).toList();
+      }
+      debugPrint('[ApiService] Orders failed: ${response.statusCode} ${response.body}');
+      throw Exception('Failed to load orders: ${response.statusCode}');
+    } catch (e) {
+      debugPrint('[ApiService] Orders error: $e');
+      if (e.toString().contains('SocketException') ||
+          e.toString().contains('Connection refused') ||
+          e.toString().contains('XMLHttpRequest')) {
+        throw Exception('Network error: Unable to load order history. Please check your connection.');
+      }
+      rethrow;
     }
-    throw Exception('Failed to load orders');
   }
 
   static List<Artifact> get mockArtifacts => _mockArtifacts;

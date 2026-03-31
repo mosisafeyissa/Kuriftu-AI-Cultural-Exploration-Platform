@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart';
 import '../models/artifact.dart';
 import '../services/scan_service.dart';
@@ -8,12 +8,12 @@ enum ScanState { idle, capturing, scanning, complete, error }
 class ScanProvider extends ChangeNotifier {
   ScanState _state = ScanState.idle;
   Artifact? _result;
-  File? _capturedImage;
+  XFile? _capturedImage;
   String? _errorMessage;
 
   ScanState get state => _state;
   Artifact? get result => _result;
-  File? get capturedImage => _capturedImage;
+  XFile? get capturedImage => _capturedImage;
   String? get errorMessage => _errorMessage;
 
   void reset() {

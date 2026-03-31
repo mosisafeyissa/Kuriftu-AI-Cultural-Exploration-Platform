@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
 
-from .models import Artifact
-from .serializers import ArtifactSerializer
+from .models import Country, Villa, Artifact
+from .serializers import CountrySerializer, VillaSerializer, ArtifactSerializer
 
 from ai_services.services import process_scan_pipeline
 
@@ -17,7 +17,33 @@ class ArtifactPagination(PageNumberPagination):
     max_page_size = 50
 
 
-# Views 
+# ── Country & Villa list views ────────────────────────────────────────────────
+
+
+@api_view(["GET"])
+def country_list(request):
+    """
+    GET /api/countries/
+    Returns all countries.
+    """
+    qs = Country.objects.all()
+    serializer = CountrySerializer(qs, many=True)
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
+def villa_list(request):
+    """
+    GET /api/villas/
+    Returns all villas with nested country info.
+    """
+    qs = Villa.objects.select_related("country").all()
+    serializer = VillaSerializer(qs, many=True)
+    return Response(serializer.data)
+
+
+# ── Artifact views ────────────────────────────────────────────────────────────
+
 
 @api_view(["GET"])
 def artifact_list(request):
@@ -65,6 +91,23 @@ def artifact_list(request):
     page = paginator.paginate_queryset(qs, request)
     serializer = ArtifactSerializer(page, many=True)
     return paginator.get_paginated_response(serializer.data)
+
+
+@api_view(["GET"])
+def artifact_detail(request, pk):
+    """
+    GET /api/artifacts/<pk>/
+    Returns a single artifact with nested country, villa, and story.
+    """
+    try:
+        artifact = Artifact.objects.select_related("country", "villa", "story").get(pk=pk)
+    except Artifact.DoesNotExist:
+        return Response(
+            {"error": f"Artifact with id={pk} not found."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+    serializer = ArtifactSerializer(artifact)
+    return Response(serializer.data)
 
 
 @api_view(["POST"])

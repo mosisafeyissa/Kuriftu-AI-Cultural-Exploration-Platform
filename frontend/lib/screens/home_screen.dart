@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -26,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<Artifact> _featured = [];
   bool _isLoading = true;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -34,12 +36,26 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _loadData() async {
-    final artifacts = await ApiService.getArtifacts();
-    if (mounted) {
-      setState(() {
-        _featured = artifacts.where((a) => _curatedIds.contains(a.id)).toList();
-        _isLoading = false;
-      });
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    try {
+      final artifacts = await ApiService.getArtifacts();
+      if (mounted) {
+        setState(() {
+          _featured = artifacts.where((a) => _curatedIds.contains(a.id)).toList();
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('[HomeScreen] Load error: $e');
+      if (mounted) {
+        setState(() {
+          _errorMessage = e.toString().replaceFirst('Exception: ', '');
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -328,6 +344,33 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Padding(
               padding: EdgeInsets.all(40),
               child: CircularProgressIndicator(color: KuriftuColors.gold, strokeWidth: 2),
+            ),
+          )
+        else if (_errorMessage != null)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            child: Column(
+              children: [
+                Icon(LucideIcons.wifiOff, color: KuriftuColors.textMuted, size: 36),
+                const SizedBox(height: 12),
+                Text(
+                  _errorMessage!,
+                  style: KuriftuTheme.bodyText.copyWith(color: KuriftuColors.textMuted, fontSize: 13),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                GestureDetector(
+                  onTap: _loadData,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: KuriftuColors.gold, width: 1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text('Retry', style: KuriftuTheme.goldAccent.copyWith(fontSize: 13)),
+                  ),
+                ),
+              ],
             ),
           )
         else

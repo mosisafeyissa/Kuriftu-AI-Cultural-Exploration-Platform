@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -20,6 +21,7 @@ class _VillasScreenState extends State<VillasScreen> {
   Map<String, List<Artifact>> _villaArtifacts = {};
   bool _isLoading = true;
   String? _selectedVillaId;
+  String? _errorMessage;
 
   @override
   void initState() {
@@ -28,20 +30,34 @@ class _VillasScreenState extends State<VillasScreen> {
   }
 
   Future<void> _loadData() async {
-    final villas = await ApiService.getVillas();
-    final artifacts = await ApiService.getArtifacts();
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+    try {
+      final villas = await ApiService.getVillas();
+      final artifacts = await ApiService.getArtifacts();
 
-    final grouped = <String, List<Artifact>>{};
-    for (final a in artifacts) {
-      grouped.putIfAbsent(a.villaId, () => []).add(a);
-    }
+      final grouped = <String, List<Artifact>>{};
+      for (final a in artifacts) {
+        grouped.putIfAbsent(a.villaId, () => []).add(a);
+      }
 
-    if (mounted) {
-      setState(() {
-        _villas = villas;
-        _villaArtifacts = grouped;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _villas = villas;
+          _villaArtifacts = grouped;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('[VillasScreen] Load error: $e');
+      if (mounted) {
+        setState(() {
+          _errorMessage = e.toString().replaceFirst('Exception: ', '');
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -82,9 +98,39 @@ class _VillasScreenState extends State<VillasScreen> {
           ? const Center(
               child: CircularProgressIndicator(color: KuriftuColors.gold, strokeWidth: 2),
             )
-          : _selectedVillaId == null
-              ? _buildVillaList()
-              : _buildVillaArtifacts(),
+          : _errorMessage != null
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(40),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(LucideIcons.wifiOff, color: KuriftuColors.textMuted, size: 36),
+                        const SizedBox(height: 12),
+                        Text(
+                          _errorMessage!,
+                          style: KuriftuTheme.bodyText.copyWith(color: KuriftuColors.textMuted, fontSize: 13),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        GestureDetector(
+                          onTap: _loadData,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: KuriftuColors.gold, width: 1),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text('Retry', style: KuriftuTheme.goldAccent.copyWith(fontSize: 13)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : _selectedVillaId == null
+                  ? _buildVillaList()
+                  : _buildVillaArtifacts(),
     );
   }
 
@@ -166,6 +212,29 @@ class _ReferenceVillaCard extends StatelessWidget {
     required this.onTap,
   });
 
+  Widget _buildVillaImage(String imagePath) {
+    final isNetwork = imagePath.startsWith('http://') || imagePath.startsWith('https://');
+    final errorWidget = Container(
+      color: KuriftuColors.surfaceLight,
+      child: const Center(
+        child: Icon(LucideIcons.image, color: KuriftuColors.textMuted, size: 40),
+      ),
+    );
+
+    if (isNetwork) {
+      return Image.network(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => errorWidget,
+      );
+    }
+    return Image.asset(
+      imagePath,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => errorWidget,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -179,16 +248,7 @@ class _ReferenceVillaCard extends StatelessWidget {
               children: [
                 AspectRatio(
                   aspectRatio: 16 / 10,
-                  child: Image.asset(
-                    villa.image,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      color: KuriftuColors.surfaceLight,
-                      child: const Center(
-                        child: Icon(LucideIcons.image, color: KuriftuColors.textMuted, size: 40),
-                      ),
-                    ),
-                  ),
+                  child: _buildVillaImage(villa.image),
                 ),
                 Positioned(
                   bottom: 12,
