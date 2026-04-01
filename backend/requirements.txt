@@ -2,5 +2,3 @@ Django==6.0.3
 djangorestframework==3.17.1
 django-cors-headers==4.6.0
 Pillow==11.1.0
-google-generativeai
-python-dotenv

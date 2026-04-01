@@ -22,12 +22,12 @@ load_dotenv()
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-@_zp2q01g!rrnp7qyt3^@mh&%qivajvm_f@=%6d@-%138i1_80"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-@_zp2q01g!rrnp7qyt3^@mh&%qivajvm_f@=%6d@-%138i1_80")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 
 
@@ -116,10 +116,12 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+DB_DIR = BASE_DIR / "db"
+DB_DIR.mkdir(exist_ok=True)
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": DB_DIR / "db.sqlite3",
     }
 }
 
@@ -159,6 +161,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Media files — uploaded images (artifacts, scan uploads)
 MEDIA_URL = "/media/"
@@ -166,4 +169,4 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Temporary scan uploads directory (inside MEDIA_ROOT)
 SCAN_UPLOAD_DIR = "scans/"
-API_KEY = os.getenv('GEMINI_API_KEY')
+API_KEY = os.getenv("GEMINI_API_KEY", "")
