@@ -6,6 +6,7 @@ Two public functions (called by artifacts/views.py):
     generate_story(name, country) → dict with title, story, materials, cultural_significance
 """
 import logging
+import time
 
 from google import genai
 from google.genai import types
@@ -27,6 +28,14 @@ _CLIENT = None
 if _API_KEY:
     print(f"Loaded GEMINI_API_KEY: {_API_KEY[:8]}...")
     _CLIENT = genai.Client(api_key=_API_KEY)
+    
+    # Validation Check: Print available models
+    try:
+        models = _CLIENT.models.list() if hasattr(_CLIENT.models, 'list') else getattr(_CLIENT.models, 'list_models', lambda: [])()
+        print(f"Available Models: {[m.name for m in models]}")
+    except Exception as e:
+        print(f"Initial ListModels check failed: {e}")
+        
 else:
     logger.warning("GEMINI_API_KEY is not set. AI features will return fallback responses.")
 
@@ -65,31 +74,60 @@ def identify_object(image_file) -> dict:
             "required": ["artifact_name", "country", "category", "confidence", "materials"],
         }
 
-        try:
-            response = client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=[
-                    types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
-                    IDENTIFY_OBJECT_PROMPT,
-                ],
-                config=types.GenerateContentConfig(
-                    temperature=0.1,
-                    max_output_tokens=1024,
-                    response_mime_type="application/json",
-                    response_schema=identify_schema,
-                ),
-            )
-            print(f"DEBUG AI TEXT: {response.text}")
-        except Exception as e:
-            logger.error(f"Gemini Vision API error: {e}")
-            if "429" in str(e) or "ResourceExhausted" in str(e) or "Resource Exhausted" in str(e):
-                return {
-                    "artifact_name": "AI Cooling Down (Rate Limit)",
-                    "country": "Unknown",
-                    "category": "Other",
-                    "confidence": 0.0,
-                    "materials": []
-                }
+        max_retries = 3
+        response = None
+        current_model = "gemini-1.5-flash"
+        
+        for attempt in range(max_retries):
+            try:
+                response = client.models.generate_content(
+                    model=current_model,
+                    contents=[
+                        types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
+                        IDENTIFY_OBJECT_PROMPT,
+                    ],
+                    config=types.GenerateContentConfig(
+                        temperature=0.7,
+                        top_k=40,
+                        max_output_tokens=1024,
+                        response_mime_type="application/json",
+                        response_schema=identify_schema,
+                    ),
+                )
+                print(f"DEBUG AI TEXT [{current_model}]: {response.text}")
+                break
+            except Exception as e:
+                err_str = str(e)
+                logger.error(f"Gemini Vision API error [{current_model}]: {err_str}")
+                
+                # Model 404 Fallback
+                if "404" in err_str or "NotFound" in err_str or "not found" in err_str.lower():
+                    if current_model == "gemini-1.5-flash":
+                        current_model = "models/gemini-1.5-flash"
+                        logger.warning(f"404 error. Retrying with {current_model}...")
+                        continue
+                    elif current_model == "models/gemini-1.5-flash":
+                        current_model = "gemini-1.5-flash-002"
+                        logger.warning(f"404 error. Retrying with {current_model}...")
+                        continue
+
+                # Rate Limit Backoff
+                if "429" in err_str or "ResourceExhausted" in err_str or "Resource Exhausted" in err_str:
+                    if attempt < max_retries - 1:
+                        logger.info("Rate limited. Waiting 5 seconds before retry...")
+                        time.sleep(5)
+                        continue
+                    else:
+                        return {
+                            "artifact_name": "AI Cooling Down (Rate Limit) - Please try again later.",
+                            "country": "Unknown",
+                            "category": "Other",
+                            "confidence": 0.0,
+                            "materials": []
+                        }
+                return _fallback_identification()
+
+        if not response:
             return _fallback_identification()
 
         clean_text = response.text.replace("```json", "").replace("```", "").strip()
@@ -98,13 +136,14 @@ def identify_object(image_file) -> dict:
         if result is None:
             logger.info("First identification parse failed, retrying...")
             retry_response = client.models.generate_content(
-                model="gemini-2.0-flash",
+                model=current_model,
                 contents=[
                     types.Part.from_bytes(data=image_bytes, mime_type=mime_type),
                     IDENTIFY_RETRY_PROMPT,
                 ],
                 config=types.GenerateContentConfig(
-                    temperature=0.1,
+                    temperature=0.7,
+                    top_k=40,
                     max_output_tokens=1024,
                     response_mime_type="application/json",
                     response_schema=identify_schema,
@@ -157,31 +196,60 @@ def generate_story(object_name: str, country: str) -> dict:
             "required": ["title", "story", "materials", "cultural_significance", "fun_fact"],
         }
         
-        try:
-            response = client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    temperature=0.7,
-                    max_output_tokens=3000,
-                    response_mime_type="application/json",
-                    response_schema=story_schema,
-                ),
-            )
-            print(f"DEBUG AI TEXT: {response.text}")
-        except Exception as e:
-            print(f"AI EXCEPTION GENERATE STORY: {e}")
-            logger.error(f"Gemini Text API error: {e}")
-            if "429" in str(e) or "ResourceExhausted" in str(e) or "Resource Exhausted" in str(e):
-                return {
-                    "title": "AI Cooling Down (Rate Limit)",
-                    "story": "The AI is cooling down due to Google Gemini rate limits.",
-                    "materials": "Unknown",
-                    "cultural_significance": "Unknown",
-                    "fun_fact": "Rate Limit",
-                    "name": "AI Cooling Down (Rate Limit)",
-                    "price": 150.0
-                }
+        max_retries = 3
+        response = None
+        current_model = "gemini-1.5-flash"
+        
+        for attempt in range(max_retries):
+            try:
+                response = client.models.generate_content(
+                    model=current_model,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        temperature=0.7,
+                        top_k=40,
+                        max_output_tokens=3000,
+                        response_mime_type="application/json",
+                        response_schema=story_schema,
+                    ),
+                )
+                print(f"DEBUG AI TEXT [{current_model}]: {response.text}")
+                break
+            except Exception as e:
+                err_str = str(e)
+                print(f"AI EXCEPTION GENERATE STORY [{current_model}]: {err_str}")
+                logger.error(f"Gemini Text API error [{current_model}]: {err_str}")
+                
+                # Model 404 Fallback
+                if "404" in err_str or "NotFound" in err_str or "not found" in err_str.lower():
+                    if current_model == "gemini-1.5-flash":
+                        current_model = "models/gemini-1.5-flash"
+                        logger.warning(f"404 error. Retrying with {current_model}...")
+                        continue
+                    elif current_model == "models/gemini-1.5-flash":
+                        current_model = "gemini-1.5-flash-002"
+                        logger.warning(f"404 error. Retrying with {current_model}...")
+                        continue
+
+                # Rate Limit Backoff
+                if "429" in err_str or "ResourceExhausted" in err_str or "Resource Exhausted" in err_str:
+                    if attempt < max_retries - 1:
+                        logger.info("Rate limited. Waiting 5 seconds before retry...")
+                        time.sleep(5)
+                        continue
+                    else:
+                        return {
+                            "title": "AI Cooling Down (Rate Limit)",
+                            "story": "The AI is cooling down due to Google Gemini rate limits. Please try again later.",
+                            "materials": "Unknown",
+                            "cultural_significance": "Unknown",
+                            "fun_fact": "Rate Limit Exceeded",
+                            "name": "AI Cooling Down (Rate Limit) - Please try again later.",
+                            "price": 150.0
+                        }
+                return _fallback_story(object_name, country)
+
+        if not response:
             return _fallback_story(object_name, country)
 
         # Clean the JSON from Markdown block delimiters

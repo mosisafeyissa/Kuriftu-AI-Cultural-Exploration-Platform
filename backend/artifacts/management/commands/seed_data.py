@@ -188,55 +188,76 @@ class Command(BaseCommand):
             Villa.objects.all().delete()
             Country.objects.all().delete()
 
+        asset_map = {
+            "Ethiopian Heritage Villa": "assets/images/villa_1.jpg",
+            "Moroccan Riad Villa": "assets/images/villa_2.jpg",
+            "Nigerian Royal Villa": "assets/images/villa_3.jpg",
+            "Handwoven Mesob Basket": "assets/images/mesob_basket.jpg",
+            "Jimma Traditional Chair": "assets/images/JimmaChair.jpg",
+            "Ethiopian Coffee Ceremony Table": "assets/images/ethiopian_coffee_table.jpg",
+            "Ethiopian Coffee Table": "assets/images/ethiopian_coffee_table.jpg",
+            "Beaded Royal Chair": "assets/images/beaded_royal_chair.webp",
+            "Berber Handwoven Carpet": "assets/images/berber_carpet.webp",
+            "Brass Hanging Lantern": "assets/images/brass_lantern.png",
+            "Moroccan Zellige Mosaic Table": "assets/images/moroccan_zellige_table.webp",
+            "Moroccan Zellige Table": "assets/images/moroccan_zellige_table.webp",
+            "Carved Wooden Stool": "assets/images/wooden_stool.webp",
+            "Yoruba Tribal Mask": "assets/images/yoruba_mask.webp",
+        }
+
         # Countries
         country_map = {}
         for c in SEED["countries"]:
-            obj, created = Country.objects.get_or_create(
+            obj, created = Country.objects.update_or_create(
                 code=c["code"],
                 defaults={"name": c["name"], "image_url": c["image_url"]},
             )
             country_map[c["code"]] = obj
-            tag = "Created" if created else "Exists"
+            tag = "Created" if created else "Updated"
             self.stdout.write(f"  {tag} country: {obj.name}")
 
         # Villas
         villa_map = {}
         for v in SEED["villas"]:
             country = country_map[v["country_code"]]
-            obj, created = Villa.objects.get_or_create(
+            mapped_image = asset_map.get(v["name"], v["image_url"])
+            obj, created = Villa.objects.update_or_create(
                 name=v["name"],
                 country=country,
-                defaults={"location": v["location"], "image_url": v["image_url"]},
+                defaults={"location": v["location"], "image_url": mapped_image},
             )
             villa_map[v["name"]] = obj
-            tag = "Created" if created else "Exists"
+            tag = "Created" if created else "Updated"
             self.stdout.write(f"  {tag} villa: {obj.name}")
 
         # Artifacts + Stories
         for a in SEED["artifacts"]:
             country = country_map[a["country_code"]]
             villa = villa_map[a["villa_name"]]
-            obj, created = Artifact.objects.get_or_create(
+            mapped_image = asset_map.get(a["name"], a["image_url"])
+            obj, created = Artifact.objects.update_or_create(
                 name=a["name"],
                 country=country,
                 defaults={
                     "villa": villa,
                     "description": a["description"],
                     "price": a["price"],
-                    "image_url": a["image_url"],
+                    "image_url": mapped_image,
                 },
             )
-            tag = "Created" if created else "Exists"
+            tag = "Created" if created else "Updated"
             self.stdout.write(f"  {tag} artifact: {obj.name}")
 
-            if created and "story" in a:
+            if "story" in a:
                 s = a["story"]
-                Story.objects.create(
+                Story.objects.update_or_create(
                     artifact=obj,
-                    title=s["title"],
-                    story=s["story"],
-                    materials=s["materials"],
-                    cultural_significance=s["cultural_significance"],
+                    defaults={
+                        "title": s["title"],
+                        "story": s["story"],
+                        "materials": s["materials"],
+                        "cultural_significance": s["cultural_significance"],
+                    }
                 )
                 self.stdout.write(f"    + Story: {s['title']}")
 
