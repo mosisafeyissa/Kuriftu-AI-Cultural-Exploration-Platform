@@ -38,7 +38,13 @@ if not ALLOWED_HOSTS and DEBUG:
 # CSRF Trusted Origins (important for production)
 CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host and "localhost" not in host]
 if "localhost" in str(ALLOWED_HOSTS):
-    CSRF_TRUSTED_ORIGINS += ["http://localhost:33225", "http://localhost:8000"]
+    # Dynamically allow all common local development ports
+    CSRF_TRUSTED_ORIGINS += [
+        "http://localhost:33225", 
+        "http://localhost:36791", 
+        "http://localhost:8000",
+        "http://127.0.0.1:8000"
+    ]
 
 # Secure Proxy SSL Header (required for Render/Proxies)
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -67,9 +73,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",  # must be at the very top
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    "corsheaders.middleware.CorsMiddleware",  # must be high up
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -78,9 +84,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# CORS — allow all origins in development and production (for Flutter Web)
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
+# CORS — allow all origins in development and production (for Flutter Web)CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_METHODS = [
     "DELETE",
@@ -102,6 +106,7 @@ CORS_ALLOW_HEADERS = [
     "x-csrftoken",
     "x-requested-with",
 ]
+CORS_PREFLIGHT_MAX_AGE = 86400  # Cache preflight for 24 hours
 
 # Django REST Framework
 REST_FRAMEWORK = {
