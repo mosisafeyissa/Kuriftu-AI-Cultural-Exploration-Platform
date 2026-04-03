@@ -6,7 +6,7 @@ Two public functions (called by artifacts/views.py):
     generate_story(name, country) → dict with title, story, materials, cultural_significance
 """
 import logging
-
+import time
 import google.generativeai as genai
 from django.conf import settings
 
@@ -39,7 +39,7 @@ def _get_vision_model():
     """Return (or create) the Gemini model used for image recognition."""
     global _VISION_MODEL
     if _VISION_MODEL is None:
-        _VISION_MODEL = genai.GenerativeModel("gemini-flash-latest")
+        _VISION_MODEL = genai.GenerativeModel("gemini-1.5-flash")
     return _VISION_MODEL
 
 
@@ -47,7 +47,7 @@ def _get_text_model():
     """Return (or create) the Gemini model used for story generation."""
     global _TEXT_MODEL
     if _TEXT_MODEL is None:
-        _TEXT_MODEL = genai.GenerativeModel("gemini-flash-latest")
+        _TEXT_MODEL = genai.GenerativeModel("gemini-1.5-flash")
     return _TEXT_MODEL
 
 
@@ -76,18 +76,34 @@ def identify_object(image_file) -> dict:
 
         model = _get_vision_model()
 
-        # Build the multimodal content: [image, prompt]
-        response = model.generate_content(
-            [
-                {"mime_type": mime_type, "data": image_bytes},
-                IDENTIFY_OBJECT_PROMPT,
-            ],
-            generation_config=genai.types.GenerationConfig(
-                temperature=0.1,
-                max_output_tokens=1024,
-                response_mime_type="application/json",
-            ),
-        )
+        # Retry loop for 429 / Rate limit
+        retry_count = 0
+        max_retries = 3
+        response = None
+        
+        while retry_count <= max_retries:
+            try:
+                # Build the multimodal content: [image, prompt]
+                response = model.generate_content(
+                    [
+                        {"mime_type": mime_type, "data": image_bytes},
+                        IDENTIFY_OBJECT_PROMPT,
+                    ],
+                    generation_config=genai.types.GenerationConfig(
+                        temperature=0.1,
+                        max_output_tokens=1024,
+                        response_mime_type="application/json",
+                    ),
+                )
+                break
+            except Exception as e:
+                if "429" in str(e) and retry_count < max_retries:
+                    retry_count += 1
+                    wait_time = 2 ** retry_count
+                    logger.warning(f"Gemini 429 received. Retrying in {wait_time}s... ({retry_count}/{max_retries})")
+                    time.sleep(wait_time)
+                else:
+                    raise e
 
         result = parse_json_response(response.text)
 
@@ -149,14 +165,31 @@ def generate_story(object_name: str, country: str) -> dict:
         )
 
         model = _get_text_model()
-        response = model.generate_content(
-            prompt,
-            generation_config=genai.types.GenerationConfig(
-                temperature=0.7,
-                max_output_tokens=3000,
-                response_mime_type="application/json",
-            ),
-        )
+        
+        # Retry loop for 429 / Rate limit
+        retry_count = 0
+        max_retries = 3
+        response = None
+        
+        while retry_count <= max_retries:
+            try:
+                response = model.generate_content(
+                    prompt,
+                    generation_config=genai.types.GenerationConfig(
+                        temperature=0.7,
+                        max_output_tokens=3000,
+                        response_mime_type="application/json",
+                    ),
+                )
+                break
+            except Exception as e:
+                if "429" in str(e) and retry_count < max_retries:
+                    retry_count += 1
+                    wait_time = 2 ** retry_count
+                    logger.warning(f"Gemini 429 received. Retrying in {wait_time}s... ({retry_count}/{max_retries})")
+                    time.sleep(wait_time)
+                else:
+                    raise e
 
         result = parse_json_response(response.text)
 

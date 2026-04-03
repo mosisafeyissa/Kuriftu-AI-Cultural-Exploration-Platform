@@ -13,3 +13,5 @@ static/
 .git/
 .vscode/
 .idea/
+*.whl
+tensorflow-*
