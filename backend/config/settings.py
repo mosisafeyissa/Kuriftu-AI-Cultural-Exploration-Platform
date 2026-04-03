@@ -29,9 +29,19 @@ load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "True").lower() == "true"
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",") if os.getenv("ALLOWED_HOSTS") else ["*"]
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",") if os.getenv("ALLOWED_HOSTS") else []
+if not ALLOWED_HOSTS and DEBUG:
+    ALLOWED_HOSTS = ["*"]
+
+# CSRF Trusted Origins (important for production)
+CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host and "localhost" not in host]
+if "localhost" in str(ALLOWED_HOSTS):
+    CSRF_TRUSTED_ORIGINS += ["http://localhost:33225", "http://localhost:8000"]
+
+# Secure Proxy SSL Header (required for Render/Proxies)
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 
@@ -68,8 +78,30 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# CORS — allow all origins in development
+# CORS — allow all origins in development and production (for Flutter Web)
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
 
 # Django REST Framework
 REST_FRAMEWORK = {
@@ -189,3 +221,21 @@ API_KEY = os.getenv('GEMINI_API_KEY')
 # Chapa Payment (set CHAPA_SECRET_KEY env var for production)
 CHAPA_SECRET_KEY = os.getenv('CHAPA_SECRET_KEY', '')
 CHAPA_MOCK_MODE = os.getenv('CHAPA_MOCK_MODE', 'True').lower() in ('true', '1', 'yes')
+
+
+# Production Security Headers
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    X_FRAME_OPTIONS = 'DENY'
+
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^http://localhost:\d+$",
+]

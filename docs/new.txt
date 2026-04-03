@@ -1,0 +1,46 @@
+# Redeployment & Re-dockerization Steps
+
+Follow these steps to apply the recent changes to both your local development environment and the live production server (Render).
+
+### 1. Local Backend (Docker Re-build)
+If you want to test the changes locally using Docker:
+```bash
+# In the backend/ directory
+docker compose down
+docker compose up --build -d
+```
+*Note: This will rebuild the containers with the updated .env and settings.py.*
+
+### 2. Local Frontend (Verify URL)
+Ensure you are using the updated production URL in `test_api.dart` or during runtime:
+```bash
+# In the frontend/ directory
+flutter run -d chrome
+```
+
+### 3. Production Deployment (Render)
+Since `.env` is ignored by git, you must sync it manually in the Render Dashboard:
+
+1.  **Go to Render Dashboard**: Navigate to your Service settings.
+2.  **Environment Variables**:
+    - Update `DEBUG` to `False`.
+    - Update `ALLOWED_HOSTS` to `kuriftu-ai-cultural-exploration-platform-b7jj.onrender.com,localhost,127.0.0.1`.
+    - Ensure `SECRET_KEY` is set to the new secure value (copy from your local `.env`).
+    - ensure `CSRF_TRUSTED_ORIGINS` is not manually set (the backend handles it from ALLOWED_HOSTS now).
+3.  **Push Code to GitHub**:
+    ```bash
+    git add .
+    git commit -m "fix: production hardening, CORS stability, and build optimization"
+    git push origin main
+    ```
+4.  **Wait for Redeploy**: Render will automatically detect the push. 
+    *Thanks to the `.dockerignore` update, the build will skip the 572MB .whl file and deploy much faster!*
+
+### 4. Database Re-Seeding (Optional)
+If you need to refresh the data after deployment:
+```bash
+# Attach to the running 'web' container on Render (via Shell)
+python manage.py seed_data
+```
+
+Your system is now fully hardened and pointing to the production Render URL!
