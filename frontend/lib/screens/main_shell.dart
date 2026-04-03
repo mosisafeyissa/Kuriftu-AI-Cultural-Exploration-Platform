@@ -6,6 +6,7 @@ import '../theme/app_theme.dart';
 import 'home_screen.dart';
 import 'scan_screen.dart';
 import 'purchase_screen.dart';
+import 'profile_screen.dart';
 
 class MainShell extends StatefulWidget {
   final int initialTab;
@@ -25,7 +26,7 @@ class MainShellState extends State<MainShell> {
   }
 
   void switchToTab(int index) {
-    if (index >= 0 && index <= 2) setState(() => _currentIndex = index);
+    if (index >= 0 && index <= 3) setState(() => _currentIndex = index);
   }
 
   @override
@@ -39,6 +40,7 @@ class MainShellState extends State<MainShell> {
           HomeScreen(),
           ScanScreen(embeddedInShell: true),
           PurchaseScreen(),
+          ProfileScreen(),
         ],
       ),
       bottomNavigationBar: _GlassBottomBar(
@@ -88,6 +90,12 @@ class _GlassBottomBar extends StatelessWidget {
                 label: 'Purchase',
                 isActive: currentIndex == 2,
                 onTap: () => onTap(2),
+              ),
+              _BarItem(
+                icon: LucideIcons.user,
+                label: 'Profile',
+                isActive: currentIndex == 3,
+                onTap: () => onTap(3),
               ),
             ],
           ),

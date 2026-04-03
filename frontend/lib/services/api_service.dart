@@ -7,6 +7,7 @@ import '../models/country.dart';
 import '../models/order.dart';
 import '../models/villa_guide.dart';
 import 'platform_config.dart';
+import 'auth_service.dart';
 
 class ApiService {
   // Platform-aware base URL (no dart:io needed)
@@ -14,6 +15,11 @@ class ApiService {
   
   // Toggle this flag to switch between live backend and mock data rapid testing
   static bool useMockData = false;
+
+  /// Returns headers with auth token if available
+  static Future<Map<String, String>> _authHeaders() async {
+    return AuthService.getAuthHeaders();
+  }
 
   // ── Mock Data ──────────────────────────────────────────────────────────────
 
@@ -242,9 +248,10 @@ class ApiService {
     }
     try {
       debugPrint('[ApiService] POST $_baseUrl/order/');
+      final headers = await _authHeaders();
       final response = await http.post(
         Uri.parse('$_baseUrl/order/'),
-        headers: {'Content-Type': 'application/json'},
+        headers: headers,
         body: jsonEncode({
           'artifact': int.tryParse(artifactId) ?? 0,
           'user_email': email,
