@@ -5,6 +5,7 @@ import '../models/artifact.dart';
 import '../models/villa.dart';
 import '../models/country.dart';
 import '../models/order.dart';
+import '../models/app_notification.dart';
 import '../models/villa_guide.dart';
 import 'platform_config.dart';
 import 'auth_service.dart';
@@ -331,6 +332,66 @@ class ApiService {
     }
   }
 
+  // ── Featured Artifacts ──────────────────────────────────────────────────────
+
+  static Future<List<Artifact>> getFeaturedArtifacts() async {
+    if (useMockData) {
+      await Future.delayed(const Duration(milliseconds: 400));
+      return _mockArtifacts.take(4).toList();
+    }
+    try {
+      debugPrint('[ApiService] GET $_baseUrl/artifacts/featured/');
+      final response = await http.get(Uri.parse('$_baseUrl/artifacts/featured/'));
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List results = (data is List) ? data : (data['results'] as List? ?? []);
+        return results.map((e) => Artifact.fromApiJson(e as Map<String, dynamic>)).toList();
+      }
+      debugPrint('[ApiService] Featured failed: ${response.statusCode} ${response.body}');
+      throw Exception('Failed to load featured artifacts: ${response.statusCode}');
+    } catch (e) {
+      debugPrint('[ApiService] Featured error: $e');
+      if (e.toString().contains('SocketException') ||
+          e.toString().contains('Connection refused') ||
+          e.toString().contains('XMLHttpRequest')) {
+        throw Exception('Network error: Unable to reach the server. Please check your connection.');
+      }
+      rethrow;
+    }
+  }
+
+  // ── Authenticated Order History ────────────────────────────────────────────
+
+  static Future<List<Order>> getMyOrders() async {
+    if (useMockData) {
+      await Future.delayed(const Duration(milliseconds: 600));
+      return [];
+    }
+    try {
+      debugPrint('[ApiService] GET $_baseUrl/orders/ (authenticated)');
+      final headers = await _authHeaders();
+      final response = await http.get(
+        Uri.parse('$_baseUrl/orders/'),
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List results = (data is List) ? data : (data['results'] as List? ?? []);
+        return results.map((e) => Order.fromJson(e as Map<String, dynamic>)).toList();
+      }
+      debugPrint('[ApiService] Orders failed: ${response.statusCode} ${response.body}');
+      throw Exception('Failed to load orders: ${response.statusCode}');
+    } catch (e) {
+      debugPrint('[ApiService] Orders error: $e');
+      if (e.toString().contains('SocketException') ||
+          e.toString().contains('Connection refused') ||
+          e.toString().contains('XMLHttpRequest')) {
+        throw Exception('Network error: Unable to load order history. Please check your connection.');
+      }
+      rethrow;
+    }
+  }
+
   static Future<List<Order>> getOrders({required String email}) async {
     if (useMockData) {
       await Future.delayed(const Duration(milliseconds: 600));
@@ -362,4 +423,58 @@ class ApiService {
   static List<Artifact> get mockArtifacts => _mockArtifacts;
   static List<Villa> get mockVillas => _mockVillas;
   static List<Country> get mockCountries => _mockCountries;
+
+  // ── Notifications ─────────────────────────────────────────────────────────
+ 
+  static Future<List<AppNotification>> getNotifications() async {
+    try {
+      debugPrint('[ApiService] GET $_baseUrl/notifications/');
+      final headers = await _authHeaders();
+      final response = await http.get(
+        Uri.parse('$_baseUrl/notifications/'),
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List results = (data is List) ? data : (data['results'] as List? ?? []);
+        return results.map((e) => AppNotification.fromJson(e as Map<String, dynamic>)).toList();
+      }
+      debugPrint('[ApiService] Notifications failed: ${response.statusCode}');
+      return [];
+    } catch (e) {
+      debugPrint('[ApiService] Notifications error: $e');
+      return [];
+    }
+  }
+
+  static Future<void> markNotificationsRead({List<int>? ids}) async {
+    try {
+      final headers = await _authHeaders();
+      final body = ids != null ? jsonEncode({'ids': ids}) : jsonEncode({});
+      await http.post(
+        Uri.parse('$_baseUrl/notifications/mark-read/'),
+        headers: headers,
+        body: body,
+      );
+    } catch (e) {
+      debugPrint('[ApiService] Mark read error: $e');
+    }
+  }
+
+  static Future<int> getUnreadCount() async {
+    try {
+      final headers = await _authHeaders();
+      final response = await http.get(
+        Uri.parse('$_baseUrl/notifications/unread-count/'),
+        headers: headers,
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body)['unread_count'] ?? 0;
+      }
+      return 0;
+    } catch (e) {
+      debugPrint('[ApiService] Unread count error: $e');
+      return 0;
+    }
+  }
 }

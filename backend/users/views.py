@@ -13,6 +13,42 @@ from .serializers import (
     RegisterSerializer,
     UserProfileSerializer,
 )
+import logging
+
+logger = logging.getLogger(__name__)
+
+
+def _create_welcome_notification(user, is_new=False):
+    """Create a welcome notification for the user."""
+    try:
+        from notifications.models import Notification
+
+        # Don't duplicate if one exists in the last hour
+        from django.utils import timezone
+        from datetime import timedelta
+        cutoff = timezone.now() - timedelta(hours=1)
+        exists = Notification.objects.filter(
+            user=user, notification_type="welcome", created_at__gte=cutoff
+        ).exists()
+        if exists:
+            return
+
+        if is_new:
+            Notification.objects.create(
+                user=user,
+                notification_type="welcome",
+                title="Welcome to Kuriftu!",
+                message="Your journey into African heritage begins now. Explore our curated collection of cultural artifacts.",
+            )
+        else:
+            Notification.objects.create(
+                user=user,
+                notification_type="welcome",
+                title="Welcome Back!",
+                message="Great to see you again. Check out what's new in our collection.",
+            )
+    except Exception as e:
+        logger.warning(f"Failed to create welcome notification: {e}")
 
 
 def _get_tokens_for_user(user):
@@ -37,6 +73,7 @@ def register(request):
     serializer.is_valid(raise_exception=True)
     user = serializer.save()
     tokens = _get_tokens_for_user(user)
+    _create_welcome_notification(user, is_new=True)
     return Response(
         {
             "user": UserProfileSerializer(user).data,
@@ -44,6 +81,7 @@ def register(request):
         },
         status=status.HTTP_201_CREATED,
     )
+
 
 
 # ── Login ─────────────────────────────────────────────────────────────────────
@@ -60,6 +98,7 @@ def login(request):
     serializer.is_valid(raise_exception=True)
     user = serializer.validated_data["user"]
     tokens = _get_tokens_for_user(user)
+    _create_welcome_notification(user, is_new=False)
     return Response(
         {
             "user": UserProfileSerializer(user).data,

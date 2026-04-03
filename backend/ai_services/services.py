@@ -288,7 +288,11 @@ def process_scan_pipeline(image_file, artifact_name_hint, request) -> dict:
 
         image_url = ""
         if artifact.image:
-            image_url = request.build_absolute_uri(artifact.image.url)
+            name = getattr(artifact.image, "name", str(artifact.image))
+            if name.startswith("assets/"):
+                image_url = name
+            else:
+                image_url = request.build_absolute_uri(artifact.image.url)
         elif artifact.image_url:
             image_url = artifact.image_url
 

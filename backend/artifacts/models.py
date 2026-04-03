@@ -122,6 +122,7 @@ class Artifact(models.Model):
     )
     image = models.ImageField(upload_to="artifacts/", blank=True, null=True)
     embedding = models.JSONField(null=True, blank=True, help_text="MobileNetV2 feature vector (auto-generated)")
+    is_featured = models.BooleanField(default=False, help_text="Show in Featured Artifacts on home screen")
 
     class Meta:
         ordering = ["country", "name"]

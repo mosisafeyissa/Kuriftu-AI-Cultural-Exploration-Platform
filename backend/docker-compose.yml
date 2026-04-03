@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:15
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-kuriftu_ai}
+      - POSTGRES_USER=${POSTGRES_USER:-kuriftu_ai_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-kuriftu_ai_pass}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kuriftu_ai_user} -d ${POSTGRES_DB:-kuriftu_ai}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    volumes:
+      - ./media:/app/media
+      - ./static:/app/static
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-kuriftu_ai_user}:${POSTGRES_PASSWORD:-kuriftu_ai_pass}@db:5432/${POSTGRES_DB:-kuriftu_ai}
+      - DEBUG=${DEBUG:-False}
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

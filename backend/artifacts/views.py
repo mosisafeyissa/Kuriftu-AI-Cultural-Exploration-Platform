@@ -157,6 +157,14 @@ def villa_guide_translate(request, qr_code):
 
 
 @api_view(["GET"])
+def featured_artifacts(request):
+    """GET /api/artifacts/featured/ — Returns up to 4 featured artifacts."""
+    qs = Artifact.objects.filter(is_featured=True).select_related("country", "villa", "story")[:4]
+    serializer = ArtifactSerializer(qs, many=True, context={"request": request})
+    return Response(serializer.data)
+
+
+@api_view(["GET"])
 def artifact_list(request):
     """
     GET /api/artifacts/

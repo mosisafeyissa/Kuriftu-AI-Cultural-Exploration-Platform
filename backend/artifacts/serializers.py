@@ -1,8 +1,19 @@
 from rest_framework import serializers
 from .models import Country, Villa, VillaSection, Artifact, Story
 
+class LocalAssetImageField(serializers.ImageField):
+    def to_representation(self, value):
+        if not value:
+            return None
+        name = getattr(value, 'name', str(value))
+        if name and name.startswith("assets/"):
+            return name
+        return super().to_representation(value)
+
 
 class CountrySerializer(serializers.ModelSerializer):
+    image = LocalAssetImageField(read_only=True)
+
     class Meta:
         model = Country
         fields = ["id", "name", "code", "image"]
@@ -18,6 +29,7 @@ class StorySerializer(serializers.ModelSerializer):
 class SectionArtifactSerializer(serializers.ModelSerializer):
     """Lightweight artifact serializer for section context."""
     story = StorySerializer(read_only=True)
+    image = LocalAssetImageField(read_only=True)
 
     class Meta:
         model = Artifact
@@ -26,6 +38,7 @@ class SectionArtifactSerializer(serializers.ModelSerializer):
 
 class VillaSectionSerializer(serializers.ModelSerializer):
     artifacts = serializers.SerializerMethodField()
+    image = LocalAssetImageField(read_only=True)
 
     class Meta:
         model = VillaSection
@@ -38,6 +51,7 @@ class VillaSectionSerializer(serializers.ModelSerializer):
 
 class VillaSerializer(serializers.ModelSerializer):
     country = CountrySerializer(read_only=True)
+    image = LocalAssetImageField(read_only=True)
 
     class Meta:
         model = Villa
@@ -48,6 +62,7 @@ class VillaGuideSerializer(serializers.ModelSerializer):
     """Full villa guide with sections, artifacts, and narratives."""
     country = CountrySerializer(read_only=True)
     sections = serializers.SerializerMethodField()
+    image = LocalAssetImageField(read_only=True)
 
     class Meta:
         model = Villa
@@ -64,7 +79,8 @@ class ArtifactSerializer(serializers.ModelSerializer):
     country = CountrySerializer(read_only=True)
     villa = VillaSerializer(read_only=True)
     story = StorySerializer(read_only=True)
+    image = LocalAssetImageField(read_only=True)
 
     class Meta:
         model = Artifact
-        fields = ["id", "name", "country", "villa", "description", "price", "image", "story"]
+        fields = ["id", "name", "country", "villa", "description", "price", "image", "is_featured", "story"]

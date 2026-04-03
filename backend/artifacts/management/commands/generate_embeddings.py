@@ -43,7 +43,16 @@ class Command(BaseCommand):
 
         for artifact in queryset.iterator():
             try:
-                embedding = generate_embedding(artifact.image.path)
+                if artifact.image.name.startswith("assets/"):
+                    import os
+                    from django.conf import settings
+                    from pathlib import Path
+                    project_root = Path(settings.BASE_DIR).parent
+                    image_path = str(project_root / "frontend" / artifact.image.name)
+                else:
+                    image_path = artifact.image.path
+                    
+                embedding = generate_embedding(image_path)
                 Artifact.objects.filter(pk=artifact.pk).update(embedding=embedding)
                 self.stdout.write(f"  ✓ {artifact.name}")
                 success += 1

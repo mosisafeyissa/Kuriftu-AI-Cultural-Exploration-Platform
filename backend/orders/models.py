@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from artifacts.models import Artifact
 
@@ -16,6 +17,10 @@ class Order(models.Model):
         FAILED = "failed", "Failed"
 
     artifact = models.ForeignKey(Artifact, on_delete=models.CASCADE, related_name="orders")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
+        null=True, blank=True, related_name="orders",
+    )
     user_email = models.EmailField()
     quantity = models.PositiveIntegerField(default=1)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)

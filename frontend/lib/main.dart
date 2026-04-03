@@ -42,7 +42,15 @@ class CulturalWhispererApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: KuriftuTheme.darkTheme,
         home: Consumer<AuthProvider>(
-          builder: (_, auth, __) {
+          builder: (context, auth, __) {
+            // Sync notification provider with auth state after the current frame
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (context.mounted) {
+                final notifProvider = context.read<NotificationProvider>();
+                notifProvider.onAuthStateChanged(auth.isAuthenticated);
+              }
+            });
+
             // While checking stored token, show a splash
             if (auth.status == AuthStatus.unknown) {
               return const _SplashScreen();

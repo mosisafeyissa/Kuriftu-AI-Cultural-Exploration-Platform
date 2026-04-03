@@ -7,6 +7,7 @@ import '../theme/app_theme.dart';
 import '../widgets/gold_button.dart';
 import '../widgets/glass_card.dart';
 import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
 import '../services/api_service.dart';
 import '../providers/notification_provider.dart';
 
@@ -23,6 +24,15 @@ class _OrderScreenState extends State<OrderScreen> {
   int _quantity = 1;
   final _emailController = TextEditingController();
   bool _isPlacing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final auth = context.read<AuthProvider>();
+    if (auth.isAuthenticated && auth.user != null) {
+      _emailController.text = auth.user!.email;
+    }
+  }
 
   double get _total => widget.artifact.price * _quantity;
 

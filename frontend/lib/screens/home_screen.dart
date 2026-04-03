@@ -15,6 +15,7 @@ import 'main_shell.dart';
 import 'villas_screen.dart';
 import 'artifact_detail_screen.dart';
 import 'qr_scan_screen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,7 +25,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  static const _curatedIds = ['3', '5', '7'];
 
   List<Artifact> _featured = [];
   bool _isLoading = true;
@@ -42,10 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
       _errorMessage = null;
     });
     try {
-      final artifacts = await ApiService.getArtifacts();
+      final featured = await ApiService.getFeaturedArtifacts();
       if (mounted) {
         setState(() {
-          _featured = artifacts.where((a) => _curatedIds.contains(a.id)).toList();
+          _featured = featured;
           _isLoading = false;
         });
       }
@@ -221,36 +221,60 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       actions: [
+        GestureDetector(
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfileScreen())),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.05),
+                border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+              ),
+              child: const Icon(LucideIcons.user, size: 18, color: KuriftuColors.textPrimary),
+            ),
+          ),
+        ),
+        const SizedBox(width: 4),
         Consumer<NotificationProvider>(
           builder: (context, notif, _) {
             return GestureDetector(
               onTap: () => _showNotificationSheet(context),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    const Icon(LucideIcons.bell, size: 20, color: KuriftuColors.textSecondary),
-                    if (notif.unreadCount > 0)
-                      Positioned(
-                        top: -3,
-                        right: -3,
-                        child: Container(
-                          width: 10,
-                          height: 10,
-                          decoration: const BoxDecoration(
-                            color: KuriftuColors.gold,
-                            shape: BoxShape.circle,
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.05),
+                    border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+                  ),
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      const Icon(LucideIcons.bell, size: 18, color: KuriftuColors.textPrimary),
+                      if (notif.unreadCount > 0)
+                        Positioned(
+                          top: -2,
+                          right: -2,
+                          child: Container(
+                            width: 8,
+                            height: 8,
+                            decoration: const BoxDecoration(
+                              color: KuriftuColors.gold,
+                              shape: BoxShape.circle,
+                            ),
                           ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );
           },
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 12),
       ],
     );
   }

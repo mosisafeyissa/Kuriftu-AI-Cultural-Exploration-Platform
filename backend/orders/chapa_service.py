@@ -4,8 +4,13 @@ Handles payment initiation and verification via Chapa API.
 """
 import uuid
 import logging
+import time
+import hmac
+import hashlib
+from decimal import Decimal
 import requests
 from django.conf import settings
+from django.core.cache import cache
 
 logger = logging.getLogger(__name__)
 
@@ -33,28 +38,30 @@ def initialize_payment(order):
     """
     tx_ref = generate_tx_ref()
     total = float(order.calculate_total())
+    
+    # Get base URL from settings
+    base_url = getattr(settings, "SITE_URL", "http://localhost:8000")
+    callback_url = getattr(settings, "CHAPA_CALLBACK_URL", f"{base_url}/api/chapa-webhook/")
+    return_url = getattr(settings, "CHAPA_RETURN_URL", f"{base_url}/payment-status/{tx_ref}")
 
     payload = {
         "amount": str(total),
         "currency": "ETB",
         "email": order.user_email,
         "tx_ref": tx_ref,
-        "callback_url": "",  # Backend webhook callback (optional)
-        "return_url": "",    # Frontend return after payment
+        "callback_url": callback_url,
+        "return_url": return_url,
         "customization[title]": "Kuriftu Artifact Purchase",
         "customization[description]": f"Order #{order.pk} - {order.artifact.name} x{order.quantity}",
+        "customization[logo]": getattr(settings, "CHAPA_LOGO_URL", ""),
+        "meta[order_id]": str(order.pk),
+        "meta[user_email]": order.user_email,
     }
 
-    # Check if we are in mock/demo mode (no real Chapa key)
-    mock_mode = getattr(settings, "CHAPA_MOCK_MODE", True)
-    if mock_mode or not getattr(settings, "CHAPA_SECRET_KEY", ""):
-        # Return a mock checkout URL for demo/hackathon purposes
-        order.tx_ref = tx_ref
-        order.checkout_url = f"https://checkout.chapa.co/checkout/mock/{tx_ref}"
-        order.payment_status = "pending"
-        order.save(update_fields=["tx_ref", "checkout_url", "payment_status"])
-        logger.info(f"[Chapa Mock] Payment initialized for order #{order.pk}, tx_ref={tx_ref}")
-        return order.checkout_url, tx_ref
+    secret_key = getattr(settings, "CHAPA_SECRET_KEY", "")
+    if not secret_key:
+        logger.error("[Chapa] Missing CHAPA_SECRET_KEY")
+        raise Exception("Payment gateway is not configured properly.")
 
     try:
         response = requests.post(
@@ -67,11 +74,15 @@ def initialize_payment(order):
 
         if response.status_code == 200 and data.get("status") == "success":
             checkout_url = data["data"]["checkout_url"]
+            
+            # Store payment reference in cache for quick lookup (expires in 1 hour)
+            cache.set(f"payment_{tx_ref}", order.pk, timeout=3600)
+            
             order.tx_ref = tx_ref
             order.checkout_url = checkout_url
             order.payment_status = "pending"
             order.save(update_fields=["tx_ref", "checkout_url", "payment_status"])
-            logger.info(f"[Chapa] Payment initialized for order #{order.pk}")
+            logger.info(f"[Chapa] Payment initialized for order #{order.pk}, tx_ref: {tx_ref}")
             return checkout_url, tx_ref
         else:
             error_msg = data.get("message", "Payment initialization failed")
@@ -83,40 +94,87 @@ def initialize_payment(order):
         raise Exception("Payment service unavailable. Please try again.")
 
 
-def verify_payment(tx_ref):
+def verify_payment(tx_ref, expected_amount=None):
     """
     Verify a payment by transaction reference.
     Returns the payment data dict on success.
+    Includes retry logic for network issues.
     """
-    mock_mode = getattr(settings, "CHAPA_MOCK_MODE", True)
-    if mock_mode or not getattr(settings, "CHAPA_SECRET_KEY", ""):
-        # Simulate successful payment for demo
-        logger.info(f"[Chapa Mock] Verifying tx_ref={tx_ref} => success")
-        return {
-            "status": "success",
-            "data": {
-                "tx_ref": tx_ref,
-                "status": "success",
-                "amount": "0",
-                "currency": "ETB",
-            },
-        }
+    secret_key = getattr(settings, "CHAPA_SECRET_KEY", "")
+    if not secret_key:
+        logger.error("[Chapa] Missing CHAPA_SECRET_KEY")
+        raise Exception("Payment gateway is not configured properly.")
 
-    try:
-        response = requests.get(
-            f"{CHAPA_BASE_URL}/transaction/verify/{tx_ref}",
-            headers=get_chapa_headers(),
-            timeout=15,
-        )
-        data = response.json()
+    max_retries = 3
+    retry_delay = 1  # seconds
 
-        if response.status_code == 200 and data.get("status") == "success":
-            return data
-        else:
-            error_msg = data.get("message", "Verification failed")
-            logger.warning(f"[Chapa] Verify failed for {tx_ref}: {error_msg}")
-            raise Exception(error_msg)
+    for attempt in range(max_retries):
+        try:
+            response = requests.get(
+                f"{CHAPA_BASE_URL}/transaction/verify/{tx_ref}",
+                headers=get_chapa_headers(),
+                timeout=15,
+            )
+            data = response.json()
 
-    except requests.RequestException as e:
-        logger.error(f"[Chapa] Network error during verify: {e}")
-        raise Exception("Could not verify payment. Please try again.")
+            if response.status_code == 200 and data.get("status") == "success":
+                payment_data = data.get("data", {})
+                
+                # Verify amount if expected_amount is provided
+                if expected_amount is not None:
+                    actual_amount = Decimal(str(payment_data.get("amount", 0)))
+                    expected_decimal = Decimal(str(expected_amount))
+                    
+                    if actual_amount != expected_decimal:
+                        logger.error(f"[Chapa] Amount mismatch for {tx_ref}: expected {expected_amount}, got {actual_amount}")
+                        raise Exception(f"Payment amount mismatch: expected {expected_amount}, got {actual_amount}")
+                
+                logger.info(f"[Chapa] Payment verified successfully for {tx_ref}")
+                return payment_data
+            else:
+                error_msg = data.get("message", "Verification failed")
+                logger.warning(f"[Chapa] Verify failed for {tx_ref} (attempt {attempt + 1}): {error_msg}")
+                
+                if attempt == max_retries - 1:
+                    raise Exception(error_msg)
+                time.sleep(retry_delay * (2 ** attempt))  # Exponential backoff
+
+        except requests.RequestException as e:
+            logger.error(f"[Chapa] Network error during verify (attempt {attempt + 1}): {e}")
+            if attempt == max_retries - 1:
+                raise Exception("Could not verify payment. Please try again.")
+            time.sleep(retry_delay * (2 ** attempt))
+
+    raise Exception("Payment verification failed after multiple attempts.")
+
+
+def verify_webhook_signature(request):
+    """
+    Verify the webhook signature from Chapa for security.
+    Returns True if signature is valid, False otherwise.
+    """
+    signature = request.headers.get("Chapa-Signature", "")
+    if not signature:
+        logger.warning("[Chapa] No signature provided in webhook")
+        return False
+    
+    secret_key = getattr(settings, "CHAPA_SECRET_KEY", "")
+    if not secret_key:
+        logger.error("[Chapa] Missing CHAPA_SECRET_KEY for signature verification")
+        return False
+    
+    # Get the raw body
+    raw_body = request.body
+    
+    # Compute HMAC SHA256
+    expected_signature = hmac.new(
+        secret_key.encode('utf-8'),
+        raw_body,
+        hashlib.sha256
+    ).hexdigest()
+    
+    is_valid = hmac.compare_digest(signature, expected_signature)
+    if not is_valid:
+        logger.warning("[Chapa] Invalid webhook signature")
+    
+    return is_valid
