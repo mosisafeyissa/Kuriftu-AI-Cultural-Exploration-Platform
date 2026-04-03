@@ -17,13 +17,12 @@ services:
       timeout: 5s
       retries: 5
 
-  backend:
+  web:
     build: .
+    container_name: django_app
     volumes:
-      - ./media:/app/media
-      - ./static:/app/static
-    ports:
-      - "8000:8000"
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     env_file:
       - .env
     environment:
@@ -33,6 +32,22 @@ services:
       db:
         condition: service_healthy
     restart: unless-stopped
+    expose:
+      - "8000"
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - web
 
 volumes:
   postgres_data:
+  static_volume:
+  media_volume:

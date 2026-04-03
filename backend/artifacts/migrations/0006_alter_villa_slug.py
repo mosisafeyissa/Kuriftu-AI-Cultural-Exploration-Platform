@@ -10,9 +10,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='villa',
-            name='slug',
-            field=models.SlugField(blank=True, help_text='User-friendly URL identifier', unique=True),
-        ),
     ]
