@@ -236,6 +236,4 @@ if not DEBUG:
     X_FRAME_OPTIONS = 'DENY'
 
 
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^http://localhost:\d+$",
-]
+CORS_ALLOW_ALL_ORIGINS = True
