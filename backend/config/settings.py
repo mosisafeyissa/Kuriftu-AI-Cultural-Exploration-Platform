@@ -223,6 +223,7 @@ STATICFILES_STORAGE = STORAGES["staticfiles"]["BACKEND"]
 
 CLOUDINARY_STORAGE = {
     "CLOUDINARY_URL": os.getenv("CLOUDINARY_URL"),
+    "PREFIX": "",  # Remove the 'media/' prefix from URLs
 }
 
 # Media files — uploaded images (artifacts, scan uploads)
