@@ -120,7 +120,7 @@ class Artifact(models.Model):
     image_url = models.URLField(
         max_length=500, blank=True, default="https://placehold.co/400x300?text=Artifact"
     )
-    image = models.ImageField(upload_to="artifacts/", blank=True, null=True)
+    image = models.ImageField(upload_to="villas/", blank=True, null=True)
     embedding = models.JSONField(null=True, blank=True, help_text="MobileNetV2 feature vector (auto-generated)")
     is_featured = models.BooleanField(default=False, help_text="Show in Featured Artifacts on home screen")
 
