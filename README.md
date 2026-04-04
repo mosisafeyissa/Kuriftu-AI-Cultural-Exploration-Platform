@@ -29,10 +29,6 @@ The platform supports three distinct levels of authority carefully segregated to
   - *Access:* Frontend Flutter Application only.
   - *Permissions:* Can scan artifacts, read generated cultural stories, browse the curated catalog (by Country and Villa), and place orders via the Chapa payment gateway. They do not have access to the backend dashboards.
 
-- **Admin (Resort Staff/Curator):**
-  - *Access:* Django Admin Panel with restricted permissions.
-  - *Permissions:* Can add, edit, or remove `Artifacts`, `Villas`, and `Countries`. They can view `Orders` and update order status (e.g., from 'Pending' to 'Shipped'). They *cannot* modify system configurations, manage other staff accounts, or alter payment gateway secrets.
-
 - **Super Admin (System Owner/IT):**
   - *Access:* Full unrestricted access to the Django Admin Panel.
   - *Permissions:* Has total control over the database. Can create/delete Admin accounts, view detailed `ScanLogs` for AI analytics, manage overarching app configurations, and directly modify the PostgreSQL database schema through migrations.
@@ -43,7 +39,7 @@ The platform supports three distinct levels of authority carefully segregated to
 
 > **IMPORTANT:** A default Super Admin account has been configured for initial setup and testing purposes. 
 
-- **Login URL:** `[http://localhost:8000/admin/](https://kuriftu-ai-cultural-exploration-platform-b7jj.onrender.com/admin/)`
+- **Login URL:** `http://localhost:8000/admin/](https://kuriftu-ai-cultural-exploration-platform-b7jj.onrender.com/admin/`
 - **Email/Username:** `1234@gmail.com`
 - **Password:** `ashu3079`
 
@@ -72,7 +68,7 @@ Upon logging in, you will see the full Django backend interface. You can immedia
 
 1. **Clone the Repository and Navigate to Backend:**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/mosisafeyissa/Kuriftu-AI-Cultural-Exploration-Platform.git
    cd Kuriftu-AI-Cultural-Exploration-Platform/backend
    git checkout main
    ```
@@ -131,7 +127,7 @@ Upon logging in, you will see the full Django backend interface. You can immedia
 Below is the detailed expected journey for a guest user interacting with the platform.
 
 ### Step 1: Launch & Welcome
-- **Action:** The user opens the Kuriftu Cultural Whisperer app on their mobile device or available tablet in the lobby.
+- **Action:** The user opens the AfriLens app on their mobile device or available tablet in the lobby.
 - **Experience:** They are greeted by the dynamic, dark-themed `WelcomeScreen`. A subtle animation plays, prompting them to tap **"Start Exploring"**.
 
 ### Step 2: The Core Scanning Experience
@@ -254,7 +250,7 @@ Kuriftu-Platform/
 
 ## 9. 🌐 Informative Website (Landing Page)
 
-*(Note: While the core code here covers the system App and Backend, a promotional landing page is assumed to exist for marketing).*
+[*(Visit our landing page).*](https://afri-lens-web.vercel.app/)
 
 The Kuriftu Cultural Whisperer Landing Page serves as the public face of the platform.
 - **What users see:** A cinematic, premium web experience featuring high-definition video of African artifacts. 
