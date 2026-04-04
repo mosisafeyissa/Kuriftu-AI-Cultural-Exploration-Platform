@@ -297,19 +297,27 @@ def process_scan_pipeline(image_file, artifact_name_hint, request) -> dict:
     if not is_valid:
         return {"error": error_msg, "status": 400}
 
-    # Step 2: Generate embedding from uploaded image
+    # Step 2: Identify object using Gemini Vision (Low Memory, High Accuracy)
     try:
-        image_file.seek(0)
-        scan_embedding = generate_embedding(image_file)
+        identification = identify_object(image_file)
+        # Use the identified name to find a match in our catalog
+        ai_name = identification.get("artifact_name", "").lower()
+        confidence = identification.get("confidence", 0.0)
     except Exception:
-        logger.exception("Failed to generate embedding for scanned image")
+        logger.exception("Gemini identification failed in pipeline")
         return {
-            "error": "Failed to process the uploaded image.",
-            "status": 500,
+            "error": "AI service temporarily unavailable.",
+            "status": 503,
         }
 
-    # Step 3: Find the best matching artifact
-    artifact, similarity = find_best_match(scan_embedding, threshold=0.75)
+    # Step 3: Find the best matching artifact in our DB
+    # We try an exact match first, then a fuzzy search
+    artifact = Artifact.objects.filter(name__iexact=ai_name).first()
+    if not artifact:
+        # Fallback: search for artifacts containing the identified name
+        artifact = Artifact.objects.filter(name__icontains=ai_name).first()
+
+    similarity = confidence
 
     # Step 4: Build response
     if artifact is not None:
