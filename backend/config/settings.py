@@ -208,6 +208,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Storage Configuration (Unified for modern & legacy compatibility)
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
@@ -216,6 +217,10 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
+
+# Explicitly define legacy settings to fix "AttributeError: 'Settings' object has no attribute 'STATICFILES_STORAGE'"
+DEFAULT_FILE_STORAGE = STORAGES["default"]["BACKEND"]
+STATICFILES_STORAGE = STORAGES["staticfiles"]["BACKEND"]
 
 CLOUDINARY_STORAGE = {
     "CLOUDINARY_URL": os.getenv("CLOUDINARY_URL"),
