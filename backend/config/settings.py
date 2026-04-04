@@ -225,9 +225,9 @@ CLOUDINARY_STORAGE = {
     "CLOUDINARY_URL": os.getenv("CLOUDINARY_URL"),
 }
 
-# Media handled by Cloudinary
-# MEDIA_URL = "/media/"
-# MEDIA_ROOT = BASE_DIR / "media"
+# Media files — uploaded images (artifacts, scan uploads)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Temporary scan uploads directory (inside MEDIA_ROOT)
 SCAN_UPLOAD_DIR = "scans/"

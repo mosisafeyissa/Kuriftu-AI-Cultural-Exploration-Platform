@@ -20,4 +20,7 @@ urlpatterns = [
     path("api/", include("orders.urls")),
     path("api/", include("notifications.urls")),
     path("api/ai/", include("ai_services.urls")),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.MEDIA_URL and settings.MEDIA_ROOT:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
