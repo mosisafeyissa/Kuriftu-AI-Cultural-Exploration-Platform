@@ -53,13 +53,15 @@ def _get_text_model():
 
 # Job 1: Object Recognition 
 
-def identify_object(image_file) -> dict:
+def identify_object(image_file, catalog_names=None) -> dict:
     """
     Identify a cultural artifact from an uploaded image file.
 
     Args:
         image_file: A Django UploadedFile (InMemoryUploadedFile or
                     TemporaryUploadedFile) with .read() and .content_type.
+        catalog_names: Optional list of known artifact names from the DB.
+                       When provided, the AI is instructed to prefer these names.
 
     Returns:
         dict with keys: artifact_name, country, category, confidence, materials
@@ -74,6 +76,19 @@ def identify_object(image_file) -> dict:
         image_bytes = image_file.read()
         mime_type = getattr(image_file, "content_type", "image/jpeg")
 
+        # Build prompt — append catalog constraint when available
+        prompt = IDENTIFY_OBJECT_PROMPT
+        if catalog_names:
+            catalog_list = "\n".join(f"  - {name}" for name in catalog_names)
+            prompt += (
+                f"\n\nIMPORTANT: Our catalog contains these artifacts:\n"
+                f"{catalog_list}\n\n"
+                f"If the image matches any of these artifacts, you MUST use "
+                f"the EXACT name from this list as the artifact_name. "
+                f"Only invent a new name if you are certain the object is "
+                f"NOT any of the items listed above."
+            )
+
         model = _get_vision_model()
 
         # Retry loop for 429 / Rate limit
@@ -87,7 +102,7 @@ def identify_object(image_file) -> dict:
                 response = model.generate_content(
                     [
                         {"mime_type": mime_type, "data": image_bytes},
-                        IDENTIFY_OBJECT_PROMPT,
+                        prompt,
                     ],
                     generation_config=genai.types.GenerationConfig(
                         temperature=0.1,
@@ -275,9 +290,10 @@ def process_scan_pipeline(image_file, artifact_name_hint, request) -> dict:
 
     Steps:
       1. Validate the uploaded image
-      2. Generate embedding from uploaded image (MobileNetV2)
-      3. Compare against all artifact embeddings (cosine similarity)
-      4. Return best match or "not found"
+      2. Load known artifact names from the DB
+      3. Send image + catalog list to Gemini Vision
+      4. Match response against DB (exact → contains → fuzzy word overlap)
+      5. Return best match or "not found"
 
     Returns a dict ready to be wrapped in a Response().
     """
@@ -296,12 +312,19 @@ def process_scan_pipeline(image_file, artifact_name_hint, request) -> dict:
     if not is_valid:
         return {"error": error_msg, "status": 400}
 
-    # Step 2: Identify object using Gemini Vision (Low Memory, High Accuracy)
+    # Step 2: Load known artifact names for catalog-aware identification
+    all_artifacts = list(Artifact.objects.select_related("country").all())
+    catalog_names = [a.name for a in all_artifacts]
+    logger.info("Scan pipeline: %d artifacts in catalog", len(catalog_names))
+
+    # Step 3: Identify object using Gemini Vision
     try:
-        identification = identify_object(image_file)
-        # Use the identified name to find a match in our catalog
-        ai_name = identification.get("artifact_name", "").lower()
+        identification = identify_object(image_file, catalog_names=catalog_names)
+        ai_name = identification.get("artifact_name", "").strip()
         confidence = identification.get("confidence", 0.0)
+        logger.info(
+            "Gemini identified: '%s' (confidence %.2f)", ai_name, confidence
+        )
     except Exception:
         logger.exception("Gemini identification failed in pipeline")
         return {
@@ -309,16 +332,52 @@ def process_scan_pipeline(image_file, artifact_name_hint, request) -> dict:
             "status": 503,
         }
 
-    # Step 3: Find the best matching artifact in our DB
-    # We try an exact match first, then a fuzzy search
+    # Step 4: Find the best matching artifact in our DB
+    #   a) Exact match (case-insensitive)
     artifact = Artifact.objects.filter(name__iexact=ai_name).first()
-    if not artifact:
-        # Fallback: search for artifacts containing the identified name
+
+    #   b) Contains match
+    if not artifact and ai_name and ai_name.lower() != "unknown artifact":
         artifact = Artifact.objects.filter(name__icontains=ai_name).first()
+
+    #   c) Reverse contains — check if any DB name appears inside the AI name
+    if not artifact and ai_name:
+        ai_lower = ai_name.lower()
+        for a in all_artifacts:
+            if a.name.lower() in ai_lower:
+                artifact = a
+                break
+
+    #   d) Word-overlap fuzzy matching
+    if not artifact and ai_name and ai_name.lower() != "unknown artifact":
+        ai_words = set(ai_name.lower().split())
+        # Remove common stop-words for better matching
+        stop_words = {"the", "a", "an", "of", "and", "in", "from", "with", "for", "to", "is"}
+        ai_words -= stop_words
+
+        best_match = None
+        best_score = 0
+        for a in all_artifacts:
+            db_words = set(a.name.lower().split()) - stop_words
+            if not db_words:
+                continue
+            overlap = len(ai_words & db_words)
+            score = overlap / max(len(ai_words), len(db_words))
+            if score > best_score:
+                best_score = score
+                best_match = a
+
+        # Accept fuzzy match if at least 40% word overlap
+        if best_match and best_score >= 0.4:
+            logger.info(
+                "Fuzzy match: '%s' → '%s' (score %.2f)",
+                ai_name, best_match.name, best_score,
+            )
+            artifact = best_match
 
     similarity = confidence
 
-    # Step 4: Build response
+    # Step 5: Build response
     if artifact is not None:
         # ── MATCH FOUND ──
         story_data = None
@@ -361,7 +420,7 @@ def process_scan_pipeline(image_file, artifact_name_hint, request) -> dict:
         # ── NOT FOUND ──
         _log_scan(
             image_file,
-            {"artifact_name": "No match", "country": "Unknown",
+            {"artifact_name": ai_name or "No match", "country": "Unknown",
              "category": "Unmatched", "confidence": similarity},
         )
 

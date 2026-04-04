@@ -85,15 +85,16 @@
   </div>
 
   <script>
-    // Global error handler for CanvasKit / module load failures
+    // Global error handler for module load failures
     window.addEventListener('error', function(e) {
       if (e.message && (
         e.message.includes('canvaskit') ||
         e.message.includes('CanvasKit') ||
+        e.message.includes('WebAssembly') ||
         e.message.includes('Failed to fetch') ||
         e.message.includes('Loading chunk')
       )) {
-        console.error('[Kuriftu] CanvasKit load failure:', e.message);
+        console.error('[Kuriftu] Renderer load failure:', e.message);
         var loading = document.getElementById('loading-indicator');
         var errorDiv = document.getElementById('error-display');
         if (loading) loading.style.display = 'none';
@@ -109,5 +110,7 @@
       document.getElementById('error-display').style.display='flex';
     ">
   </script>
+
+
 </body>
 </html>
