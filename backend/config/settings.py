@@ -85,7 +85,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# CORS — allow all origins in development and production (for Flutter Web)CORS_ALLOW_CREDENTIALS = True
+# CORS — allow all origins (Flutter Web uses random ports in dev)
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOW_METHODS = [
     "DELETE",
