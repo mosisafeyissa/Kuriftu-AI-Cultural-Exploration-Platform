@@ -39,7 +39,7 @@ def _get_vision_model():
     """Return (or create) the Gemini model used for image recognition."""
     global _VISION_MODEL
     if _VISION_MODEL is None:
-        _VISION_MODEL = genai.GenerativeModel("gemini-1.5-flash")
+        _VISION_MODEL = genai.GenerativeModel("gemini-flash-latest")
     return _VISION_MODEL
 
 
@@ -47,7 +47,7 @@ def _get_text_model():
     """Return (or create) the Gemini model used for story generation."""
     global _TEXT_MODEL
     if _TEXT_MODEL is None:
-        _TEXT_MODEL = genai.GenerativeModel("gemini-1.5-flash")
+        _TEXT_MODEL = genai.GenerativeModel("gemini-flash-latest")
     return _TEXT_MODEL
 
 
