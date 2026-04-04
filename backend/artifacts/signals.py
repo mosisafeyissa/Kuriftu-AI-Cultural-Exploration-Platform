@@ -1,32 +1,29 @@
-"""
-Django signals for the artifacts app.
-
-Auto-generates MobileNetV2 embeddings whenever an Artifact with an image is saved.
-"""
-import logging
-from django.db.models.signals import post_save
+from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from .models import Artifact, Villa, Country
+import cloudinary.uploader
 
-logger = logging.getLogger(__name__)
+@receiver(post_delete, sender=Artifact)
+def delete_artifact_image(sender, instance, **kwargs):
+    if instance.image:
+        # instance.image.name contains the public_id/path in Cloudinary
+        try:
+            cloudinary.uploader.destroy(instance.image.name)
+        except Exception:
+            pass
 
+@receiver(post_delete, sender=Villa)
+def delete_villa_image(sender, instance, **kwargs):
+    if instance.image:
+        try:
+            cloudinary.uploader.destroy(instance.image.name)
+        except Exception:
+            pass
 
-@receiver(post_save, sender="artifacts.Artifact")
-def generate_artifact_embedding(sender, instance, **kwargs):
-    # NO-OP: MobileNetV2 embeddings are deprecated in favor of Gemini Vision.
-    return
-
-    try:
-        from ai_services.embedding_service import generate_embedding
-
-        logger.info("Generating embedding for artifact: %s (id=%d)", instance.name, instance.pk)
-
-        image_path = instance.image.path
-        embedding = generate_embedding(image_path)
-
-        # Use update() to avoid re-triggering this signal
-        from artifacts.models import Artifact
-        Artifact.objects.filter(pk=instance.pk).update(embedding=embedding)
-
-        logger.info("Embedding saved for artifact: %s", instance.name)
-    except Exception:
-        logger.exception("Failed to generate embedding for artifact: %s", instance.name)
+@receiver(post_delete, sender=Country)
+def delete_country_image(sender, instance, **kwargs):
+    if instance.image:
+        try:
+            cloudinary.uploader.destroy(instance.image.name)
+        except Exception:
+            pass

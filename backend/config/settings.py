@@ -59,7 +59,9 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "cloudinary_storage",
     "django.contrib.staticfiles",
+    "cloudinary",
     # Third-party
     "rest_framework",
     "rest_framework_simplejwt",
@@ -208,16 +210,20 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 
-# Media files — uploaded images (artifacts, scan uploads)
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+CLOUDINARY_STORAGE = {
+    "CLOUDINARY_URL": os.getenv("CLOUDINARY_URL"),
+}
+
+# Media handled by Cloudinary
+# MEDIA_URL = "/media/"
+# MEDIA_ROOT = BASE_DIR / "media"
 
 # Temporary scan uploads directory (inside MEDIA_ROOT)
 SCAN_UPLOAD_DIR = "scans/"
