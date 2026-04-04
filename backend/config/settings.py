@@ -77,7 +77,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",  # must be at the very top
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -208,17 +207,17 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Storage Configuration (Unified for modern & legacy compatibility)
+# Storage Configuration (Full Cloudinary Migration)
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "cloudinary_storage.storage.StaticHashedCloudinaryStorage",
     },
 }
 
-# Explicitly define legacy settings to fix "AttributeError: 'Settings' object has no attribute 'STATICFILES_STORAGE'"
+# Explicitly define legacy settings for compatibility
 DEFAULT_FILE_STORAGE = STORAGES["default"]["BACKEND"]
 STATICFILES_STORAGE = STORAGES["staticfiles"]["BACKEND"]
 
