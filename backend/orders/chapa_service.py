@@ -28,7 +28,7 @@ def get_chapa_headers():
 
 def generate_tx_ref():
     """Generate a unique transaction reference."""
-    return f"kuriftu-order-{uuid.uuid4().hex[:12]}"
+    return f"afrilens-order-{uuid.uuid4().hex[:12]}"
 
 
 def initialize_payment(order):
@@ -53,7 +53,7 @@ def initialize_payment(order):
         "tx_ref": tx_ref,
         "callback_url": callback_url,
         "return_url": return_url,
-        "customization[title]": "Kuriftu Artifact Purchase",
+        "customization[title]": "Afrilens Artifact Purchase",
         "customization[description]": f"Order #{order.pk} - {order.artifact.name} x{order.quantity}",
         "customization[logo]": getattr(settings, "CHAPA_LOGO_URL", ""),
         "meta[order_id]": str(order.pk),

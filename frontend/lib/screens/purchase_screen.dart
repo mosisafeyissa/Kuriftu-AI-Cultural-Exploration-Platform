@@ -59,7 +59,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
     return Consumer<AuthProvider>(
       builder: (context, auth, _) {
         return Scaffold(
-          backgroundColor: KuriftuColors.background,
+          backgroundColor: AfrilensColors.background,
           body: SafeArea(
             bottom: false,
             child: CustomScrollView(
@@ -70,7 +70,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                   SliverToBoxAdapter(child: _buildLoginPrompt())
                 else if (_isLoading)
                   const SliverFillRemaining(
-                    child: Center(child: CircularProgressIndicator(color: KuriftuColors.gold, strokeWidth: 2)),
+                    child: Center(child: CircularProgressIndicator(color: AfrilensColors.gold, strokeWidth: 2)),
                   )
                 else if (_error != null)
                   SliverToBoxAdapter(child: _buildError())
@@ -98,13 +98,13 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
             style: GoogleFonts.playfairDisplay(
               fontSize: 32,
               fontWeight: FontWeight.w700,
-              color: KuriftuColors.textPrimary,
+              color: AfrilensColors.textPrimary,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Track your cultural collection',
-            style: KuriftuTheme.bodyText.copyWith(fontSize: 15),
+            style: AfrilensTheme.bodyText.copyWith(fontSize: 15),
           ),
         ],
       ),
@@ -121,10 +121,10 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: KuriftuColors.gold.withValues(alpha: 0.1),
+                color: AfrilensColors.gold.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(LucideIcons.logIn, size: 36, color: KuriftuColors.gold),
+              child: const Icon(LucideIcons.logIn, size: 36, color: AfrilensColors.gold),
             ),
             const SizedBox(height: 24),
             Text(
@@ -132,14 +132,14 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
               style: GoogleFonts.playfairDisplay(
                 fontSize: 22,
                 fontWeight: FontWeight.w600,
-                color: KuriftuColors.textPrimary,
+                color: AfrilensColors.textPrimary,
               ),
             ),
             const SizedBox(height: 12),
             Text(
               'Log in to see your purchase history\nand track your cultural collection.',
               textAlign: TextAlign.center,
-              style: KuriftuTheme.bodyText.copyWith(height: 1.7),
+              style: AfrilensTheme.bodyText.copyWith(height: 1.7),
             ),
             const SizedBox(height: 28),
             SizedBox(
@@ -169,10 +169,10 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: KuriftuColors.gold.withValues(alpha: 0.08),
+              color: AfrilensColors.gold.withOpacity(0.08),
               shape: BoxShape.circle,
             ),
-            child: const Icon(LucideIcons.package, size: 40, color: KuriftuColors.gold),
+            child: const Icon(LucideIcons.package, size: 40, color: AfrilensColors.gold),
           ),
           const SizedBox(height: 24),
           Text(
@@ -180,14 +180,14 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
             style: GoogleFonts.playfairDisplay(
               fontSize: 22,
               fontWeight: FontWeight.w600,
-              color: KuriftuColors.textPrimary,
+              color: AfrilensColors.textPrimary,
             ),
           ),
           const SizedBox(height: 12),
           Text(
             'Scan an artifact to begin collecting\npieces of living African heritage.',
             textAlign: TextAlign.center,
-            style: KuriftuTheme.bodyText.copyWith(height: 1.7),
+            style: AfrilensTheme.bodyText.copyWith(height: 1.7),
           ),
         ],
       ),
@@ -201,17 +201,17 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
         children: [
           const Icon(LucideIcons.alertCircle, size: 40, color: Color(0xFFFF6B6B)),
           const SizedBox(height: 16),
-          Text(_error!, style: KuriftuTheme.bodyText.copyWith(color: const Color(0xFFFF6B6B))),
+          Text(_error!, style: AfrilensTheme.bodyText.copyWith(color: const Color(0xFFFF6B6B))),
           const SizedBox(height: 20),
           GestureDetector(
             onTap: _loadOrders,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
               decoration: BoxDecoration(
-                border: Border.all(color: KuriftuColors.gold, width: 1),
+                border: Border.all(color: AfrilensColors.gold, width: 1),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Text('Retry', style: KuriftuTheme.goldAccent.copyWith(fontSize: 13)),
+              child: Text('Retry', style: AfrilensTheme.goldAccent.copyWith(fontSize: 13)),
             ),
           ),
         ],
@@ -241,7 +241,7 @@ class _OrderCard extends StatelessWidget {
       case 'completed': return const Color(0xFF4CAF50);
       case 'processing': return const Color(0xFF2196F3);
       case 'cancelled': return const Color(0xFFFF6B6B);
-      default: return KuriftuColors.gold;
+      default: return AfrilensColors.gold;
     }
   }
 
@@ -257,10 +257,10 @@ class _OrderCard extends StatelessWidget {
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color: KuriftuColors.gold.withValues(alpha: 0.1),
+                color: AfrilensColors.gold.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(LucideIcons.box, color: KuriftuColors.gold, size: 22),
+              child: const Icon(LucideIcons.box, color: AfrilensColors.gold, size: 22),
             ),
             const SizedBox(width: 14),
             Expanded(
@@ -274,20 +274,20 @@ class _OrderCard extends StatelessWidget {
                     style: GoogleFonts.inter(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: KuriftuColors.textPrimary,
+                      color: AfrilensColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Qty: ${order.quantity}${order.createdAt != null ? '  •  ${_formatDate(order.createdAt!)}' : ''}',
-                    style: KuriftuTheme.bodyText.copyWith(fontSize: 12),
+                    style: AfrilensTheme.bodyText.copyWith(fontSize: 12),
                   ),
                   if (order.totalAmount > 0)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
                         '\$${order.totalAmount.toStringAsFixed(2)}',
-                        style: KuriftuTheme.goldAccent.copyWith(fontSize: 13),
+                        style: AfrilensTheme.goldAccent.copyWith(fontSize: 13),
                       ),
                     ),
                 ],
@@ -296,7 +296,7 @@ class _OrderCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: _statusColor(order.status).withValues(alpha: 0.15),
+                color: _statusColor(order.status).withOpacity(0.15),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(

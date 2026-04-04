@@ -61,7 +61,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KuriftuColors.background,
+      backgroundColor: AfrilensColors.background,
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -72,9 +72,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withValues(alpha: 0.5),
-                  Colors.black.withValues(alpha: 0.7),
-                  Colors.black.withValues(alpha: 0.92),
+                  Colors.black.withOpacity(0.5),
+                  Colors.black.withOpacity(0.7),
+                  Colors.black.withOpacity(0.92),
                 ],
               ),
             ),
@@ -98,7 +98,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                         height: 80,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: KuriftuColors.gold, width: 1.5),
+                          border: Border.all(color: AfrilensColors.gold, width: 1.5),
                         ),
                         child: ClipOval(
                           child: Image.asset('assets/images/logo.png', fit: BoxFit.cover),
@@ -108,21 +108,21 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
                       // Brand
                       Text(
-                        'KURIFTU',
+                        'AFRILENS',
                         style: GoogleFonts.playfairDisplay(
                           fontSize: 36,
                           fontWeight: FontWeight.w700,
-                          color: KuriftuColors.gold,
+                          color: AfrilensColors.gold,
                           letterSpacing: 8,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'AFRICAN VILLAGE',
+                        'CULTURAL EXPLORATION',
                         style: GoogleFonts.inter(
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
-                          color: KuriftuColors.textSecondary,
+                          color: AfrilensColors.textSecondary,
                           letterSpacing: 6,
                         ),
                       ),
@@ -135,7 +135,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                         style: GoogleFonts.playfairDisplay(
                           fontSize: 28,
                           fontWeight: FontWeight.w600,
-                          color: KuriftuColors.textPrimary,
+                          color: AfrilensColors.textPrimary,
                           height: 1.3,
                         ),
                       ),
@@ -145,7 +145,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                         child: Text(
                           'Scan artifacts, hear their ancient stories, and collect pieces of living heritage.',
                           textAlign: TextAlign.center,
-                          style: KuriftuTheme.bodyText.copyWith(fontSize: 15, height: 1.7),
+                          style: AfrilensTheme.bodyText.copyWith(fontSize: 15, height: 1.7),
                         ),
                       ),
 
@@ -158,15 +158,16 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                         style: GoogleFonts.playfairDisplay(
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
-                          color: KuriftuColors.gold,
+                          color: AfrilensColors.gold,
                         ),
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'Kuriftu African Village is a living museum celebrating the artistic heritage of 54 African nations. Each villa is a portal into a different culture \u2014 handcrafted furniture, woven textiles, and sacred objects sourced from master artisans across the continent. Our AI Cultural Whisperer bridges ancient tradition with modern technology, letting you scan any object and instantly hear its centuries-old story.',
+                        'Afrilens is a living platform celebrating the artistic heritage of 54 African nations. Each artifact is a portal into a different culture \u2014 handcrafted furniture, woven textiles, and sacred objects sourced from master artisans across the continent. Our AI Cultural Whisperer bridges ancient tradition with modern technology, letting you scan any object and instantly hear its centuries-old story.',
                         textAlign: TextAlign.center,
-                        style: KuriftuTheme.bodyText.copyWith(fontSize: 14, height: 1.8),
+                        style: AfrilensTheme.bodyText.copyWith(fontSize: 14, height: 1.8),
                       ),
+
                       const SizedBox(height: 28),
                       _buildStatPills(),
 
@@ -195,7 +196,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   Widget _buildDiamondDivider() {
     return Row(
       children: [
-        Expanded(child: Container(height: 0.5, color: KuriftuColors.glassBorder)),
+        Expanded(child: Container(height: 0.5, color: AfrilensColors.glassBorder)),
         const SizedBox(width: 16),
         Transform.rotate(
           angle: 0.785398,
@@ -203,16 +204,17 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             width: 8,
             height: 8,
             decoration: BoxDecoration(
-              color: KuriftuColors.gold,
+              color: AfrilensColors.gold,
               borderRadius: BorderRadius.circular(1.5),
             ),
           ),
         ),
         const SizedBox(width: 16),
-        Expanded(child: Container(height: 0.5, color: KuriftuColors.glassBorder)),
+        Expanded(child: Container(height: 0.5, color: AfrilensColors.glassBorder)),
       ],
     );
   }
+
 
   Widget _buildStatPills() {
     return Row(
@@ -242,21 +244,21 @@ class _StatPill extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.07),
+            color: Colors.white.withOpacity(0.07),
             borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+            border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, size: 14, color: KuriftuColors.gold),
+              Icon(icon, size: 14, color: AfrilensColors.gold),
               const SizedBox(width: 7),
               Text(
                 label,
                 style: GoogleFonts.inter(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: KuriftuColors.textPrimary,
+                  color: AfrilensColors.textPrimary,
                   letterSpacing: 0.3,
                 ),
               ),
@@ -266,4 +268,5 @@ class _StatPill extends StatelessWidget {
       ),
     );
   }
+
 }

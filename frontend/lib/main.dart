@@ -18,7 +18,7 @@ void main() {
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: KuriftuColors.background,
+      systemNavigationBarColor: AfrilensColors.background,
       systemNavigationBarIconBrightness: Brightness.light,
     ),
   );
@@ -38,9 +38,9 @@ class CulturalWhispererApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
       child: MaterialApp(
-        title: 'Kuriftu Cultural Whisperer',
+        title: 'Afrilens Cultural Whisperer',
         debugShowCheckedModeBanner: false,
-        theme: KuriftuTheme.darkTheme,
+        theme: AfrilensTheme.darkTheme,
         home: Consumer<AuthProvider>(
           builder: (context, auth, __) {
             // Sync notification provider with auth state after the current frame
@@ -75,7 +75,7 @@ class _SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KuriftuColors.background,
+      backgroundColor: AfrilensColors.background,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -85,7 +85,7 @@ class _SplashScreen extends StatelessWidget {
               height: 70,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: KuriftuColors.gold, width: 1.5),
+                border: Border.all(color: AfrilensColors.gold, width: 1.5),
               ),
               child: ClipOval(
                 child: Image.asset('assets/images/logo.png', fit: BoxFit.cover),
@@ -93,7 +93,7 @@ class _SplashScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             const CircularProgressIndicator(
-              color: KuriftuColors.gold,
+              color: AfrilensColors.gold,
               strokeWidth: 2,
             ),
           ],

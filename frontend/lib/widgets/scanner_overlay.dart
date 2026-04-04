@@ -46,8 +46,8 @@ class _ScannerOverlayState extends State<ScannerOverlay>
               child: CustomPaint(
                 painter: _CornerPainter(
                   color: widget.isScanning
-                      ? KuriftuColors.gold
-                      : KuriftuColors.gold.withValues(alpha: 0.5),
+                      ? AfrilensColors.gold
+                      : AfrilensColors.gold.withOpacity(0.5),
                   cornerLength: 36,
                   strokeWidth: 3,
                   radius: 20,
@@ -73,16 +73,16 @@ class _ScannerOverlayState extends State<ScannerOverlay>
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             colors: [
-                              KuriftuColors.gold.withValues(alpha: 0.0),
+                              AfrilensColors.gold.withOpacity(0.0),
                               widget.isScanning
-                                  ? KuriftuColors.gold
-                                  : KuriftuColors.gold.withValues(alpha: 0.5),
-                              KuriftuColors.gold.withValues(alpha: 0.0),
+                                  ? AfrilensColors.gold
+                                  : AfrilensColors.gold.withOpacity(0.5),
+                              AfrilensColors.gold.withOpacity(0.0),
                             ],
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: KuriftuColors.gold.withValues(alpha: widget.isScanning ? 0.6 : 0.3),
+                              color: AfrilensColors.gold.withOpacity(widget.isScanning ? 0.6 : 0.3),
                               blurRadius: widget.isScanning ? 16 : 8,
                               spreadRadius: widget.isScanning ? 4 : 2,
                             ),

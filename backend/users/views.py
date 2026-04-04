@@ -37,7 +37,7 @@ def _create_welcome_notification(user, is_new=False):
             Notification.objects.create(
                 user=user,
                 notification_type="welcome",
-                title="Welcome to Kuriftu!",
+                title="Welcome to Afrilens!",
                 message="Your journey into African heritage begins now. Explore our curated collection of cultural artifacts.",
             )
         else:

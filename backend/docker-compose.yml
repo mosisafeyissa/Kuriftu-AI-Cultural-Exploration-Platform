@@ -8,11 +8,11 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=${POSTGRES_DB:-kuriftu_ai}
-      - POSTGRES_USER=${POSTGRES_USER:-kuriftu_ai_user}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-kuriftu_ai_pass}
+      - POSTGRES_DB=${POSTGRES_DB:-afrilens_ai}
+      - POSTGRES_USER=${POSTGRES_USER:-afrilens_ai_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-afrilens_ai_pass}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kuriftu_ai_user} -d ${POSTGRES_DB:-kuriftu_ai}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-afrilens_ai_user} -d ${POSTGRES_DB:-afrilens_ai}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -26,7 +26,7 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-kuriftu_ai_user}:${POSTGRES_PASSWORD:-kuriftu_ai_pass}@db:5432/${POSTGRES_DB:-kuriftu_ai}
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-afrilens_ai_user}:${POSTGRES_PASSWORD:-afrilens_ai_pass}@db:5432/${POSTGRES_DB:-afrilens_ai}
       - DEBUG=${DEBUG:-False}
     depends_on:
       db:

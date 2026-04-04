@@ -173,7 +173,7 @@ def create_order(request):
 def verify_payment(request):
     """
     POST /api/verify-payment/
-    Body: { "tx_ref": "kuriftu-order-xxxx" }
+    Body: { "tx_ref": "afrilens-order-xxxx" }
 
     Verifies payment with Chapa and updates the order status.
     """

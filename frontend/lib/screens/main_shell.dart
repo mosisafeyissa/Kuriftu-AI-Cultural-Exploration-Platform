@@ -31,7 +31,7 @@ class MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KuriftuColors.background,
+      backgroundColor: AfrilensColors.background,
       extendBody: true,
       body: IndexedStack(
         index: _currentIndex,
@@ -65,7 +65,7 @@ class _GlassBottomBar extends StatelessWidget {
           height: 72 + bottomPad,
           padding: EdgeInsets.only(bottom: bottomPad),
           decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.65),
+            color: Colors.black.withOpacity(0.65),
             border: const Border(
               top: BorderSide(color: Color(0x22FFFFFF), width: 0.5),
             ),
@@ -112,7 +112,7 @@ class _BarItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isActive ? KuriftuColors.gold : KuriftuColors.textMuted;
+    final color = isActive ? AfrilensColors.gold : AfrilensColors.textMuted;
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -161,7 +161,7 @@ class _ScanButton extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: KuriftuColors.gold.withValues(alpha: 0.35),
+              color: AfrilensColors.gold.withOpacity(0.35),
               blurRadius: 16,
               offset: const Offset(0, 4),
             ),

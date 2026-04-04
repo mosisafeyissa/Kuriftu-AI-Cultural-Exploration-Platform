@@ -33,12 +33,12 @@ class GoldButton extends StatelessWidget {
         child: OutlinedButton(
           onPressed: isLoading ? null : onPressed,
           style: OutlinedButton.styleFrom(
-            foregroundColor: KuriftuColors.gold,
-            side: const BorderSide(color: KuriftuColors.gold, width: 1.5),
+            foregroundColor: AfrilensColors.gold,
+            side: const BorderSide(color: AfrilensColors.gold, width: 1.5),
             shape: const StadiumBorder(),
             padding: const EdgeInsets.symmetric(horizontal: 32),
           ),
-          child: _buildChild(KuriftuColors.gold),
+          child: _buildChild(AfrilensColors.gold),
         ),
       );
     }
@@ -48,7 +48,7 @@ class GoldButton extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: onPressed != null && !isLoading ? _gradient : null,
         color: onPressed == null || isLoading
-            ? KuriftuColors.goldDark.withValues(alpha: 0.4)
+            ? AfrilensColors.goldDark.withOpacity(0.4)
             : null,
         borderRadius: BorderRadius.circular(height / 2),
         boxShadow: onPressed != null && !isLoading

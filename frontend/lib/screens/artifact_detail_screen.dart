@@ -15,7 +15,7 @@ class ArtifactDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KuriftuColors.background,
+      backgroundColor: AfrilensColors.background,
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -31,13 +31,13 @@ class ArtifactDetailScreen extends StatelessWidget {
     return SliverAppBar(
       expandedHeight: 380,
       pinned: true,
-      backgroundColor: KuriftuColors.surface,
+      backgroundColor: AfrilensColors.surface,
       leading: GestureDetector(
         onTap: () => Navigator.pop(context),
         child: Container(
           margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.4),
+            color: Colors.black.withOpacity(0.4),
             borderRadius: BorderRadius.circular(12),
           ),
           child: const Icon(LucideIcons.arrowLeft, color: Colors.white, size: 20),
@@ -58,7 +58,7 @@ class ArtifactDetailScreen extends StatelessWidget {
                   end: Alignment.bottomCenter,
                   colors: [
                     Colors.transparent,
-                    KuriftuColors.background.withValues(alpha: 0.8),
+                    AfrilensColors.background.withOpacity(0.8),
                   ],
                 ),
               ),
@@ -75,8 +75,8 @@ class ArtifactDetailScreen extends StatelessWidget {
         artifact.image,
         fit: BoxFit.cover,
         errorBuilder: (_, __, ___) => Container(
-          color: KuriftuColors.surfaceLight,
-          child: const Icon(LucideIcons.image, color: KuriftuColors.textMuted, size: 50),
+          color: AfrilensColors.surfaceLight,
+          child: const Icon(LucideIcons.image, color: AfrilensColors.textMuted, size: 50),
         ),
       );
     }
@@ -84,8 +84,8 @@ class ArtifactDetailScreen extends StatelessWidget {
       artifact.image,
       fit: BoxFit.cover,
       errorBuilder: (_, __, ___) => Container(
-        color: KuriftuColors.surfaceLight,
-        child: const Icon(LucideIcons.image, color: KuriftuColors.textMuted, size: 50),
+        color: AfrilensColors.surfaceLight,
+        child: const Icon(LucideIcons.image, color: AfrilensColors.textMuted, size: 50),
       ),
     );
   }
@@ -94,7 +94,7 @@ class ArtifactDetailScreen extends StatelessWidget {
     return Container(
       transform: Matrix4.translationValues(0, -32, 0),
       decoration: const BoxDecoration(
-        color: KuriftuColors.background,
+        color: AfrilensColors.background,
         borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
       ),
       padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
@@ -107,7 +107,7 @@ class ArtifactDetailScreen extends StatelessWidget {
             style: GoogleFonts.playfairDisplay(
               fontSize: 28,
               fontWeight: FontWeight.w700,
-              color: KuriftuColors.textPrimary,
+              color: AfrilensColors.textPrimary,
             ),
           ),
           const SizedBox(height: 12),
@@ -129,10 +129,10 @@ class ArtifactDetailScreen extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             artifact.fullStory,
-            style: KuriftuTheme.bodyText.copyWith(
+            style: AfrilensTheme.bodyText.copyWith(
               fontSize: 15,
               height: 1.8,
-              color: KuriftuColors.textSecondary,
+              color: AfrilensColors.textSecondary,
             ),
           ),
           const SizedBox(height: 32),
@@ -162,7 +162,7 @@ class ArtifactDetailScreen extends StatelessWidget {
           width: 3,
           height: 20,
           decoration: BoxDecoration(
-            color: KuriftuColors.gold,
+            color: AfrilensColors.gold,
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -172,7 +172,7 @@ class ArtifactDetailScreen extends StatelessWidget {
           style: GoogleFonts.playfairDisplay(
             fontSize: 20,
             fontWeight: FontWeight.w600,
-            color: KuriftuColors.textPrimary,
+            color: AfrilensColors.textPrimary,
           ),
         ),
       ],
@@ -183,16 +183,16 @@ class ArtifactDetailScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
       decoration: BoxDecoration(
-        color: KuriftuColors.gold.withValues(alpha: 0.1),
+        color: AfrilensColors.gold.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: KuriftuColors.gold.withValues(alpha: 0.2)),
+        border: Border.all(color: AfrilensColors.gold.withOpacity(0.2)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: KuriftuColors.gold),
+          Icon(icon, size: 14, color: AfrilensColors.gold),
           const SizedBox(width: 6),
-          Text(label, style: KuriftuTheme.goldAccent.copyWith(fontSize: 12)),
+          Text(label, style: AfrilensTheme.goldAccent.copyWith(fontSize: 12)),
         ],
       ),
     );
@@ -210,9 +210,9 @@ class ArtifactDetailScreen extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.05),
+            color: Colors.white.withOpacity(0.05),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+            border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,10 +220,10 @@ class ArtifactDetailScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: KuriftuColors.gold.withValues(alpha: 0.1),
+                  color: AfrilensColors.gold.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: KuriftuColors.gold, size: 20),
+                child: Icon(icon, color: AfrilensColors.gold, size: 20),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -232,12 +232,12 @@ class ArtifactDetailScreen extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: KuriftuTheme.headlineSerif.copyWith(fontSize: 15),
+                      style: AfrilensTheme.headlineSerif.copyWith(fontSize: 15),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       content,
-                      style: KuriftuTheme.bodyText.copyWith(
+                      style: AfrilensTheme.bodyText.copyWith(
                         fontSize: 14,
                         height: 1.6,
                       ),
@@ -264,9 +264,9 @@ class ArtifactDetailScreen extends StatelessWidget {
             MediaQuery.of(context).padding.bottom + 16,
           ),
           decoration: BoxDecoration(
-            color: KuriftuColors.surface.withValues(alpha: 0.85),
+            color: AfrilensColors.surface.withOpacity(0.85),
             border: Border(
-              top: BorderSide(color: Colors.white.withValues(alpha: 0.06)),
+              top: BorderSide(color: Colors.white.withOpacity(0.06)),
             ),
           ),
           child: Row(
@@ -277,7 +277,7 @@ class ArtifactDetailScreen extends StatelessWidget {
                 children: [
                   Text(
                     'PRICE',
-                    style: KuriftuTheme.labelText.copyWith(fontSize: 11),
+                    style: AfrilensTheme.labelText.copyWith(fontSize: 11),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -285,7 +285,7 @@ class ArtifactDetailScreen extends StatelessWidget {
                     style: GoogleFonts.playfairDisplay(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
-                      color: KuriftuColors.textPrimary,
+                      color: AfrilensColors.textPrimary,
                     ),
                   ),
                 ],

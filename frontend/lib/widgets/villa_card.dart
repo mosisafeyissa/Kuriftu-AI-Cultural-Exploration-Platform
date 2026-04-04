@@ -22,7 +22,7 @@ class VillaCard extends StatelessWidget {
         height: 200,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
-          boxShadow: KuriftuTheme.softShadow,
+          boxShadow: AfrilensTheme.softShadow,
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(24),
@@ -47,8 +47,8 @@ class VillaCard extends StatelessWidget {
       villa.image,
       fit: BoxFit.cover,
       errorBuilder: (_, __, ___) => Container(
-        color: KuriftuColors.surfaceLight,
-        child: const Icon(LucideIcons.building, color: KuriftuColors.textMuted, size: 40),
+        color: AfrilensColors.surfaceLight,
+        child: const Icon(LucideIcons.building, color: AfrilensColors.textMuted, size: 40),
       ),
     );
   }
@@ -61,7 +61,7 @@ class VillaCard extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             Colors.transparent,
-            Colors.black.withValues(alpha: 0.7),
+            Colors.black.withOpacity(0.7),
           ],
         ),
       ),
@@ -80,9 +80,9 @@ class VillaCard extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.07),
+              color: Colors.white.withOpacity(0.07),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+              border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
             ),
             child: Row(
               children: [
@@ -93,12 +93,12 @@ class VillaCard extends StatelessWidget {
                     children: [
                       Text(
                         villa.name,
-                        style: KuriftuTheme.headlineSerif.copyWith(fontSize: 17),
+                        style: AfrilensTheme.headlineSerif.copyWith(fontSize: 17),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         villa.description,
-                        style: KuriftuTheme.bodyText.copyWith(fontSize: 12),
+                        style: AfrilensTheme.bodyText.copyWith(fontSize: 12),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -109,12 +109,12 @@ class VillaCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
-                    color: KuriftuColors.gold.withValues(alpha: 0.15),
+                    color: AfrilensColors.gold.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(
                     LucideIcons.arrowRight,
-                    color: KuriftuColors.gold,
+                    color: AfrilensColors.gold,
                     size: 18,
                   ),
                 ),

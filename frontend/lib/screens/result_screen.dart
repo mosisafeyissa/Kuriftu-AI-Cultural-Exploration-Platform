@@ -53,7 +53,7 @@ class _ResultScreenState extends State<ResultScreen>
     final bottomPad = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: KuriftuColors.background,
+      backgroundColor: AfrilensColors.background,
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -71,8 +71,8 @@ class _ResultScreenState extends State<ResultScreen>
                 end: Alignment.bottomCenter,
                 colors: [
                   Colors.transparent,
-                  Colors.black.withValues(alpha: 0.3),
-                  Colors.black.withValues(alpha: 0.95),
+                  Colors.black.withOpacity(0.3),
+                  Colors.black.withOpacity(0.95),
                 ],
                 stops: const [0.0, 0.4, 0.75],
               ),
@@ -114,9 +114,9 @@ class _ResultScreenState extends State<ResultScreen>
         artifact.image,
         fit: BoxFit.cover,
         errorBuilder: (_, __, ___) => Container(
-          color: KuriftuColors.surface,
+          color: AfrilensColors.surface,
           child: const Center(
-            child: Icon(LucideIcons.image, size: 60, color: KuriftuColors.textMuted),
+            child: Icon(LucideIcons.image, size: 60, color: AfrilensColors.textMuted),
           ),
         ),
       );
@@ -125,9 +125,9 @@ class _ResultScreenState extends State<ResultScreen>
       artifact.image,
       fit: BoxFit.cover,
       errorBuilder: (_, __, ___) => Container(
-        color: KuriftuColors.surface,
+        color: AfrilensColors.surface,
         child: const Center(
-          child: Icon(LucideIcons.image, size: 60, color: KuriftuColors.textMuted),
+          child: Icon(LucideIcons.image, size: 60, color: AfrilensColors.textMuted),
         ),
       ),
     );
@@ -150,7 +150,7 @@ class _ResultScreenState extends State<ResultScreen>
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.black.withValues(alpha: 0.6),
+              Colors.black.withOpacity(0.6),
               Colors.transparent,
             ],
           ),
@@ -166,7 +166,7 @@ class _ResultScreenState extends State<ResultScreen>
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: Colors.white.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(LucideIcons.arrowLeft, color: Colors.white, size: 20),
@@ -180,7 +180,7 @@ class _ResultScreenState extends State<ResultScreen>
               style: GoogleFonts.playfairDisplay(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: KuriftuColors.textPrimary,
+                color: AfrilensColors.textPrimary,
               ),
             ),
             const Spacer(),
@@ -200,9 +200,9 @@ class _ResultScreenState extends State<ResultScreen>
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.1),
+            color: Colors.white.withOpacity(0.1),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+            border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -210,13 +210,13 @@ class _ResultScreenState extends State<ResultScreen>
               Icon(
                 LucideIcons.sparkles,
                 size: 14,
-                color: pct >= 80 ? KuriftuColors.gold : KuriftuColors.textSecondary,
+                color: pct >= 80 ? AfrilensColors.gold : AfrilensColors.textSecondary,
               ),
               const SizedBox(width: 6),
               Text(
                 '$pct% match',
-                style: KuriftuTheme.labelText.copyWith(
-                  color: KuriftuColors.textPrimary,
+                style: AfrilensTheme.labelText.copyWith(
+                  color: AfrilensColors.textPrimary,
                   fontSize: 12,
                 ),
               ),
@@ -235,10 +235,10 @@ class _ResultScreenState extends State<ResultScreen>
         child: Container(
           padding: EdgeInsets.fromLTRB(24, 28, 24, bottomPad + 24),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.07),
+            color: Colors.white.withOpacity(0.07),
             borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
             border: Border(
-              top: BorderSide(color: KuriftuColors.glassBorder, width: 0.5),
+              top: BorderSide(color: AfrilensColors.glassBorder, width: 0.5),
             ),
           ),
           child: Column(
@@ -251,7 +251,7 @@ class _ResultScreenState extends State<ResultScreen>
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
+                    color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -264,7 +264,7 @@ class _ResultScreenState extends State<ResultScreen>
                 style: GoogleFonts.playfairDisplay(
                   fontSize: 26,
                   fontWeight: FontWeight.w700,
-                  color: KuriftuColors.textPrimary,
+                  color: AfrilensColors.textPrimary,
                 ),
               ),
               const SizedBox(height: 12),
@@ -273,17 +273,17 @@ class _ResultScreenState extends State<ResultScreen>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                 decoration: BoxDecoration(
-                  color: KuriftuColors.gold.withValues(alpha: 0.12),
+                  color: AfrilensColors.gold.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(LucideIcons.mapPin, size: 14, color: KuriftuColors.gold),
+                    const Icon(LucideIcons.mapPin, size: 14, color: AfrilensColors.gold),
                     const SizedBox(width: 6),
                     Text(
                       artifact.countryName,
-                      style: KuriftuTheme.goldAccent.copyWith(fontSize: 13),
+                      style: AfrilensTheme.goldAccent.copyWith(fontSize: 13),
                     ),
                   ],
                 ),
@@ -299,7 +299,7 @@ class _ResultScreenState extends State<ResultScreen>
               // Divider
               Container(
                 height: 0.5,
-                color: Colors.white.withValues(alpha: 0.1),
+                color: Colors.white.withOpacity(0.1),
               ),
               const SizedBox(height: 20),
 
@@ -311,7 +311,7 @@ class _ResultScreenState extends State<ResultScreen>
                     children: [
                       Text(
                         'Purchase Value',
-                        style: KuriftuTheme.labelText.copyWith(fontSize: 11),
+                        style: AfrilensTheme.labelText.copyWith(fontSize: 11),
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -319,7 +319,7 @@ class _ResultScreenState extends State<ResultScreen>
                         style: GoogleFonts.playfairDisplay(
                           fontSize: 28,
                           fontWeight: FontWeight.w700,
-                          color: KuriftuColors.gold,
+                          color: AfrilensColors.gold,
                         ),
                       ),
                     ],
@@ -365,7 +365,7 @@ class _ResultScreenState extends State<ResultScreen>
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 16, color: KuriftuColors.gold.withValues(alpha: 0.7)),
+        Icon(icon, size: 16, color: AfrilensColors.gold.withOpacity(0.7)),
         const SizedBox(width: 12),
         Expanded(
           child: Column(
@@ -373,13 +373,13 @@ class _ResultScreenState extends State<ResultScreen>
             children: [
               Text(
                 label.toUpperCase(),
-                style: KuriftuTheme.labelText.copyWith(fontSize: 10, letterSpacing: 1.5),
+                style: AfrilensTheme.labelText.copyWith(fontSize: 10, letterSpacing: 1.5),
               ),
               const SizedBox(height: 4),
               Text(
                 value,
-                style: KuriftuTheme.bodyText.copyWith(
-                  color: KuriftuColors.textPrimary.withValues(alpha: 0.85),
+                style: AfrilensTheme.bodyText.copyWith(
+                  color: AfrilensColors.textPrimary.withOpacity(0.85),
                   fontSize: 13,
                   height: 1.5,
                 ),

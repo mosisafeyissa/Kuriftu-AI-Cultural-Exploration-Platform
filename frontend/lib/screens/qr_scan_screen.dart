@@ -66,7 +66,7 @@ class _QRScanScreenState extends State<QRScanScreen> {
               width: 250,
               height: 250,
               decoration: BoxDecoration(
-                border: Border.all(color: KuriftuColors.gold, width: 2),
+                border: Border.all(color: AfrilensColors.gold, width: 2),
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
@@ -89,13 +89,13 @@ class _QRScanScreenState extends State<QRScanScreen> {
               children: [
                 Text(
                   'Scan Villa QR Code',
-                  style: KuriftuTheme.headlineSerif.copyWith(fontSize: 24),
+                  style: AfrilensTheme.headlineSerif.copyWith(fontSize: 24),
                 ),
                 const SizedBox(height: 10),
                 Text(
                   'Point your camera at the QR code\nin your villa to start the journey.',
                   textAlign: TextAlign.center,
-                  style: KuriftuTheme.bodyText,
+                  style: AfrilensTheme.bodyText,
                 ),
               ],
             ),

@@ -81,9 +81,9 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Container(
             constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.55),
             decoration: BoxDecoration(
-              color: KuriftuColors.surface.withValues(alpha: 0.92),
+              color: AfrilensColors.surface.withOpacity(0.92),
               borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-              border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+              border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -93,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: KuriftuColors.textMuted.withValues(alpha: 0.4),
+                    color: AfrilensColors.textMuted.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: GoogleFonts.playfairDisplay(
                           fontSize: 22,
                           fontWeight: FontWeight.w700,
-                          color: KuriftuColors.textPrimary,
+                          color: AfrilensColors.textPrimary,
                         ),
                       ),
                       GestureDetector(
@@ -117,13 +117,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                         child: Text(
                           'Mark All Read',
-                          style: KuriftuTheme.goldAccent.copyWith(fontSize: 13),
+                          style: AfrilensTheme.goldAccent.copyWith(fontSize: 13),
                         ),
                       ),
                     ],
                   ),
                 ),
-                const Divider(color: KuriftuColors.glassBorder, height: 1),
+                const Divider(color: AfrilensColors.glassBorder, height: 1),
                 Flexible(
                   child: ChangeNotifierProvider.value(
                     value: notifProvider,
@@ -135,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             padding: const EdgeInsets.all(40),
                             child: Text(
                               'No notifications yet',
-                              style: KuriftuTheme.bodyText.copyWith(color: KuriftuColors.textMuted),
+                              style: AfrilensTheme.bodyText.copyWith(color: AfrilensColors.textMuted),
                             ),
                           );
                         }
@@ -144,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           shrinkWrap: true,
                           itemCount: items.length,
                           separatorBuilder: (_, __) => const Divider(
-                            color: KuriftuColors.glassBorder,
+                            color: AfrilensColors.glassBorder,
                             height: 1,
                             indent: 68,
                           ),
@@ -165,14 +165,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KuriftuColors.background,
+      backgroundColor: AfrilensColors.background,
       body: Stack(
         children: [
           Positioned.fill(
             child: Image.asset('assets/images/villa_4.jpg', fit: BoxFit.cover),
           ),
           Positioned.fill(
-            child: Container(color: Colors.black.withValues(alpha: 0.82)),
+            child: Container(color: Colors.black.withOpacity(0.82)),
           ),
           CustomScrollView(
             physics: const BouncingScrollPhysics(),
@@ -203,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 36,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: KuriftuColors.gold.withValues(alpha: 0.6), width: 1),
+              border: Border.all(color: AfrilensColors.gold.withOpacity(0.6), width: 1),
             ),
             child: ClipOval(
               child: Image.asset('assets/images/logo.png', fit: BoxFit.cover),
@@ -211,11 +211,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(width: 12),
           Text(
-            'Kuriftu Village',
+            'Afrilens Village',
             style: GoogleFonts.playfairDisplay(
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              color: KuriftuColors.textPrimary,
+              color: AfrilensColors.textPrimary,
             ),
           ),
         ],
@@ -229,10 +229,10 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.white.withValues(alpha: 0.05),
-                border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+                color: Colors.white.withOpacity(0.05),
+                border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
               ),
-              child: const Icon(LucideIcons.user, size: 18, color: KuriftuColors.textPrimary),
+              child: const Icon(LucideIcons.user, size: 18, color: AfrilensColors.textPrimary),
             ),
           ),
         ),
@@ -247,13 +247,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withValues(alpha: 0.05),
-                    border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+                    color: Colors.white.withOpacity(0.05),
+                    border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
                   ),
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      const Icon(LucideIcons.bell, size: 18, color: KuriftuColors.textPrimary),
+                      const Icon(LucideIcons.bell, size: 18, color: AfrilensColors.textPrimary),
                       if (notif.unreadCount > 0)
                         Positioned(
                           top: -2,
@@ -262,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             width: 8,
                             height: 8,
                             decoration: const BoxDecoration(
-                              color: KuriftuColors.gold,
+                              color: AfrilensColors.gold,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -290,7 +290,7 @@ class _HomeScreenState extends State<HomeScreen> {
             style: GoogleFonts.playfairDisplay(
               fontSize: 42,
               fontWeight: FontWeight.w700,
-              color: KuriftuColors.textPrimary,
+              color: AfrilensColors.textPrimary,
             ),
           ),
           const SizedBox(height: 4),
@@ -299,13 +299,13 @@ class _HomeScreenState extends State<HomeScreen> {
             style: GoogleFonts.playfairDisplay(
               fontSize: 42,
               fontWeight: FontWeight.w700,
-              color: KuriftuColors.gold,
+              color: AfrilensColors.gold,
             ),
           ),
           const SizedBox(height: 16),
           Text(
             'Scan objects around you to unlock centuries of cultural stories powered by AI.',
-            style: KuriftuTheme.bodyText.copyWith(fontSize: 15, height: 1.7),
+            style: AfrilensTheme.bodyText.copyWith(fontSize: 15, height: 1.7),
           ),
         ],
       ),
@@ -325,13 +325,13 @@ class _HomeScreenState extends State<HomeScreen> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           gradient: const LinearGradient(
-            colors: [KuriftuColors.goldDark, KuriftuColors.gold],
+            colors: [AfrilensColors.goldDark, AfrilensColors.gold],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           boxShadow: [
             BoxShadow(
-              color: KuriftuColors.gold.withOpacity(0.3),
+              color: AfrilensColors.gold.withOpacity(0.3),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -359,7 +359,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         Text(
                           'CULTURAL JOURNEY',
-                          style: KuriftuTheme.labelText.copyWith(
+                          style: AfrilensTheme.labelText.copyWith(
                             color: Colors.white,
                             letterSpacing: 2,
                             fontWeight: FontWeight.w700,
@@ -368,7 +368,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 8),
                         Text(
                           'Your Personal AI Tour Guide',
-                          style: KuriftuTheme.headlineSerif.copyWith(
+                          style: AfrilensTheme.headlineSerif.copyWith(
                             fontSize: 20,
                             color: Colors.white,
                           ),
@@ -383,7 +383,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.white,
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(LucideIcons.qrCode, color: KuriftuColors.gold),
+                    child: const Icon(LucideIcons.qrCode, color: AfrilensColors.gold),
                   ),
                 ],
               ),
@@ -410,7 +410,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 8),
           Text(
             'Browse 3 African heritage villas and their cultural treasures',
-            style: KuriftuTheme.bodyText.copyWith(fontSize: 12, color: KuriftuColors.textMuted),
+            style: AfrilensTheme.bodyText.copyWith(fontSize: 12, color: AfrilensColors.textMuted),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -425,7 +425,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 8),
           Text(
             'Point your camera at any artifact to hear its centuries-old story',
-            style: KuriftuTheme.bodyText.copyWith(fontSize: 12, color: KuriftuColors.textMuted),
+            style: AfrilensTheme.bodyText.copyWith(fontSize: 12, color: AfrilensColors.textMuted),
             textAlign: TextAlign.center,
           ),
         ],
@@ -444,7 +444,7 @@ class _HomeScreenState extends State<HomeScreen> {
             style: GoogleFonts.playfairDisplay(
               fontSize: 22,
               fontWeight: FontWeight.w600,
-              color: KuriftuColors.textPrimary,
+              color: AfrilensColors.textPrimary,
             ),
           ),
         ),
@@ -452,7 +452,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const Center(
             child: Padding(
               padding: EdgeInsets.all(40),
-              child: CircularProgressIndicator(color: KuriftuColors.gold, strokeWidth: 2),
+              child: CircularProgressIndicator(color: AfrilensColors.gold, strokeWidth: 2),
             ),
           )
         else if (_errorMessage != null)
@@ -460,11 +460,11 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             child: Column(
               children: [
-                Icon(LucideIcons.wifiOff, color: KuriftuColors.textMuted, size: 36),
+                Icon(LucideIcons.wifiOff, color: AfrilensColors.textMuted, size: 36),
                 const SizedBox(height: 12),
                 Text(
                   _errorMessage!,
-                  style: KuriftuTheme.bodyText.copyWith(color: KuriftuColors.textMuted, fontSize: 13),
+                  style: AfrilensTheme.bodyText.copyWith(color: AfrilensColors.textMuted, fontSize: 13),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
@@ -473,10 +473,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
                     decoration: BoxDecoration(
-                      border: Border.all(color: KuriftuColors.gold, width: 1),
+                      border: Border.all(color: AfrilensColors.gold, width: 1),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Text('Retry', style: KuriftuTheme.goldAccent.copyWith(fontSize: 13)),
+                    child: Text('Retry', style: AfrilensTheme.goldAccent.copyWith(fontSize: 13)),
                   ),
                 ),
               ],
@@ -541,14 +541,14 @@ class _NotificationTile extends StatelessWidget {
             height: 40,
             decoration: BoxDecoration(
               color: notification.isRead
-                  ? KuriftuColors.surfaceLight
-                  : KuriftuColors.gold.withValues(alpha: 0.12),
+                  ? AfrilensColors.surfaceLight
+                  : AfrilensColors.gold.withOpacity(0.12),
               shape: BoxShape.circle,
             ),
             child: Icon(
               _icon,
               size: 18,
-              color: notification.isRead ? KuriftuColors.textMuted : KuriftuColors.gold,
+              color: notification.isRead ? AfrilensColors.textMuted : AfrilensColors.gold,
             ),
           ),
           const SizedBox(width: 14),
@@ -564,7 +564,7 @@ class _NotificationTile extends StatelessWidget {
                         style: GoogleFonts.inter(
                           fontSize: 14,
                           fontWeight: notification.isRead ? FontWeight.w400 : FontWeight.w600,
-                          color: KuriftuColors.textPrimary,
+                          color: AfrilensColors.textPrimary,
                         ),
                       ),
                     ),
@@ -573,7 +573,7 @@ class _NotificationTile extends StatelessWidget {
                         width: 8,
                         height: 8,
                         decoration: const BoxDecoration(
-                          color: KuriftuColors.gold,
+                          color: AfrilensColors.gold,
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -582,12 +582,12 @@ class _NotificationTile extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   notification.message,
-                  style: KuriftuTheme.bodyText.copyWith(fontSize: 13, color: KuriftuColors.textMuted),
+                  style: AfrilensTheme.bodyText.copyWith(fontSize: 13, color: AfrilensColors.textMuted),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   _timeAgo(notification.timestamp),
-                  style: GoogleFonts.inter(fontSize: 11, color: KuriftuColors.textMuted.withValues(alpha: 0.6)),
+                  style: GoogleFonts.inter(fontSize: 11, color: AfrilensColors.textMuted.withOpacity(0.6)),
                 ),
               ],
             ),

@@ -1,5 +1,5 @@
 """
-Core AI service functions for the Kuriftu Cultural Exploration Platform.
+Core AI service functions for the Afrilens Cultural Exploration Platform.
 
 Two public functions (called by artifacts/views.py):
     identify_object(image_file)   → dict with artifact_name, country, confidence

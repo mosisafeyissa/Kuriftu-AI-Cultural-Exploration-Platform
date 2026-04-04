@@ -85,8 +85,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       SnackBar(
         content: Text(msg, style: GoogleFonts.inter(fontSize: 13)),
         backgroundColor: isError
-            ? Colors.red.withValues(alpha: 0.85)
-            : Colors.green.withValues(alpha: 0.85),
+            ? Colors.red.withOpacity(0.85)
+            : Colors.green.withOpacity(0.85),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
@@ -98,24 +98,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: KuriftuColors.surface,
+        backgroundColor: AfrilensColors.surface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
           'Sign Out',
           style: GoogleFonts.playfairDisplay(
-            color: KuriftuColors.textPrimary,
+            color: AfrilensColors.textPrimary,
             fontWeight: FontWeight.w600,
           ),
         ),
         content: Text(
           'Are you sure you want to sign out?',
-          style: GoogleFonts.inter(color: KuriftuColors.textSecondary),
+          style: GoogleFonts.inter(color: AfrilensColors.textSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
             child: Text('Cancel',
-                style: GoogleFonts.inter(color: KuriftuColors.textMuted)),
+                style: GoogleFonts.inter(color: AfrilensColors.textMuted)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
@@ -152,23 +152,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return InputDecoration(
       labelText: label,
       labelStyle:
-          GoogleFonts.inter(color: KuriftuColors.textMuted, fontSize: 14),
-      prefixIcon: Icon(icon, color: KuriftuColors.gold, size: 20),
+          GoogleFonts.inter(color: AfrilensColors.textMuted, fontSize: 14),
+      prefixIcon: Icon(icon, color: AfrilensColors.gold, size: 20),
       suffixIcon: suffixIcon,
       filled: true,
-      fillColor: Colors.white.withValues(alpha: 0.05),
+      fillColor: Colors.white.withOpacity(0.05),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(color: KuriftuColors.glassBorder, width: 0.5),
+        borderSide: BorderSide(color: AfrilensColors.glassBorder, width: 0.5),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(color: KuriftuColors.glassBorder, width: 0.5),
+        borderSide: BorderSide(color: AfrilensColors.glassBorder, width: 0.5),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: const BorderSide(color: KuriftuColors.gold, width: 1),
+        borderSide: const BorderSide(color: AfrilensColors.gold, width: 1),
       ),
     );
   }
@@ -176,13 +176,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KuriftuColors.background,
+      backgroundColor: AfrilensColors.background,
       body: Consumer<AuthProvider>(
         builder: (_, auth, __) {
           final user = auth.user;
           if (user == null) {
             return const Center(
-              child: CircularProgressIndicator(color: KuriftuColors.gold),
+              child: CircularProgressIndicator(color: AfrilensColors.gold),
             );
           }
 
@@ -192,7 +192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SliverAppBar(
                 expandedHeight: 200,
                 pinned: true,
-                backgroundColor: KuriftuColors.background,
+                backgroundColor: AfrilensColors.background,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Stack(
                     fit: StackFit.expand,
@@ -203,8 +203,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                             colors: [
-                              KuriftuColors.gold.withValues(alpha: 0.15),
-                              KuriftuColors.background,
+                              AfrilensColors.gold.withOpacity(0.15),
+                              AfrilensColors.background,
                             ],
                           ),
                         ),
@@ -222,14 +222,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 shape: BoxShape.circle,
                                 gradient: LinearGradient(
                                   colors: [
-                                    KuriftuColors.gold,
-                                    KuriftuColors.goldDark,
+                                    AfrilensColors.gold,
+                                    AfrilensColors.goldDark,
                                   ],
                                 ),
                                 boxShadow: [
                                   BoxShadow(
                                     color:
-                                        KuriftuColors.gold.withValues(alpha: 0.3),
+                                        AfrilensColors.gold.withOpacity(0.3),
                                     blurRadius: 20,
                                     offset: const Offset(0, 4),
                                   ),
@@ -241,7 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   style: GoogleFonts.playfairDisplay(
                                     fontSize: 26,
                                     fontWeight: FontWeight.w700,
-                                    color: KuriftuColors.background,
+                                    color: AfrilensColors.background,
                                   ),
                                 ),
                               ),
@@ -254,7 +254,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               style: GoogleFonts.playfairDisplay(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w600,
-                                color: KuriftuColors.textPrimary,
+                                color: AfrilensColors.textPrimary,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -262,7 +262,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               user.email,
                               style: GoogleFonts.inter(
                                 fontSize: 13,
-                                color: KuriftuColors.textSecondary,
+                                color: AfrilensColors.textSecondary,
                               ),
                             ),
                           ],
@@ -320,10 +320,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: Colors.red.withValues(alpha: 0.4),
+                            color: Colors.red.withOpacity(0.4),
                             width: 1,
                           ),
-                          color: Colors.red.withValues(alpha: 0.08),
+                          color: Colors.red.withOpacity(0.08),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -364,9 +364,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Container(
           padding: const EdgeInsets.all(22),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.06),
+            color: Colors.white.withOpacity(0.06),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+            border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
           ),
           child: child,
         ),
@@ -386,7 +386,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: GoogleFonts.playfairDisplay(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: KuriftuColors.textPrimary,
+                color: AfrilensColors.textPrimary,
               ),
             ),
             GestureDetector(
@@ -397,21 +397,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   border:
-                      Border.all(color: KuriftuColors.gold.withValues(alpha: 0.5)),
-                  color: KuriftuColors.gold.withValues(alpha: 0.08),
+                      Border.all(color: AfrilensColors.gold.withOpacity(0.5)),
+                  color: AfrilensColors.gold.withOpacity(0.08),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Icon(LucideIcons.edit3,
-                        color: KuriftuColors.gold, size: 14),
+                        color: AfrilensColors.gold, size: 14),
                     const SizedBox(width: 6),
                     Text(
                       'Edit',
                       style: GoogleFonts.inter(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: KuriftuColors.gold,
+                        color: AfrilensColors.gold,
                       ),
                     ),
                   ],
@@ -454,13 +454,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: GoogleFonts.playfairDisplay(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: KuriftuColors.textPrimary,
+                color: AfrilensColors.textPrimary,
               ),
             ),
             GestureDetector(
               onTap: () => setState(() => _isEditing = false),
               child: const Icon(LucideIcons.x,
-                  color: KuriftuColors.textMuted, size: 20),
+                  color: AfrilensColors.textMuted, size: 20),
             ),
           ],
         ),
@@ -468,7 +468,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         TextFormField(
           controller: _nameController,
           style:
-              GoogleFonts.inter(color: KuriftuColors.textPrimary, fontSize: 15),
+              GoogleFonts.inter(color: AfrilensColors.textPrimary, fontSize: 15),
           decoration: _inputDecoration(label: 'Full Name', icon: LucideIcons.user),
         ),
         const SizedBox(height: 14),
@@ -476,7 +476,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           controller: _phoneController,
           keyboardType: TextInputType.phone,
           style:
-              GoogleFonts.inter(color: KuriftuColors.textPrimary, fontSize: 15),
+              GoogleFonts.inter(color: AfrilensColors.textPrimary, fontSize: 15),
           decoration: _inputDecoration(label: 'Phone', icon: LucideIcons.phone),
         ),
         const SizedBox(height: 20),
@@ -485,7 +485,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: auth.isLoading
               ? const Center(
                   child: CircularProgressIndicator(
-                      color: KuriftuColors.gold, strokeWidth: 2))
+                      color: AfrilensColors.gold, strokeWidth: 2))
               : GoldButton(
                   text: 'SAVE CHANGES',
                   icon: LucideIcons.check,
@@ -506,9 +506,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             height: 40,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: KuriftuColors.gold.withValues(alpha: 0.1),
+              color: AfrilensColors.gold.withOpacity(0.1),
             ),
-            child: const Icon(LucideIcons.key, color: KuriftuColors.gold, size: 18),
+            child: const Icon(LucideIcons.key, color: AfrilensColors.gold, size: 18),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -517,12 +517,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: GoogleFonts.inter(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
-                color: KuriftuColors.textPrimary,
+                color: AfrilensColors.textPrimary,
               ),
             ),
           ),
           const Icon(LucideIcons.chevronRight,
-              color: KuriftuColors.textMuted, size: 18),
+              color: AfrilensColors.textMuted, size: 18),
         ],
       ),
     );
@@ -540,13 +540,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: GoogleFonts.playfairDisplay(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: KuriftuColors.textPrimary,
+                color: AfrilensColors.textPrimary,
               ),
             ),
             GestureDetector(
               onTap: () => setState(() => _showPasswordForm = false),
               child: const Icon(LucideIcons.x,
-                  color: KuriftuColors.textMuted, size: 20),
+                  color: AfrilensColors.textMuted, size: 20),
             ),
           ],
         ),
@@ -555,7 +555,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           controller: _oldPasswordController,
           obscureText: true,
           style:
-              GoogleFonts.inter(color: KuriftuColors.textPrimary, fontSize: 15),
+              GoogleFonts.inter(color: AfrilensColors.textPrimary, fontSize: 15),
           decoration: _inputDecoration(
               label: 'Current Password', icon: LucideIcons.lock),
         ),
@@ -564,7 +564,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           controller: _newPasswordController,
           obscureText: true,
           style:
-              GoogleFonts.inter(color: KuriftuColors.textPrimary, fontSize: 15),
+              GoogleFonts.inter(color: AfrilensColors.textPrimary, fontSize: 15),
           decoration:
               _inputDecoration(label: 'New Password', icon: LucideIcons.key),
         ),
@@ -573,7 +573,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           controller: _confirmPasswordController,
           obscureText: true,
           style:
-              GoogleFonts.inter(color: KuriftuColors.textPrimary, fontSize: 15),
+              GoogleFonts.inter(color: AfrilensColors.textPrimary, fontSize: 15),
           decoration: _inputDecoration(
               label: 'Confirm New Password', icon: LucideIcons.shieldCheck),
         ),
@@ -583,7 +583,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: auth.isLoading
               ? const Center(
                   child: CircularProgressIndicator(
-                      color: KuriftuColors.gold, strokeWidth: 2))
+                      color: AfrilensColors.gold, strokeWidth: 2))
               : GoldButton(
                   text: 'UPDATE PASSWORD',
                   icon: LucideIcons.check,
@@ -601,7 +601,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }) {
     return Row(
       children: [
-        Icon(icon, color: KuriftuColors.gold, size: 18),
+        Icon(icon, color: AfrilensColors.gold, size: 18),
         const SizedBox(width: 12),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -611,7 +611,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: GoogleFonts.inter(
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
-                color: KuriftuColors.textMuted,
+                color: AfrilensColors.textMuted,
                 letterSpacing: 1,
               ),
             ),
@@ -620,7 +620,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               value,
               style: GoogleFonts.inter(
                 fontSize: 14,
-                color: KuriftuColors.textPrimary,
+                color: AfrilensColors.textPrimary,
               ),
             ),
           ],

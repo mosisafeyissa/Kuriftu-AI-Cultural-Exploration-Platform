@@ -26,7 +26,7 @@ class ArtifactCard extends StatelessWidget {
           height: height,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(24),
-            boxShadow: KuriftuTheme.softShadow,
+            boxShadow: AfrilensTheme.softShadow,
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(24),
@@ -50,8 +50,8 @@ class ArtifactCard extends StatelessWidget {
         artifact.image,
         fit: BoxFit.cover,
         errorBuilder: (_, __, ___) => Container(
-          color: KuriftuColors.surfaceLight,
-          child: const Icon(LucideIcons.image, color: KuriftuColors.textMuted, size: 40),
+          color: AfrilensColors.surfaceLight,
+          child: const Icon(LucideIcons.image, color: AfrilensColors.textMuted, size: 40),
         ),
       );
     }
@@ -59,8 +59,8 @@ class ArtifactCard extends StatelessWidget {
       artifact.image,
       fit: BoxFit.cover,
       errorBuilder: (_, __, ___) => Container(
-        color: KuriftuColors.surfaceLight,
-        child: const Icon(LucideIcons.image, color: KuriftuColors.textMuted, size: 40),
+        color: AfrilensColors.surfaceLight,
+        child: const Icon(LucideIcons.image, color: AfrilensColors.textMuted, size: 40),
       ),
     );
   }
@@ -73,8 +73,8 @@ class ArtifactCard extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             Colors.transparent,
-            Colors.black.withValues(alpha: 0.3),
-            Colors.black.withValues(alpha: 0.85),
+            Colors.black.withOpacity(0.3),
+            Colors.black.withOpacity(0.85),
           ],
           stops: const [0.3, 0.6, 1.0],
         ),
@@ -94,9 +94,9 @@ class ArtifactCard extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: Colors.white.withOpacity(0.08),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+              border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,7 +104,7 @@ class ArtifactCard extends StatelessWidget {
               children: [
                 Text(
                   artifact.name,
-                  style: KuriftuTheme.headlineSerif.copyWith(fontSize: 16),
+                  style: AfrilensTheme.headlineSerif.copyWith(fontSize: 16),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -114,13 +114,13 @@ class ArtifactCard extends StatelessWidget {
                   children: [
                     Text(
                       artifact.countryName,
-                      style: KuriftuTheme.goldAccent.copyWith(fontSize: 12),
+                      style: AfrilensTheme.goldAccent.copyWith(fontSize: 12),
                     ),
                     Text(
                       '\$${artifact.price.toStringAsFixed(0)}',
-                      style: KuriftuTheme.headlineSerif.copyWith(
+                      style: AfrilensTheme.headlineSerif.copyWith(
                         fontSize: 18,
-                        color: KuriftuColors.gold,
+                        color: AfrilensColors.gold,
                       ),
                     ),
                   ],

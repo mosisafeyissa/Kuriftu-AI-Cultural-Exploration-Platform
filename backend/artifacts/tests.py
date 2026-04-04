@@ -20,7 +20,7 @@ def _make_country(name="Ethiopia", code="ET"):
     return Country.objects.create(name=name, code=code)
 
 
-def _make_villa(country, name="Kuriftu Addis"):
+def _make_villa(country, name="Afrilens Addis"):
     return Villa.objects.create(name=name, country=country, location="Addis Ababa")
 
 
@@ -59,7 +59,7 @@ class ArtifactListTests(TestCase):
         self.client = APIClient()
         self.et = _make_country("Ethiopia", "ET")
         self.ma = _make_country("Morocco", "MA")
-        self.villa1 = _make_villa(self.et, "Kuriftu Addis")
+        self.villa1 = _make_villa(self.et, "Afrilens Addis")
         self.villa2 = _make_villa(self.ma, "Riad Al Fez")
         self.a1 = _make_artifact(self.et, self.villa1, "Coffee Table")
         self.a2 = _make_artifact(self.et, self.villa1, "Mesob Basket", "74.99")

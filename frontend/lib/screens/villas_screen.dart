@@ -63,7 +63,7 @@ class _VillasScreenState extends State<VillasScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KuriftuColors.background,
+      backgroundColor: AfrilensColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -78,7 +78,7 @@ class _VillasScreenState extends State<VillasScreen> {
           child: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.06),
+              color: Colors.white.withOpacity(0.06),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(LucideIcons.arrowLeft, color: Colors.white, size: 20),
@@ -89,13 +89,13 @@ class _VillasScreenState extends State<VillasScreen> {
           style: GoogleFonts.playfairDisplay(
             fontSize: 22,
             fontWeight: FontWeight.w600,
-            color: KuriftuColors.textPrimary,
+            color: AfrilensColors.textPrimary,
           ),
         ),
       ),
       body: _isLoading
           ? const Center(
-              child: CircularProgressIndicator(color: KuriftuColors.gold, strokeWidth: 2),
+              child: CircularProgressIndicator(color: AfrilensColors.gold, strokeWidth: 2),
             )
           : _errorMessage != null
               ? Center(
@@ -104,11 +104,11 @@ class _VillasScreenState extends State<VillasScreen> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(LucideIcons.wifiOff, color: KuriftuColors.textMuted, size: 36),
+                        Icon(LucideIcons.wifiOff, color: AfrilensColors.textMuted, size: 36),
                         const SizedBox(height: 12),
                         Text(
                           _errorMessage!,
-                          style: KuriftuTheme.bodyText.copyWith(color: KuriftuColors.textMuted, fontSize: 13),
+                          style: AfrilensTheme.bodyText.copyWith(color: AfrilensColors.textMuted, fontSize: 13),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 16),
@@ -117,10 +117,10 @@ class _VillasScreenState extends State<VillasScreen> {
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
                             decoration: BoxDecoration(
-                              border: Border.all(color: KuriftuColors.gold, width: 1),
+                              border: Border.all(color: AfrilensColors.gold, width: 1),
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: Text('Retry', style: KuriftuTheme.goldAccent.copyWith(fontSize: 13)),
+                            child: Text('Retry', style: AfrilensTheme.goldAccent.copyWith(fontSize: 13)),
                           ),
                         ),
                       ],
@@ -162,9 +162,9 @@ class _VillasScreenState extends State<VillasScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(villa.description, style: KuriftuTheme.bodyText.copyWith(fontSize: 15)),
+                Text(villa.description, style: AfrilensTheme.bodyText.copyWith(fontSize: 15)),
                 const SizedBox(height: 8),
-                Text('${artifacts.length} artifacts', style: KuriftuTheme.goldAccent.copyWith(fontSize: 13)),
+                Text('${artifacts.length} artifacts', style: AfrilensTheme.goldAccent.copyWith(fontSize: 13)),
               ],
             ),
           ),
@@ -214,9 +214,9 @@ class _ReferenceVillaCard extends StatelessWidget {
   Widget _buildVillaImage(String imagePath) {
     final isNetwork = imagePath.startsWith('http://') || imagePath.startsWith('https://');
     final errorWidget = Container(
-      color: KuriftuColors.surfaceLight,
+      color: AfrilensColors.surfaceLight,
       child: const Center(
-        child: Icon(LucideIcons.image, color: KuriftuColors.textMuted, size: 40),
+        child: Icon(LucideIcons.image, color: AfrilensColors.textMuted, size: 40),
       ),
     );
 
@@ -277,7 +277,7 @@ class _ReferenceVillaCard extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.55),
+                      color: Colors.black.withOpacity(0.55),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -285,7 +285,7 @@ class _ReferenceVillaCard extends StatelessWidget {
                       style: GoogleFonts.inter(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: KuriftuColors.textSecondary,
+                        color: AfrilensColors.textSecondary,
                       ),
                     ),
                   ),
@@ -299,13 +299,13 @@ class _ReferenceVillaCard extends StatelessWidget {
             style: GoogleFonts.playfairDisplay(
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: KuriftuColors.textPrimary,
+              color: AfrilensColors.textPrimary,
             ),
           ),
           const SizedBox(height: 6),
           Text(
             villa.description,
-            style: KuriftuTheme.bodyText.copyWith(fontSize: 13, height: 1.5),
+            style: AfrilensTheme.bodyText.copyWith(fontSize: 13, height: 1.5),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),

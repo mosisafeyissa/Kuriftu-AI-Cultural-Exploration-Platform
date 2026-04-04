@@ -58,7 +58,7 @@ class _ScanScreenState extends State<ScanScreen> {
               Expanded(child: Text(msg, style: const TextStyle(fontFamily: 'Inter', color: Colors.white, fontSize: 14))),
             ],
           ),
-          backgroundColor: Colors.red.withValues(alpha: 0.9),
+          backgroundColor: Colors.red.withOpacity(0.9),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           margin: const EdgeInsets.all(16),
@@ -84,9 +84,9 @@ class _ScanScreenState extends State<ScanScreen> {
           child: Container(
             padding: EdgeInsets.fromLTRB(28, 28, 28, MediaQuery.of(context).padding.bottom + 28),
             decoration: BoxDecoration(
-              color: KuriftuColors.surface.withValues(alpha: 0.92),
+              color: AfrilensColors.surface.withOpacity(0.92),
               borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-              border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+              border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -95,7 +95,7 @@ class _ScanScreenState extends State<ScanScreen> {
                 Container(
                   width: 40, height: 4,
                   decoration: BoxDecoration(
-                    color: KuriftuColors.textMuted.withValues(alpha: 0.4),
+                    color: AfrilensColors.textMuted.withOpacity(0.4),
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -104,33 +104,33 @@ class _ScanScreenState extends State<ScanScreen> {
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: KuriftuColors.gold.withValues(alpha: 0.1),
+                    color: AfrilensColors.gold.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(LucideIcons.searchX, color: KuriftuColors.gold, size: 40),
+                  child: const Icon(LucideIcons.searchX, color: AfrilensColors.gold, size: 40),
                 ),
                 const SizedBox(height: 24),
                 Text(
                   'No Match Found',
-                  style: KuriftuTheme.headlineSerif.copyWith(fontSize: 24),
+                  style: AfrilensTheme.headlineSerif.copyWith(fontSize: 24),
                 ),
                 const SizedBox(height: 12),
                 Text(
                   'We couldn\'t find a matching artifact in our collection.',
                   textAlign: TextAlign.center,
-                  style: KuriftuTheme.bodyText.copyWith(fontSize: 14, color: KuriftuColors.textSecondary, height: 1.5),
+                  style: AfrilensTheme.bodyText.copyWith(fontSize: 14, color: AfrilensColors.textSecondary, height: 1.5),
                 ),
                 if (pct > 0) ...[
                   const SizedBox(height: 12),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.06),
+                      color: Colors.white.withOpacity(0.06),
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: KuriftuColors.glassBorder),
+                      border: Border.all(color: AfrilensColors.glassBorder),
                     ),
                     child: Text('Closest match: $pct% similarity',
-                      style: KuriftuTheme.labelText.copyWith(fontSize: 12, color: KuriftuColors.textMuted)),
+                      style: AfrilensTheme.labelText.copyWith(fontSize: 12, color: AfrilensColors.textMuted)),
                   ),
                 ],
                 const SizedBox(height: 28),
@@ -138,9 +138,9 @@ class _ScanScreenState extends State<ScanScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: KuriftuColors.gold.withValues(alpha: 0.06),
+                    color: AfrilensColors.gold.withOpacity(0.06),
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: KuriftuColors.gold.withValues(alpha: 0.15)),
+                    border: Border.all(color: AfrilensColors.gold.withOpacity(0.15)),
                   ),
                   child: Column(
                     children: [
@@ -162,15 +162,15 @@ class _ScanScreenState extends State<ScanScreen> {
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(
-                            border: Border.all(color: KuriftuColors.gold, width: 1),
+                            border: Border.all(color: AfrilensColors.gold, width: 1),
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(LucideIcons.image, color: KuriftuColors.gold, size: 18),
+                              const Icon(LucideIcons.image, color: AfrilensColors.gold, size: 18),
                               const SizedBox(width: 8),
-                              Text('GALLERY', style: KuriftuTheme.goldAccent.copyWith(fontSize: 13, fontWeight: FontWeight.w600, letterSpacing: 1)),
+                              Text('GALLERY', style: AfrilensTheme.goldAccent.copyWith(fontSize: 13, fontWeight: FontWeight.w600, letterSpacing: 1)),
                             ],
                           ),
                         ),
@@ -214,9 +214,9 @@ class _ScanScreenState extends State<ScanScreen> {
   Widget _tipRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 16, color: KuriftuColors.gold.withValues(alpha: 0.7)),
+        Icon(icon, size: 16, color: AfrilensColors.gold.withOpacity(0.7)),
         const SizedBox(width: 12),
-        Text(text, style: KuriftuTheme.bodyText.copyWith(fontSize: 13, color: KuriftuColors.textSecondary)),
+        Text(text, style: AfrilensTheme.bodyText.copyWith(fontSize: 13, color: AfrilensColors.textSecondary)),
       ],
     );
   }
@@ -252,7 +252,7 @@ class _ScanScreenState extends State<ScanScreen> {
               // Background: uploaded image during scanning, dark gradient otherwise
               if (hasImage) ...[
                 _buildCapturedImageBg(provider),
-                Container(color: Colors.black.withValues(alpha: 0.5)),
+                Container(color: Colors.black.withOpacity(0.5)),
               ] else
                 Container(
                   decoration: const BoxDecoration(
@@ -286,7 +286,7 @@ class _ScanScreenState extends State<ScanScreen> {
                   child: Text(
                     'Position the artifact within the frame',
                     textAlign: TextAlign.center,
-                    style: KuriftuTheme.bodyText.copyWith(color: KuriftuColors.textSecondary.withValues(alpha: 0.7), fontSize: 14),
+                    style: AfrilensTheme.bodyText.copyWith(color: AfrilensColors.textSecondary.withOpacity(0.7), fontSize: 14),
                   ),
                 ),
 
@@ -310,7 +310,7 @@ class _ScanScreenState extends State<ScanScreen> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter, end: Alignment.bottomCenter,
-            colors: [Colors.black.withValues(alpha: 0.7), Colors.transparent],
+            colors: [Colors.black.withOpacity(0.7), Colors.transparent],
           ),
         ),
         child: Row(
@@ -326,9 +326,9 @@ class _ScanScreenState extends State<ScanScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: Colors.white.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(14),
-                      border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+                      border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -348,12 +348,12 @@ class _ScanScreenState extends State<ScanScreen> {
             const Expanded(
               child: Text(
                 'Cultural Scanner',
-                style: TextStyle(fontFamily: 'PlayfairDisplay', fontSize: 20, fontWeight: FontWeight.w600, color: KuriftuColors.textPrimary),
+                style: TextStyle(fontFamily: 'PlayfairDisplay', fontSize: 20, fontWeight: FontWeight.w600, color: AfrilensColors.textPrimary),
               ),
             ),
-            const Icon(LucideIcons.sparkles, color: KuriftuColors.gold, size: 18),
+            const Icon(LucideIcons.sparkles, color: AfrilensColors.gold, size: 18),
             const SizedBox(width: 6),
-            Text('AI', style: KuriftuTheme.goldAccent.copyWith(fontSize: 14)),
+            Text('AI', style: AfrilensTheme.goldAccent.copyWith(fontSize: 14)),
           ],
         ),
       ),
@@ -368,9 +368,9 @@ class _ScanScreenState extends State<ScanScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.08),
+            color: Colors.white.withOpacity(0.08),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+            border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -378,10 +378,10 @@ class _ScanScreenState extends State<ScanScreen> {
             children: [
               const SizedBox(
                 width: 18, height: 18,
-                child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(KuriftuColors.gold)),
+                child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(AfrilensColors.gold)),
               ),
               const SizedBox(width: 14),
-              Text('AI is analyzing the artifact...', style: KuriftuTheme.bodyText.copyWith(color: KuriftuColors.textPrimary, fontSize: 14)),
+              Text('AI is analyzing the artifact...', style: AfrilensTheme.bodyText.copyWith(color: AfrilensColors.textPrimary, fontSize: 14)),
             ],
           ),
         ),
@@ -402,7 +402,7 @@ class _ScanScreenState extends State<ScanScreen> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.bottomCenter, end: Alignment.topCenter,
-            colors: [Colors.black.withValues(alpha: 0.8), Colors.transparent],
+            colors: [Colors.black.withOpacity(0.8), Colors.transparent],
           ),
         ),
         child: Row(
@@ -418,14 +418,14 @@ class _ScanScreenState extends State<ScanScreen> {
                 width: 80, height: 80,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: isScanning ? KuriftuColors.textMuted : KuriftuColors.gold, width: 3),
-                  boxShadow: isScanning ? [] : [BoxShadow(color: KuriftuColors.gold.withValues(alpha: 0.3), blurRadius: 20, spreadRadius: 2)],
+                  border: Border.all(color: isScanning ? AfrilensColors.textMuted : AfrilensColors.gold, width: 3),
+                  boxShadow: isScanning ? [] : [BoxShadow(color: AfrilensColors.gold.withOpacity(0.3), blurRadius: 20, spreadRadius: 2)],
                 ),
                 child: Container(
                   margin: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: isScanning ? KuriftuColors.surfaceLight : KuriftuColors.gold),
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: isScanning ? AfrilensColors.surfaceLight : AfrilensColors.gold),
                   child: isScanning
-                      ? const Padding(padding: EdgeInsets.all(22), child: CircularProgressIndicator(strokeWidth: 2.5, color: KuriftuColors.gold))
+                      ? const Padding(padding: EdgeInsets.all(22), child: CircularProgressIndicator(strokeWidth: 2.5, color: AfrilensColors.gold))
                       : const Icon(LucideIcons.scan, color: Colors.black, size: 30),
                 ),
               ),
@@ -449,14 +449,14 @@ class _ScanScreenState extends State<ScanScreen> {
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: Colors.white.withOpacity(0.08),
               shape: BoxShape.circle,
-              border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+              border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
             ),
-            child: Icon(icon, color: KuriftuColors.textSecondary, size: 22),
+            child: Icon(icon, color: AfrilensColors.textSecondary, size: 22),
           ),
           const SizedBox(height: 8),
-          Text(label, style: KuriftuTheme.labelText.copyWith(fontSize: 11)),
+          Text(label, style: AfrilensTheme.labelText.copyWith(fontSize: 11)),
         ],
       ),
     );

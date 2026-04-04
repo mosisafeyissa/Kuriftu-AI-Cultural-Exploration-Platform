@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class KuriftuColors {
-  KuriftuColors._();
+class AfrilensColors {
+  AfrilensColors._();
 
   static const Color gold = Color(0xFFD4AF37);
   static const Color goldLight = Color(0xFFF4D03F);
@@ -23,49 +23,49 @@ class KuriftuColors {
   static const Color glassHighlight = Color(0x0DFFFFFF);
 }
 
-class KuriftuTheme {
-  KuriftuTheme._();
+class AfrilensTheme {
+  AfrilensTheme._();
 
   static TextStyle get headlineSerif => GoogleFonts.playfairDisplay(
-        color: KuriftuColors.textPrimary,
+        color: AfrilensColors.textPrimary,
         fontWeight: FontWeight.w700,
       );
 
   static TextStyle get bodyText => GoogleFonts.inter(
-        color: KuriftuColors.textSecondary,
+        color: AfrilensColors.textSecondary,
         fontSize: 14,
         height: 1.6,
       );
 
   static TextStyle get labelText => GoogleFonts.inter(
-        color: KuriftuColors.textMuted,
+        color: AfrilensColors.textMuted,
         fontSize: 12,
         fontWeight: FontWeight.w500,
         letterSpacing: 1.2,
       );
 
   static TextStyle get goldAccent => GoogleFonts.inter(
-        color: KuriftuColors.gold,
+        color: AfrilensColors.gold,
         fontSize: 13,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.8,
       );
 
   static BoxDecoration get glassDecoration => BoxDecoration(
-        color: KuriftuColors.glassFill,
+        color: AfrilensColors.glassFill,
         borderRadius: BorderRadius.circular(28),
-        border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+        border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
       );
 
   static BoxDecoration glassDecorationWithRadius(double radius) => BoxDecoration(
-        color: KuriftuColors.glassFill,
+        color: AfrilensColors.glassFill,
         borderRadius: BorderRadius.circular(radius),
-        border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+        border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
       );
 
   static List<BoxShadow> get softShadow => [
         BoxShadow(
-          color: Colors.black.withValues(alpha: 0.4),
+          color: Colors.black.withOpacity(0.4),
           blurRadius: 24,
           offset: const Offset(0, 8),
         ),
@@ -73,23 +73,23 @@ class KuriftuTheme {
 
   static ThemeData get darkTheme => ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: KuriftuColors.background,
-        primaryColor: KuriftuColors.gold,
+        scaffoldBackgroundColor: AfrilensColors.background,
+        primaryColor: AfrilensColors.gold,
         colorScheme: const ColorScheme.dark(
-          primary: KuriftuColors.gold,
-          secondary: KuriftuColors.goldLight,
-          surface: KuriftuColors.surface,
+          primary: AfrilensColors.gold,
+          secondary: AfrilensColors.goldLight,
+          surface: AfrilensColors.surface,
         ),
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.transparent,
           elevation: 0,
           centerTitle: true,
           titleTextStyle: GoogleFonts.playfairDisplay(
-            color: KuriftuColors.textPrimary,
+            color: AfrilensColors.textPrimary,
             fontSize: 20,
             fontWeight: FontWeight.w600,
           ),
-          iconTheme: const IconThemeData(color: KuriftuColors.textPrimary),
+          iconTheme: const IconThemeData(color: AfrilensColors.textPrimary),
         ),
         textTheme: TextTheme(
           headlineLarge: headlineSerif.copyWith(fontSize: 32),
@@ -105,3 +105,4 @@ class KuriftuTheme {
         useMaterial3: true,
       );
 }
+

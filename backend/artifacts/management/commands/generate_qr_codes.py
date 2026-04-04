@@ -29,7 +29,7 @@ class Command(BaseCommand):
             return
 
         self.stdout.write(self.style.SUCCESS(f"\n{'='*70}"))
-        self.stdout.write(self.style.SUCCESS("  KURIFTU VILLA QR CODES"))
+        self.stdout.write(self.style.SUCCESS("  AFRILENS VILLA QR CODES"))
         self.stdout.write(self.style.SUCCESS(f"{'='*70}\n"))
 
         for villa in villas:

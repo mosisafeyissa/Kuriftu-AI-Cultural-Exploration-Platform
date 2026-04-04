@@ -76,7 +76,7 @@ class _OrderScreenState extends State<OrderScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: KuriftuColors.surface,
+        backgroundColor: AfrilensColors.surface,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
@@ -96,9 +96,9 @@ class _OrderScreenState extends State<OrderScreen> {
             child: Container(
               padding: const EdgeInsets.all(32),
               decoration: BoxDecoration(
-                color: KuriftuColors.surface.withValues(alpha: 0.9),
+                color: AfrilensColors.surface.withOpacity(0.9),
                 borderRadius: BorderRadius.circular(28),
-                border: Border.all(color: KuriftuColors.glassBorder, width: 0.5),
+                border: Border.all(color: AfrilensColors.glassBorder, width: 0.5),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -106,12 +106,12 @@ class _OrderScreenState extends State<OrderScreen> {
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: KuriftuColors.gold.withValues(alpha: 0.12),
+                      color: AfrilensColors.gold.withOpacity(0.12),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
                       LucideIcons.checkCircle,
-                      color: KuriftuColors.gold,
+                      color: AfrilensColors.gold,
                       size: 48,
                     ),
                   ),
@@ -121,7 +121,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     style: GoogleFonts.playfairDisplay(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
-                      color: KuriftuColors.textPrimary,
+                      color: AfrilensColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -130,14 +130,14 @@ class _OrderScreenState extends State<OrderScreen> {
                     style: GoogleFonts.playfairDisplay(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
-                      color: KuriftuColors.gold,
+                      color: AfrilensColors.gold,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF4CAF50).withValues(alpha: 0.15),
+                      color: const Color(0xFF4CAF50).withOpacity(0.15),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Row(
@@ -160,7 +160,7 @@ class _OrderScreenState extends State<OrderScreen> {
                   Text(
                     'Receipt sent to ${_emailController.text}',
                     textAlign: TextAlign.center,
-                    style: KuriftuTheme.bodyText.copyWith(fontSize: 13, height: 1.5),
+                    style: AfrilensTheme.bodyText.copyWith(fontSize: 13, height: 1.5),
                   ),
                   const SizedBox(height: 28),
                   SizedBox(
@@ -192,7 +192,7 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KuriftuColors.background,
+      backgroundColor: AfrilensColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -201,7 +201,7 @@ class _OrderScreenState extends State<OrderScreen> {
           child: Container(
             margin: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.06),
+              color: Colors.white.withOpacity(0.06),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(LucideIcons.arrowLeft, color: Colors.white, size: 20),
@@ -212,7 +212,7 @@ class _OrderScreenState extends State<OrderScreen> {
           style: GoogleFonts.playfairDisplay(
             fontSize: 22,
             fontWeight: FontWeight.w600,
-            color: KuriftuColors.textPrimary,
+            color: AfrilensColors.textPrimary,
           ),
         ),
       ),
@@ -241,14 +241,14 @@ class _OrderScreenState extends State<OrderScreen> {
                       children: [
                         Text(
                           widget.artifact.name,
-                          style: KuriftuTheme.headlineSerif.copyWith(fontSize: 16),
+                          style: AfrilensTheme.headlineSerif.copyWith(fontSize: 16),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 6),
                         Text(
                           widget.artifact.countryName,
-                          style: KuriftuTheme.goldAccent.copyWith(fontSize: 12),
+                          style: AfrilensTheme.goldAccent.copyWith(fontSize: 12),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -256,7 +256,7 @@ class _OrderScreenState extends State<OrderScreen> {
                           style: GoogleFonts.playfairDisplay(
                             fontSize: 20,
                             fontWeight: FontWeight.w700,
-                            color: KuriftuColors.gold,
+                            color: AfrilensColors.gold,
                           ),
                         ),
                       ],
@@ -270,7 +270,7 @@ class _OrderScreenState extends State<OrderScreen> {
             // Quantity
             Text(
               'QUANTITY',
-              style: KuriftuTheme.labelText.copyWith(letterSpacing: 2),
+              style: AfrilensTheme.labelText.copyWith(letterSpacing: 2),
             ),
             const SizedBox(height: 14),
             GlassCard(
@@ -283,8 +283,8 @@ class _OrderScreenState extends State<OrderScreen> {
                         ? () => setState(() => _quantity--)
                         : null,
                     icon: const Icon(LucideIcons.minus),
-                    color: KuriftuColors.gold,
-                    disabledColor: KuriftuColors.textMuted,
+                    color: AfrilensColors.gold,
+                    disabledColor: AfrilensColors.textMuted,
                   ),
                   const SizedBox(width: 24),
                   Text(
@@ -292,14 +292,14 @@ class _OrderScreenState extends State<OrderScreen> {
                     style: GoogleFonts.playfairDisplay(
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
-                      color: KuriftuColors.textPrimary,
+                      color: AfrilensColors.textPrimary,
                     ),
                   ),
                   const SizedBox(width: 24),
                   IconButton(
                     onPressed: () => setState(() => _quantity++),
                     icon: const Icon(LucideIcons.plus),
-                    color: KuriftuColors.gold,
+                    color: AfrilensColors.gold,
                   ),
                 ],
               ),
@@ -309,7 +309,7 @@ class _OrderScreenState extends State<OrderScreen> {
             // Email
             Text(
               'YOUR EMAIL',
-              style: KuriftuTheme.labelText.copyWith(letterSpacing: 2),
+              style: AfrilensTheme.labelText.copyWith(letterSpacing: 2),
             ),
             const SizedBox(height: 14),
             ClipRRect(
@@ -319,22 +319,22 @@ class _OrderScreenState extends State<OrderScreen> {
                 child: TextField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  style: KuriftuTheme.bodyText.copyWith(
-                    color: KuriftuColors.textPrimary,
+                  style: AfrilensTheme.bodyText.copyWith(
+                    color: AfrilensColors.textPrimary,
                     fontSize: 16,
                   ),
                   decoration: InputDecoration(
-                    hintText: 'guest@kuriftu.com',
-                    hintStyle: KuriftuTheme.bodyText.copyWith(
-                      color: KuriftuColors.textMuted,
+                    hintText: 'guest@afrilens.com',
+                    hintStyle: AfrilensTheme.bodyText.copyWith(
+                      color: AfrilensColors.textMuted,
                     ),
                     prefixIcon: const Icon(
                       LucideIcons.mail,
-                      color: KuriftuColors.textMuted,
+                      color: AfrilensColors.textMuted,
                       size: 20,
                     ),
                     filled: true,
-                    fillColor: Colors.white.withValues(alpha: 0.06),
+                    fillColor: Colors.white.withOpacity(0.06),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide.none,
@@ -342,14 +342,14 @@ class _OrderScreenState extends State<OrderScreen> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(
-                        color: Colors.white.withValues(alpha: 0.1),
+                        color: Colors.white.withOpacity(0.1),
                         width: 0.5,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: const BorderSide(
-                        color: KuriftuColors.gold,
+                        color: AfrilensColors.gold,
                         width: 1,
                       ),
                     ),
@@ -370,9 +370,9 @@ class _OrderScreenState extends State<OrderScreen> {
                 children: [
                   Text(
                     'Total',
-                    style: KuriftuTheme.bodyText.copyWith(
+                    style: AfrilensTheme.bodyText.copyWith(
                       fontSize: 18,
-                      color: KuriftuColors.textSecondary,
+                      color: AfrilensColors.textSecondary,
                     ),
                   ),
                   Text(
@@ -380,7 +380,7 @@ class _OrderScreenState extends State<OrderScreen> {
                     style: GoogleFonts.playfairDisplay(
                       fontSize: 32,
                       fontWeight: FontWeight.w700,
-                      color: KuriftuColors.textPrimary,
+                      color: AfrilensColors.textPrimary,
                     ),
                   ),
                 ],

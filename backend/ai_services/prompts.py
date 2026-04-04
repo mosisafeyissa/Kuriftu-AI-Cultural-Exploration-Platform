@@ -1,5 +1,5 @@
 """
-AI Prompt Templates for the Kuriftu Cultural Exploration Platform.
+AI Prompt Templates for the Afrilens Cultural Exploration Platform.
 
 All prompts sent to Google Gemini are stored here as constants.
 This keeps them separate from business logic so they're easy to tweak and test.
@@ -9,8 +9,8 @@ This keeps them separate from business logic so they're easy to tweak and test.
 
 IDENTIFY_OBJECT_PROMPT = """
 You are an expert in African cultural artifacts, furniture, art, and handicrafts.
-You are helping identify items displayed at Kuriftu Resort & Spa in Ethiopia.
-The resort showcases handcrafted cultural items from across Africa.
+You are helping identify items displayed at the Afrilens Heritage Collection in Ethiopia.
+The collection showcases handcrafted cultural items from across Africa.
 
 Analyze this image and identify the cultural artifact shown.
 
@@ -48,7 +48,7 @@ this exact format:
 
 {{
   "title": "A captivating, evocative title for this artifact's story",
-  "story": "A 150-200 word narrative covering the history, the artisans who create it, how it is traditionally used, and its journey to Kuriftu Resort",
+  "story": "A 150-200 word narrative covering the history, the artisans who create it, how it is traditionally used, and its journey to the Afrilens Heritage Collection",
   "materials": "A detailed description of the materials and techniques used to craft this artifact",
   "cultural_significance": "2-3 sentences about what this item means culturally to its community of origin",
   "fun_fact": "One surprising or delightful fact about this artifact or craft tradition"

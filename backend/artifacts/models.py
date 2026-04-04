@@ -62,9 +62,8 @@ class Villa(models.Model):
         # Generate QR code if image doesn't exist or slug changed
         if not self.qr_image or slug_changed:
             qr = qrcode.QRCode(version=1, box_size=10, border=4)
-            # Encode a URL (relative to frontend, but usually absolute for QRs)
-            guide_url = f"https://kuriftu-village.app/guide/{self.slug}/"
-            qr.add_data(guide_url)
+            # Encode ONLY the UUID string for the app to parse
+            qr.add_data(str(self.qr_code))
             qr.make(fit=True)
 
             img = qr.make_image(fill_color="black", back_color="white")
@@ -74,12 +73,13 @@ class Villa(models.Model):
             img.save(buffer, format="PNG")
             
             # Save to ImageField
-            filename = f"qr_{self.slug}.png"
+            filename = f"qr_{self.slug}_{str(self.qr_code)[:8]}.png"
             # Delete old image if it exists and slug changed
             if slug_changed and self.qr_image:
                 self.qr_image.delete(save=False)
                 
             self.qr_image.save(filename, ContentFile(buffer.getvalue()), save=False)
+
 
         super().save(*args, **kwargs)
 

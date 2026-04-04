@@ -55,7 +55,7 @@ class _VillaGuideScreenState extends State<VillaGuideScreen> {
         future: _guideFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting || _isTranslating) {
-            return const Center(child: CircularProgressIndicator(color: KuriftuColors.gold));
+            return const Center(child: CircularProgressIndicator(color: AfrilensColors.gold));
           }
           if (snapshot.hasError) {
             return _buildErrorState(snapshot.error.toString());
@@ -76,17 +76,17 @@ class _VillaGuideScreenState extends State<VillaGuideScreen> {
           children: [
             const Icon(LucideIcons.alertTriangle, color: Colors.orange, size: 64),
             const SizedBox(height: 16),
-            Text('Guided Tour Error', style: KuriftuTheme.headlineSerif.copyWith(fontSize: 24)),
+            Text('Guided Tour Error', style: AfrilensTheme.headlineSerif.copyWith(fontSize: 24)),
             const SizedBox(height: 8),
             Text(
               error,
               textAlign: TextAlign.center,
-              style: KuriftuTheme.bodyText,
+              style: AfrilensTheme.bodyText,
             ),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(backgroundColor: KuriftuColors.gold),
+              style: ElevatedButton.styleFrom(backgroundColor: AfrilensColors.gold),
               child: const Text('Go Back'),
             ),
           ],
@@ -103,7 +103,7 @@ class _VillaGuideScreenState extends State<VillaGuideScreen> {
           expandedHeight: 300,
           pinned: true,
           flexibleSpace: FlexibleSpaceBar(
-            title: Text(guide.name, style: KuriftuTheme.headlineSerif.copyWith(fontSize: 18)),
+            title: Text(guide.name, style: AfrilensTheme.headlineSerif.copyWith(fontSize: 18)),
             background: Image.network(
               guide.imageUrl,
               fit: BoxFit.cover,
@@ -127,38 +127,38 @@ class _VillaGuideScreenState extends State<VillaGuideScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                       decoration: BoxDecoration(
-                        color: KuriftuColors.gold.withValues(alpha: 0.1),
+                        color: AfrilensColors.gold.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: KuriftuColors.gold.withValues(alpha: 0.3)),
+                        border: Border.all(color: AfrilensColors.gold.withOpacity(0.3)),
                       ),
                       child: Text(
                         guide.countryName.toUpperCase(),
-                        style: KuriftuTheme.goldAccent.copyWith(fontSize: 10, letterSpacing: 2),
+                        style: AfrilensTheme.goldAccent.copyWith(fontSize: 10, letterSpacing: 2),
                       ),
                     ),
                     const Spacer(),
-                    const Icon(LucideIcons.mapPin, size: 14, color: KuriftuColors.gold),
+                    const Icon(LucideIcons.mapPin, size: 14, color: AfrilensColors.gold),
                     const SizedBox(width: 4),
-                    Text(guide.location, style: KuriftuTheme.labelText),
+                    Text(guide.location, style: AfrilensTheme.labelText),
                   ],
                 ),
                 const SizedBox(height: 24),
-                Text('A Cultural Welcome', style: KuriftuTheme.headlineSerif.copyWith(fontSize: 24)),
+                Text('A Cultural Welcome', style: AfrilensTheme.headlineSerif.copyWith(fontSize: 24)),
                 const SizedBox(height: 16),
                 Text(
                   guide.welcomeStory,
-                  style: KuriftuTheme.bodyText.copyWith(fontSize: 16, height: 1.8),
+                  style: AfrilensTheme.bodyText.copyWith(fontSize: 16, height: 1.8),
                 ),
                 const SizedBox(height: 40),
-                Text('Cultural Highlights', style: KuriftuTheme.headlineSerif.copyWith(fontSize: 20)),
+                Text('Cultural Highlights', style: AfrilensTheme.headlineSerif.copyWith(fontSize: 20)),
                 const SizedBox(height: 16),
                 ...guide.culturalHighlights.map((h) => _buildHighlightItem(h)),
                 const SizedBox(height: 48),
-                Text('The Guided Journey', style: KuriftuTheme.headlineSerif.copyWith(fontSize: 24)),
+                Text('The Guided Journey', style: AfrilensTheme.headlineSerif.copyWith(fontSize: 24)),
                 const SizedBox(height: 12),
                 Text(
                   'Explore each corner of the ${guide.name} and uncover the stories within.',
-                  style: KuriftuTheme.bodyText,
+                  style: AfrilensTheme.bodyText,
                 ),
                 const SizedBox(height: 24),
               ],
@@ -192,12 +192,12 @@ class _VillaGuideScreenState extends State<VillaGuideScreen> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(LucideIcons.sparkles, color: KuriftuColors.gold, size: 16),
+          const Icon(LucideIcons.sparkles, color: AfrilensColors.gold, size: 16),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               highlight,
-              style: KuriftuTheme.bodyText.copyWith(color: KuriftuColors.textPrimary),
+              style: AfrilensTheme.bodyText.copyWith(color: AfrilensColors.textPrimary),
             ),
           ),
         ],
@@ -208,7 +208,7 @@ class _VillaGuideScreenState extends State<VillaGuideScreen> {
   Widget _buildSectionCard(VillaSection section, int number) {
     return Container(
       margin: const EdgeInsets.only(bottom: 24),
-      decoration: KuriftuTheme.glassDecoration.copyWith(
+      decoration: AfrilensTheme.glassDecoration.copyWith(
         borderRadius: BorderRadius.circular(20),
       ),
       clipBehavior: Clip.antiAlias,
@@ -231,7 +231,7 @@ class _VillaGuideScreenState extends State<VillaGuideScreen> {
                   children: [
                     Text(
                       'STEP $number',
-                      style: KuriftuTheme.goldAccent.copyWith(fontSize: 12),
+                      style: AfrilensTheme.goldAccent.copyWith(fontSize: 12),
                     ),
                     const Spacer(),
                     Container(
@@ -245,18 +245,18 @@ class _VillaGuideScreenState extends State<VillaGuideScreen> {
                   ],
                 ),
                 const SizedBox(height: 8),
-                Text(section.name, style: KuriftuTheme.headlineSerif.copyWith(fontSize: 20)),
+                Text(section.name, style: AfrilensTheme.headlineSerif.copyWith(fontSize: 20)),
                 const SizedBox(height: 12),
                 Text(
                   section.description,
-                  style: KuriftuTheme.bodyText.copyWith(fontStyle: FontStyle.italic),
+                  style: AfrilensTheme.bodyText.copyWith(fontStyle: FontStyle.italic),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   section.narrative,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: KuriftuTheme.bodyText,
+                  style: AfrilensTheme.bodyText,
                 ),
                 const SizedBox(height: 20),
                 SizedBox(
@@ -264,10 +264,10 @@ class _VillaGuideScreenState extends State<VillaGuideScreen> {
                   child: ElevatedButton(
                     onPressed: () => _openSectionDetail(section),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: KuriftuColors.gold.withValues(alpha: 0.2),
-                      foregroundColor: KuriftuColors.gold,
+                      backgroundColor: AfrilensColors.gold.withOpacity(0.2),
+                      foregroundColor: AfrilensColors.gold,
                       elevation: 0,
-                      side: const BorderSide(color: KuriftuColors.gold, width: 0.5),
+                      side: const BorderSide(color: AfrilensColors.gold, width: 0.5),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     child: const Text('Explore Room'),
@@ -300,7 +300,7 @@ class _VillaGuideScreenState extends State<VillaGuideScreen> {
     };
 
     return PopupMenuButton<String>(
-      icon: const Icon(LucideIcons.languages, color: KuriftuColors.gold),
+      icon: const Icon(LucideIcons.languages, color: AfrilensColors.gold),
       onSelected: _changeLanguage,
       itemBuilder: (context) => langs.entries.map((e) {
         return PopupMenuItem(
@@ -328,7 +328,7 @@ class SectionDetailScreen extends StatelessWidget {
             expandedHeight: 250,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(section.name, style: KuriftuTheme.headlineSerif.copyWith(fontSize: 16)),
+              title: Text(section.name, style: AfrilensTheme.headlineSerif.copyWith(fontSize: 16)),
               background: section.imageUrl != null 
                 ? Image.network(section.imageUrl!, fit: BoxFit.cover)
                 : Container(color: Colors.grey[900]),
@@ -342,10 +342,10 @@ class SectionDetailScreen extends StatelessWidget {
                 children: [
                   Text(
                     section.narrative,
-                    style: KuriftuTheme.bodyText.copyWith(fontSize: 18, height: 1.8),
+                    style: AfrilensTheme.bodyText.copyWith(fontSize: 18, height: 1.8),
                   ),
                   const SizedBox(height: 48),
-                  Text('Artifacts in this Area', style: KuriftuTheme.headlineSerif.copyWith(fontSize: 20)),
+                  Text('Artifacts in this Area', style: AfrilensTheme.headlineSerif.copyWith(fontSize: 20)),
                   const SizedBox(height: 16),
                 ],
               ),

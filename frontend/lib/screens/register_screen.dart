@@ -93,26 +93,27 @@ class _RegisterScreenState extends State<RegisterScreen>
     return InputDecoration(
       labelText: label,
       labelStyle: GoogleFonts.inter(
-        color: KuriftuColors.textMuted,
+        color: AfrilensColors.textMuted,
         fontSize: 14,
       ),
-      prefixIcon: Icon(icon, color: KuriftuColors.gold, size: 20),
+      prefixIcon: Icon(icon, color: AfrilensColors.gold, size: 20),
       suffixIcon: suffixIcon,
       filled: true,
-      fillColor: Colors.white.withValues(alpha: 0.05),
+      fillColor: Colors.white.withOpacity(0.05),
       contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(color: KuriftuColors.glassBorder, width: 0.5),
+        borderSide: BorderSide(color: AfrilensColors.glassBorder, width: 0.5),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(color: KuriftuColors.glassBorder, width: 0.5),
+        borderSide: BorderSide(color: AfrilensColors.glassBorder, width: 0.5),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: KuriftuColors.gold, width: 1),
+        borderSide: const BorderSide(color: AfrilensColors.gold, width: 1),
       ),
+
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
         borderSide: BorderSide(color: Colors.red.shade400, width: 1),
@@ -128,7 +129,7 @@ class _RegisterScreenState extends State<RegisterScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: KuriftuColors.background,
+      backgroundColor: AfrilensColors.background,
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -139,13 +140,14 @@ class _RegisterScreenState extends State<RegisterScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withValues(alpha: 0.6),
-                  Colors.black.withValues(alpha: 0.85),
-                  Colors.black.withValues(alpha: 0.95),
+                  Colors.black.withOpacity(0.6),
+                  Colors.black.withOpacity(0.85),
+                  Colors.black.withOpacity(0.95),
                 ],
               ),
             ),
           ),
+
 
           SafeArea(
             child: FadeTransition(
@@ -164,23 +166,24 @@ class _RegisterScreenState extends State<RegisterScreen>
                       Row(
                         children: [
                           GestureDetector(
-                            onTap: () => Navigator.of(context).pop(),
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white.withValues(alpha: 0.08),
-                                border: Border.all(
-                                    color: KuriftuColors.glassBorder,
-                                    width: 0.5),
+                              onTap: () => Navigator.of(context).pop(),
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white.withOpacity(0.08),
+                                  border: Border.all(
+                                      color: AfrilensColors.glassBorder,
+                                      width: 0.5),
+                                ),
+                                child: const Icon(
+                                  LucideIcons.arrowLeft,
+                                  color: AfrilensColors.textPrimary,
+                                  size: 18,
+                                ),
                               ),
-                              child: const Icon(
-                                LucideIcons.arrowLeft,
-                                color: KuriftuColors.textPrimary,
-                                size: 18,
-                              ),
-                            ),
+
                           ),
                         ],
                       ),
@@ -194,7 +197,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border:
-                              Border.all(color: KuriftuColors.gold, width: 1.5),
+                              Border.all(color: AfrilensColors.gold, width: 1.5),
                         ),
                         child: ClipOval(
                           child: Image.asset('assets/images/logo.png',
@@ -204,11 +207,11 @@ class _RegisterScreenState extends State<RegisterScreen>
                       const SizedBox(height: 16),
 
                       Text(
-                        'KURIFTU',
+                        'AFRILENS',
                         style: GoogleFonts.playfairDisplay(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
-                          color: KuriftuColors.gold,
+                          color: AfrilensColors.gold,
                           letterSpacing: 6,
                         ),
                       ),
@@ -218,10 +221,11 @@ class _RegisterScreenState extends State<RegisterScreen>
                         style: GoogleFonts.inter(
                           fontSize: 11,
                           fontWeight: FontWeight.w400,
-                          color: KuriftuColors.textSecondary,
+                          color: AfrilensColors.textSecondary,
                           letterSpacing: 3,
                         ),
                       ),
+
 
                       const SizedBox(height: 28),
 
@@ -233,10 +237,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                           child: Container(
                             padding: const EdgeInsets.all(28),
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.06),
+                              color: Colors.white.withOpacity(0.06),
                               borderRadius: BorderRadius.circular(24),
                               border: Border.all(
-                                color: KuriftuColors.glassBorder,
+                                color: AfrilensColors.glassBorder,
                                 width: 0.5,
                               ),
                             ),
@@ -250,7 +254,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     style: GoogleFonts.playfairDisplay(
                                       fontSize: 24,
                                       fontWeight: FontWeight.w600,
-                                      color: KuriftuColors.textPrimary,
+                                      color: AfrilensColors.textPrimary,
                                     ),
                                   ),
                                   const SizedBox(height: 6),
@@ -258,9 +262,10 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     'Begin your cultural exploration journey',
                                     style: GoogleFonts.inter(
                                       fontSize: 13,
-                                      color: KuriftuColors.textMuted,
+                                      color: AfrilensColors.textMuted,
                                     ),
                                   ),
+
                                   const SizedBox(height: 24),
 
                                   // Full Name
@@ -269,7 +274,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     textCapitalization:
                                         TextCapitalization.words,
                                     style: GoogleFonts.inter(
-                                      color: KuriftuColors.textPrimary,
+                                      color: AfrilensColors.textPrimary,
                                       fontSize: 15,
                                     ),
                                     decoration: _inputDecoration(
@@ -290,7 +295,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     controller: _emailController,
                                     keyboardType: TextInputType.emailAddress,
                                     style: GoogleFonts.inter(
-                                      color: KuriftuColors.textPrimary,
+                                      color: AfrilensColors.textPrimary,
                                       fontSize: 15,
                                     ),
                                     decoration: _inputDecoration(
@@ -315,7 +320,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     controller: _phoneController,
                                     keyboardType: TextInputType.phone,
                                     style: GoogleFonts.inter(
-                                      color: KuriftuColors.textPrimary,
+                                      color: AfrilensColors.textPrimary,
                                       fontSize: 15,
                                     ),
                                     decoration: _inputDecoration(
@@ -330,7 +335,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     controller: _passwordController,
                                     obscureText: _obscurePassword,
                                     style: GoogleFonts.inter(
-                                      color: KuriftuColors.textPrimary,
+                                      color: AfrilensColors.textPrimary,
                                       fontSize: 15,
                                     ),
                                     decoration: _inputDecoration(
@@ -341,7 +346,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                           _obscurePassword
                                               ? LucideIcons.eyeOff
                                               : LucideIcons.eye,
-                                          color: KuriftuColors.textMuted,
+                                          color: AfrilensColors.textMuted,
                                           size: 20,
                                         ),
                                         onPressed: () => setState(() =>
@@ -366,7 +371,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                     controller: _confirmPasswordController,
                                     obscureText: _obscureConfirm,
                                     style: GoogleFonts.inter(
-                                      color: KuriftuColors.textPrimary,
+                                      color: AfrilensColors.textPrimary,
                                       fontSize: 15,
                                     ),
                                     decoration: _inputDecoration(
@@ -377,7 +382,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                           _obscureConfirm
                                               ? LucideIcons.eyeOff
                                               : LucideIcons.eye,
-                                          color: KuriftuColors.textMuted,
+                                          color: AfrilensColors.textMuted,
                                           size: 20,
                                         ),
                                         onPressed: () => setState(() =>
@@ -407,14 +412,15 @@ class _RegisterScreenState extends State<RegisterScreen>
                                         padding: const EdgeInsets.all(14),
                                         decoration: BoxDecoration(
                                           color: Colors.red
-                                              .withValues(alpha: 0.1),
+                                              .withOpacity(0.1),
                                           borderRadius:
                                               BorderRadius.circular(12),
                                           border: Border.all(
                                             color: Colors.red
-                                                .withValues(alpha: 0.3),
+                                                .withOpacity(0.3),
                                           ),
                                         ),
+
                                         child: Row(
                                           children: [
                                             Icon(LucideIcons.alertCircle,
@@ -445,7 +451,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                                             ? Center(
                                                 child:
                                                     CircularProgressIndicator(
-                                                  color: KuriftuColors.gold,
+                                                  color: AfrilensColors.gold,
                                                   strokeWidth: 2,
                                                 ),
                                               )
@@ -474,7 +480,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                             'Already have an account? ',
                             style: GoogleFonts.inter(
                               fontSize: 13,
-                              color: KuriftuColors.textSecondary,
+                              color: AfrilensColors.textSecondary,
                             ),
                           ),
                           GestureDetector(
@@ -484,7 +490,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                               style: GoogleFonts.inter(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
-                                color: KuriftuColors.gold,
+                                color: AfrilensColors.gold,
                               ),
                             ),
                           ),
