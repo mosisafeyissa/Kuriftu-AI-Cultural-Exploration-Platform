@@ -93,16 +93,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                       SizedBox(height: MediaQuery.of(context).size.height * 0.06),
 
                       // Logo
-                      Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: AfrilensColors.gold, width: 1.5),
-                        ),
-                        child: ClipOval(
-                          child: Image.asset('assets/images/logo.png', fit: BoxFit.cover),
-                        ),
+                      Image.asset(
+                        'assets/images/logo_white.png',
+                        width: 120,
+                        height: 120,
+                        fit: BoxFit.contain,
                       ),
                       const SizedBox(height: 32),
 
@@ -217,13 +212,13 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
 
   Widget _buildStatPills() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: 10,
+      runSpacing: 10,
       children: [
         _StatPill(icon: LucideIcons.globe, label: '54 Nations'),
-        const SizedBox(width: 12),
         _StatPill(icon: LucideIcons.layers, label: '200+ Artifacts'),
-        const SizedBox(width: 12),
         _StatPill(icon: LucideIcons.sparkles, label: 'AI-Powered'),
       ],
     );

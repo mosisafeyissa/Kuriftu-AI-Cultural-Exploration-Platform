@@ -176,18 +176,11 @@ class _LoginScreenState extends State<LoginScreen>
                           height: MediaQuery.of(context).size.height * 0.08),
 
                       // Logo
-                      Container(
-                        width: 70,
-                        height: 70,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                              color: AfrilensColors.gold, width: 1.5),
-                        ),
-                        child: ClipOval(
-                          child: Image.asset('assets/images/logo.png',
-                              fit: BoxFit.cover),
-                        ),
+                      Image.asset(
+                        'assets/images/logo_white.png',
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.contain,
                       ),
                       const SizedBox(height: 24),
 

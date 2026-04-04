@@ -191,18 +191,11 @@ class _RegisterScreenState extends State<RegisterScreen>
                       const SizedBox(height: 16),
 
                       // Logo
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border:
-                              Border.all(color: AfrilensColors.gold, width: 1.5),
-                        ),
-                        child: ClipOval(
-                          child: Image.asset('assets/images/logo.png',
-                              fit: BoxFit.cover),
-                        ),
+                      Image.asset(
+                        'assets/images/logo_white.png',
+                        width: 90,
+                        height: 90,
+                        fit: BoxFit.contain,
                       ),
                       const SizedBox(height: 16),
 
