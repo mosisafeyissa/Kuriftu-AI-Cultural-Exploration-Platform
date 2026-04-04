@@ -50,22 +50,23 @@ def upload_local_media():
             except ValueError:
                 continue
             
-            # The 'public_id' in Cloudinary should match the relative path
-            # We want to keep folder structure
+            # Correct logic: Public ID should NOT have the extension
+            # Cloudinary adds it automatically based on the request format (e.g., .jpg)
             folder = str(relative_path.parent)
             if folder == ".":
                 folder = ""
             
             public_id = relative_path.stem
             
-            print(f"Uploading {relative_path} (Folder: '{folder}', ID: '{public_id}')...")
+            print(f"Uploading {relative_path} to folder='{folder}' with ID='{public_id}'...")
             try:
                 result = cloudinary.uploader.upload(
                     str(local_path),
                     public_id=public_id,
                     folder=folder,
                     overwrite=True,
-                    resource_type="auto"
+                    invalidate=True, # Refresh the 'latest' version
+                    resource_type="image"
                 )
                 print(f"  Successfully uploaded! URL: {result.get('secure_url')}")
             except Exception as e:
