@@ -215,6 +215,33 @@ Navigate to `http://localhost:8000/admin/` and log in (using the credentials fro
 
 ---
 
+## 🏠 Demo Rooms Overview
+
+We provide three demo rooms to showcase the system features and user experience.
+
+Each room can be accessed by scanning the QR code below.
+
+---
+
+### 🛏️ Room 1
+
+📱 Scan to explore:
+![Room 1 QR Code](images/room1-qr.png)
+
+---
+
+### 🛋️ Room 2 
+
+📱 Scan to explore:
+![Room 2 QR Code](images/room2-qr.png)
+
+---
+
+### 🏢 Room 3
+
+📱 Scan to explore:
+![Room 3 QR Code](images/room3-qr.png)
+
 ## 8. 🧩 Project Structure
 
 ```text
