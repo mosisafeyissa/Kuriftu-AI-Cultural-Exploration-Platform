@@ -88,7 +88,7 @@ class _SplashScreen extends StatelessWidget {
                 border: Border.all(color: KuriftuColors.gold, width: 1.5),
               ),
               child: ClipOval(
-                child: Image.asset('assets/images/logo.jpg', fit: BoxFit.cover),
+                child: Image.asset('assets/images/logo.png', fit: BoxFit.cover),
               ),
             ),
             const SizedBox(height: 24),

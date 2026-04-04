@@ -206,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
               border: Border.all(color: KuriftuColors.gold.withValues(alpha: 0.6), width: 1),
             ),
             child: ClipOval(
-              child: Image.asset('assets/images/logo.jpg', fit: BoxFit.cover),
+              child: Image.asset('assets/images/logo.png', fit: BoxFit.cover),
             ),
           ),
           const SizedBox(width: 12),

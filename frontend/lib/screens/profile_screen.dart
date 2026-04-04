@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/gold_button.dart';
+import 'welcome_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -128,6 +129,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (confirmed == true && mounted) {
       await context.read<AuthProvider>().logout();
+      if (mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => const WelcomeScreen(),
+            transitionDuration: const Duration(milliseconds: 600),
+            transitionsBuilder: (_, anim, __, child) {
+              return FadeTransition(opacity: anim, child: child);
+            },
+          ),
+          (_) => false,
+        );
+      }
     }
   }
 

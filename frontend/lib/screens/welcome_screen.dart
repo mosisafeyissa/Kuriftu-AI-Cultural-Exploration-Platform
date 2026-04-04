@@ -2,9 +2,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/gold_button.dart';
 import 'main_shell.dart';
+import 'login_screen.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -41,9 +44,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   }
 
   void _navigateToHome() {
+    final auth = context.read<AuthProvider>();
+    final Widget destination = auth.isAuthenticated ? const MainShell() : const LoginScreen();
+
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
-        pageBuilder: (_, __, ___) => const MainShell(),
+        pageBuilder: (_, __, ___) => destination,
         transitionDuration: const Duration(milliseconds: 600),
         transitionsBuilder: (_, anim, __, child) {
           return FadeTransition(opacity: anim, child: child);
@@ -95,7 +101,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           border: Border.all(color: KuriftuColors.gold, width: 1.5),
                         ),
                         child: ClipOval(
-                          child: Image.asset('assets/images/logo.jpg', fit: BoxFit.cover),
+                          child: Image.asset('assets/images/logo.png', fit: BoxFit.cover),
                         ),
                       ),
                       const SizedBox(height: 32),

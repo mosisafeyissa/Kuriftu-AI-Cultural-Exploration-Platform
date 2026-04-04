@@ -24,7 +24,6 @@ class OrderScreen extends StatefulWidget {
 class _OrderScreenState extends State<OrderScreen> {
   int _quantity = 1;
   final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
   bool _isPlacing = false;
 
   @override
@@ -40,14 +39,9 @@ class _OrderScreenState extends State<OrderScreen> {
 
   Future<void> _placeOrder() async {
     final email = _emailController.text.trim();
-    final phone = _phoneController.text.trim();
     
     if (email.isEmpty || !email.contains('@')) {
       _showSnack('Please enter a valid email address');
-      return;
-    }
-    if (phone.isEmpty) {
-      _showSnack('Please enter your phone number for payment');
       return;
     }
 
@@ -57,7 +51,6 @@ class _OrderScreenState extends State<OrderScreen> {
       final order = await ApiService.createOrder(
         artifactId: widget.artifact.id,
         email: email,
-        phoneNumber: phone,
         quantity: _quantity,
       );
       if (mounted) {
@@ -193,7 +186,6 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   void dispose() {
     _emailController.dispose();
-    _phoneController.dispose();
     super.dispose();
   }
 
@@ -338,63 +330,6 @@ class _OrderScreenState extends State<OrderScreen> {
                     ),
                     prefixIcon: const Icon(
                       LucideIcons.mail,
-                      color: KuriftuColors.textMuted,
-                      size: 20,
-                    ),
-                    filled: true,
-                    fillColor: Colors.white.withValues(alpha: 0.06),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide.none,
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: BorderSide(
-                        color: Colors.white.withValues(alpha: 0.1),
-                        width: 0.5,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(
-                        color: KuriftuColors.gold,
-                        width: 1,
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 18,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Phone Number
-            Text(
-              'PHONE NUMBER',
-              style: KuriftuTheme.labelText.copyWith(letterSpacing: 2),
-            ),
-            const SizedBox(height: 14),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                child: TextField(
-                  controller: _phoneController,
-                  keyboardType: TextInputType.phone,
-                  style: KuriftuTheme.bodyText.copyWith(
-                    color: KuriftuColors.textPrimary,
-                    fontSize: 16,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: '0911000000',
-                    hintStyle: KuriftuTheme.bodyText.copyWith(
-                      color: KuriftuColors.textMuted,
-                    ),
-                    prefixIcon: const Icon(
-                      LucideIcons.phone,
                       color: KuriftuColors.textMuted,
                       size: 20,
                     ),

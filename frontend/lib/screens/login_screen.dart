@@ -4,8 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/notification_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/gold_button.dart';
+import 'main_shell.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -60,7 +62,16 @@ class _LoginScreenState extends State<LoginScreen>
     );
 
     if (success && mounted) {
-      // Navigation handled by main.dart's Consumer
+      context.read<NotificationProvider>().onAuthStateChanged(true);
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => const MainShell(),
+          transitionDuration: const Duration(milliseconds: 600),
+          transitionsBuilder: (_, anim, __, child) {
+            return FadeTransition(opacity: anim, child: child);
+          },
+        ),
+      );
     }
   }
 
@@ -172,7 +183,7 @@ class _LoginScreenState extends State<LoginScreen>
                               color: KuriftuColors.gold, width: 1.5),
                         ),
                         child: ClipOval(
-                          child: Image.asset('assets/images/logo.jpg',
+                          child: Image.asset('assets/images/logo.png',
                               fit: BoxFit.cover),
                         ),
                       ),

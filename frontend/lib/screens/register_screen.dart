@@ -4,8 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/notification_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/gold_button.dart';
+import 'main_shell.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -69,8 +71,17 @@ class _RegisterScreenState extends State<RegisterScreen>
     );
 
     if (success && mounted) {
-      // Pop back — navigation handled by main.dart's Consumer
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      context.read<NotificationProvider>().onAuthStateChanged(true);
+      Navigator.of(context).pushAndRemoveUntil(
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => const MainShell(),
+          transitionDuration: const Duration(milliseconds: 600),
+          transitionsBuilder: (_, anim, __, child) {
+            return FadeTransition(opacity: anim, child: child);
+          },
+        ),
+        (_) => false,
+      );
     }
   }
 
@@ -186,7 +197,7 @@ class _RegisterScreenState extends State<RegisterScreen>
                               Border.all(color: KuriftuColors.gold, width: 1.5),
                         ),
                         child: ClipOval(
-                          child: Image.asset('assets/images/logo.jpg',
+                          child: Image.asset('assets/images/logo.png',
                               fit: BoxFit.cover),
                         ),
                       ),

@@ -237,6 +237,8 @@ API_KEY = os.getenv('GEMINI_API_KEY')
 # Chapa Payment (set CHAPA_SECRET_KEY env var for production)
 CHAPA_SECRET_KEY = os.getenv('CHAPA_SECRET_KEY', '')
 CHAPA_MOCK_MODE = os.getenv('CHAPA_MOCK_MODE', 'True').lower() in ('true', '1', 'yes')
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://localhost:33225')
+CHAPA_LOGO_URL = "https://res.cloudinary.com/dgj7rttjf/image/upload/v1775303128/app_logo.png"
 
 
 # Production Security Headers

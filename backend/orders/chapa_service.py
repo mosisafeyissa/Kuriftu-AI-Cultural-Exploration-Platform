@@ -39,16 +39,17 @@ def initialize_payment(order):
     tx_ref = generate_tx_ref()
     total = float(order.calculate_total())
     
-    # Get base URL from settings
+    # Get base URLs from settings
     base_url = getattr(settings, "SITE_URL", "http://localhost:8000")
+    frontend_url = getattr(settings, "FRONTEND_URL", "http://localhost:33225")
+    
     callback_url = getattr(settings, "CHAPA_CALLBACK_URL", f"{base_url}/api/chapa-webhook/")
-    return_url = getattr(settings, "CHAPA_RETURN_URL", f"{base_url}/payment-status/{tx_ref}")
+    return_url = getattr(settings, "CHAPA_RETURN_URL", f"{frontend_url}/payment-status/{tx_ref}")
 
     payload = {
         "amount": str(total),
         "currency": "ETB",
         "email": order.user_email,
-        "phone_number": order.phone_number,
         "tx_ref": tx_ref,
         "callback_url": callback_url,
         "return_url": return_url,
@@ -57,7 +58,6 @@ def initialize_payment(order):
         "customization[logo]": getattr(settings, "CHAPA_LOGO_URL", ""),
         "meta[order_id]": str(order.pk),
         "meta[user_email]": order.user_email,
-        "meta[phone_number]": order.phone_number,
     }
 
     secret_key = getattr(settings, "CHAPA_SECRET_KEY", "")
