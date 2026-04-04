@@ -282,7 +282,6 @@ def process_scan_pipeline(image_file, artifact_name_hint, request) -> dict:
     Returns a dict ready to be wrapped in a Response().
     """
     from .utils import validate_image_file
-    from .embedding_service import generate_embedding, find_best_match
     from artifacts.models import Artifact
     from artifacts.serializers import ArtifactSerializer
 

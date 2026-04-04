@@ -12,21 +12,8 @@ logger = logging.getLogger(__name__)
 
 @receiver(post_save, sender="artifacts.Artifact")
 def generate_artifact_embedding(sender, instance, **kwargs):
-    """
-    After saving an Artifact, generate its embedding if:
-      - It has an image file
-      - The embedding is missing or the image was just changed
-
-    Uses update() to avoid re-triggering the signal.
-    """
-    if not instance.image:
-        return
-
-    if instance.embedding:
-        # Embedding already exists — skip unless image changed.
-        # (We can't easily detect image changes without tracking,
-        #  so we only generate if embedding is empty.)
-        return
+    # NO-OP: MobileNetV2 embeddings are deprecated in favor of Gemini Vision.
+    return
 
     try:
         from ai_services.embedding_service import generate_embedding
