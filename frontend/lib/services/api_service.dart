@@ -234,6 +234,7 @@ class ApiService {
   static Future<Order> createOrder({
     required String artifactId,
     required String email,
+    String? phoneNumber,
     required int quantity,
   }) async {
     if (useMockData) {
@@ -242,6 +243,7 @@ class ApiService {
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         artifactId: artifactId,
         userEmail: email,
+        phoneNumber: phoneNumber,
         quantity: quantity,
         status: 'Pending',
         createdAt: DateTime.now(),
@@ -256,6 +258,7 @@ class ApiService {
         body: jsonEncode({
           'artifact': int.tryParse(artifactId) ?? 0,
           'user_email': email,
+          'phone_number': phoneNumber,
           'quantity': quantity,
         }),
       );

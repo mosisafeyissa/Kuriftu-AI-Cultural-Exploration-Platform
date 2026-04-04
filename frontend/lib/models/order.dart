@@ -9,6 +9,7 @@ class Order {
   final String paymentStatus;
   final String? txRef;
   final String? checkoutUrl;
+  final String? phoneNumber;
   final DateTime? createdAt;
 
   const Order({
@@ -22,6 +23,7 @@ class Order {
     this.paymentStatus = 'unpaid',
     this.txRef,
     this.checkoutUrl,
+    this.phoneNumber,
     this.createdAt,
   });
 
@@ -37,6 +39,7 @@ class Order {
         paymentStatus: json['payment_status'] ?? 'unpaid',
         txRef: json['tx_ref'],
         checkoutUrl: json['checkout_url'],
+        phoneNumber: json['phone_number'],
         createdAt: json['created_at'] != null
             ? DateTime.tryParse(json['created_at'])
             : null,
@@ -45,6 +48,7 @@ class Order {
   Map<String, dynamic> toJson() => {
         'artifact': int.tryParse(artifactId) ?? 0,
         'user_email': userEmail,
+        'phone_number': phoneNumber,
         'quantity': quantity,
       };
 

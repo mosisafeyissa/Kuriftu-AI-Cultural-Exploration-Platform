@@ -48,6 +48,7 @@ def initialize_payment(order):
         "amount": str(total),
         "currency": "ETB",
         "email": order.user_email,
+        "phone_number": order.phone_number,
         "tx_ref": tx_ref,
         "callback_url": callback_url,
         "return_url": return_url,
@@ -56,6 +57,7 @@ def initialize_payment(order):
         "customization[logo]": getattr(settings, "CHAPA_LOGO_URL", ""),
         "meta[order_id]": str(order.pk),
         "meta[user_email]": order.user_email,
+        "meta[phone_number]": order.phone_number,
     }
 
     secret_key = getattr(settings, "CHAPA_SECRET_KEY", "")

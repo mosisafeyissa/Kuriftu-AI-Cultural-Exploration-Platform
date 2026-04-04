@@ -22,6 +22,7 @@ class Order(models.Model):
         null=True, blank=True, related_name="orders",
     )
     user_email = models.EmailField()
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
     quantity = models.PositiveIntegerField(default=1)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)

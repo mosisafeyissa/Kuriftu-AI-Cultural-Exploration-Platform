@@ -153,12 +153,10 @@ def create_order(request):
                 checkout_url, tx_ref = chapa_service.initialize_payment(order)
                 order.refresh_from_db()
                 
-                return Response({
-                    "order": OrderSerializer(order).data,
-                    "checkout_url": checkout_url,
-                    "tx_ref": tx_ref,
-                    "message": "Order created successfully. Please complete payment."
-                }, status=status.HTTP_201_CREATED)
+                return Response(
+                    OrderSerializer(order).data,
+                    status=status.HTTP_201_CREATED
+                )
                 
             except Exception as e:
                 logger.error(f"Payment init failed for order #{order.pk}: {e}")
